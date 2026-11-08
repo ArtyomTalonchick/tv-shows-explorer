@@ -1,0 +1,13 @@
+{
+  "language": "en",
+  "milestones": true,
+  "version": { "scheme": "minor" },
+  "checks": [],
+  "commit": {
+    "format": "type(scope): subject",
+    "example": "feat(search): debounce the query and cancel the previous request",
+    "types": ["feat", "fix", "design", "refactor", "test", "build", "docs", "chore"],
+    "trailers": false
+  },
+  "release": { "tag": "v{version}", "githubRelease": true, "publishedBy": "skill", "push": true }
+}
