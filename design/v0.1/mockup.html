@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premiere — v0.1 mockup: search</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../library/components.css">
+<link rel="icon" href="../icon/favicon-32.png" sizes="32x32">
+<script src="../library/library.js"></script>
+<!--
+  v0.1: the search screen in every state the user can see. Components come from ../library/components.css only;
+  the styles below are page layout (screens, header, hero, grid) and the captions of this mockup.
+  Open through a local server: npx http-server design, then /v0.1/mockup.html
+  Each state is a .screen with an id: start, loading, results, genre, empty, error.
+-->
+<style>
+  .caption { max-width: var(--sizes-content); margin: 0 auto; padding: var(--spacing-12) var(--spacing-12) var(--spacing-4); color: var(--colors-fg-subtle); font-size: var(--fontSizes-xs); letter-spacing: var(--letterSpacings-eyebrow); text-transform: uppercase; }
+  .caption b { color: var(--colors-fg); }
+  .screen { position: relative; display: flex; flex-direction: column; min-height: 100svh; overflow: hidden; border-top: 1px solid var(--colors-border); border-bottom: 1px solid var(--colors-border); background: var(--colors-bg); }
+  .container { max-width: var(--sizes-content); margin: 0 auto; padding: 0 var(--spacing-12); }
+
+  /* Start: the full-viewport hero of v0.0, without the Search button */
+  .hero { min-height: 100svh; display: grid; place-items: center; text-align: center; padding: var(--spacing-30) var(--spacing-6) var(--spacing-24); }
+  .hero::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 50% at 50% 55%, var(--colors-accent-glow), transparent 70%); }
+  .hero::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 70% at 50% 50%, transparent, var(--colors-bg) 85%); }
+  .wall { position: absolute; inset: calc(var(--spacing-10) * -1); display: grid; grid-template-columns: repeat(8, 1fr); gap: var(--spacing-3); opacity: .14; filter: grayscale(.6) blur(2px); transform: rotate(-6deg) scale(1.15); }
+  .wall img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: var(--radii-sm); }
+  .hero-inner { position: relative; z-index: 2; max-width: var(--sizes-hero); display: grid; justify-items: center; }
+  .hero .display { margin: var(--spacing-6) 0; }
+  .hero .lead { max-width: var(--sizes-prose); margin-bottom: var(--spacing-10); }
+  .hero-logo { position: absolute; top: var(--spacing-8); left: var(--spacing-12); z-index: 3; }
+
+  /* With a query: a compact header, then the list */
+  .bar { position: sticky; top: 0; z-index: 3; border-bottom: 1px solid var(--colors-border); background: var(--colors-bg-glass); backdrop-filter: blur(var(--blurs-glass)); }
+  .bar .container { display: flex; align-items: center; gap: var(--spacing-8); padding-top: var(--spacing-4); padding-bottom: var(--spacing-4); }
+  .bar .search-input { margin-left: auto; }
+  .list { padding-top: var(--spacing-12); padding-bottom: var(--spacing-16); }
+  .head { display: flex; justify-content: space-between; align-items: end; gap: var(--spacing-4); flex-wrap: wrap; margin-bottom: var(--spacing-8); }
+  .head .title { margin-top: var(--spacing-3); }
+  .count { color: var(--colors-fg-muted); }
+  .head + .chips, .skeleton-chips { margin-bottom: var(--spacing-10); }
+  .skeleton-chips { display: flex; gap: var(--spacing-2); }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-8); margin-bottom: var(--spacing-12); }
+  .list { flex: 1; display: flex; flex-direction: column; width: 100%; }
+  .list > .state { flex: 1; align-content: center; margin-top: var(--spacing-4); }
+
+  @media (max-width: 760px) {
+    .caption { padding: var(--spacing-10) var(--spacing-4) var(--spacing-4); }
+    .container { padding: 0 var(--spacing-4); }
+    .hero-logo { top: var(--spacing-6); left: var(--spacing-4); }
+    .wall { grid-template-columns: repeat(4, 1fr); }
+    .hero .lead { font-size: var(--fontSizes-lg); }
+    .bar .container { flex-wrap: wrap; gap: var(--spacing-3); }
+    .bar .search-input { margin-left: 0; max-width: none; }
+    .list { padding-top: var(--spacing-8); padding-bottom: var(--spacing-10); }
+    .head { margin-bottom: var(--spacing-6); }
+    .head + .chips, .skeleton-chips { flex-wrap: nowrap; overflow-x: auto; margin: 0 calc(var(--spacing-4) * -1) var(--spacing-8); padding: 0 var(--spacing-4); scrollbar-width: none; }
+    .grid { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-8); }
+    .grid .show-card { display: grid; grid-template-columns: var(--sizes-thumb) minmax(0, 1fr); column-gap: var(--spacing-4); align-items: center; }
+    .grid .show-card__poster { grid-row: span 2; }
+    .grid .show-card__name { margin-top: 0; align-self: end; white-space: normal; }
+    .grid .show-card__meta { align-self: start; white-space: normal; }
+    .grid .skeleton-card { display: grid; grid-template-columns: var(--sizes-thumb) minmax(0, 1fr); column-gap: var(--spacing-4); align-items: center; }
+    .grid .skeleton--poster { grid-row: span 2; }
+    .grid .skeleton--line { align-self: end; margin-top: 0; }
+    .grid .skeleton--line-short { align-self: start; }
+  }
+</style>
+</head>
+<body class="tokens-pending">
+<main id="app"></main>
+
+<script>
+  const P = (a, b) => `https://static.tvmaze.com/uploads/images/medium_portrait/${a}/${b}.jpg`;
+  const SHOWS = [
+    { name: "Breaking Bad", genres: ["Drama", "Crime", "Thriller"], rating: 9.2, years: "2008–2019", poster: P(501, 1253519) },
+    { name: "Dark", genres: ["Drama", "Science-Fiction"], rating: 8.2, years: "2017–2020", poster: P(504, 1262352) },
+    { name: "Darkroom", genres: ["Documentary"], rating: null, years: "2019", poster: null }, // made up: no poster, no rating
+    { name: "Severance", genres: ["Drama", "Science-Fiction"], rating: 7.7, years: "2022–", poster: P(548, 1371406) },
+    { name: "Mr. Robot", genres: ["Drama", "Crime"], rating: 8.3, years: "2015–2019", poster: P(211, 528026) },
+    { name: "True Detective", genres: ["Drama", "Crime"], rating: 8.1, years: "2014–", poster: P(490, 1226764) },
+    { name: "The Last of Us", genres: ["Drama", "Action"], rating: 7.9, years: "2023–", poster: P(563, 1409008) },
+    { name: "The Bear", genres: ["Drama", "Comedy"], rating: 7.3, years: "2022–2026", poster: P(629, 1574642) },
+    { name: "Dune: Prophecy", genres: ["Drama", "Science-Fiction"], rating: 7.2, years: "2024–", poster: P(543, 1358056) },
+  ];
+  const PER_PAGE = 3;
+  const icon = (id) => `<svg class="icon"><use href="#${id}"/></svg>`;
+
+  // Components: the markup of ../library/index.html, filled with data.
+  const logo = (cls = "") => `<a class="logo ${cls}" href="#">tv<span>/</span>explorer</a>`;
+  const search = ({ value = "", loading = false, small = false } = {}) => `
+    <label class="search-input ${small ? "search-input--sm" : ""}">${icon("search")}
+      <input aria-label="Search shows" placeholder="Search shows, e.g. Dark" value="${value}">
+      ${loading ? `<span class="spinner" role="status" aria-label="Loading"></span>`
+        : value ? `<button class="search-input__clear" aria-label="Clear search">${icon("close")}</button>` : ""}
+    </label>`;
+  const card = (s) => `
+    <a class="show-card" href="#">
+      <div class="show-card__poster">${s.poster ? `<img src="${s.poster}" alt="${s.name} poster">`
+        : `<div class="show-card__no-poster">${icon("film")}No poster</div>`}
+        ${s.rating ? `<span class="show-card__rating">★ ${s.rating}</span>` : ""}</div>
+      <h3 class="show-card__name">${s.name}</h3>
+      <p class="show-card__meta">${s.years} · ${s.genres.join(", ")}</p>
+    </a>`;
+  const chips = (selected) => {
+    const counts = {};
+    SHOWS.forEach((s) => s.genres.forEach((g) => (counts[g] = (counts[g] || 0) + 1)));
+    const genres = Object.keys(counts).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b));
+    const chip = (label, n, on) => `<button class="chip" aria-pressed="${on}">${label} <span class="chip__count">${n}</span></button>`;
+    return `<div class="chips" role="group" aria-label="Genre">${chip("All", SHOWS.length, !selected)}${genres.map((g) => chip(g, counts[g], g === selected)).join("")}</div>`;
+  };
+  const pagination = (page, total, count) => {
+    const btn = (n) => `<button class="pagination__item" ${n === page ? `aria-current="page"` : ""}>${n}</button>`;
+    const first = (page - 1) * PER_PAGE + 1;
+    return `<nav class="pagination" aria-label="Pages">
+        <button class="pagination__item" aria-label="Previous page" ${page === 1 ? "disabled" : ""}>${icon("chevron-left")}</button>
+        ${Array.from({ length: total }, (_, i) => btn(i + 1)).join("")}
+        <button class="pagination__item" aria-label="Next page" ${page === total ? "disabled" : ""}>${icon("chevron-right")}</button>
+      </nav><p class="pagination__info">Shows ${first}–${Math.min(first + PER_PAGE - 1, count)} of ${count}</p>`;
+  };
+  const skeletonCard = `<div class="skeleton-card"><div class="skeleton skeleton--poster"></div><div class="skeleton skeleton--line"></div><div class="skeleton skeleton--line-short"></div></div>`;
+
+  // Page layout
+  const bar = (opts) => `<header class="bar"><div class="container">${logo()}${search({ small: true, ...opts })}</div></header>`;
+  const head = (query, count) => `<div class="head"><div><div class="eyebrow">Results</div><h2 class="title">Shows for <em>“${query}”</em></h2></div>${count ? `<div class="count">${count}</div>` : ""}</div>`;
+  const listScreen = (opts, body) => `${bar(opts)}<section class="list container">${body}</section>`;
+  const page = (shows, n) => shows.slice((n - 1) * PER_PAGE, n * PER_PAGE);
+
+  const drama = SHOWS.filter((s) => s.genres.includes("Drama"));
+  const SCREENS = [
+    ["start", "Start — the search field only, the list is empty", `
+      <section class="hero" aria-label="Search">
+        ${logo("hero-logo")}
+        <div class="wall" aria-hidden="true">${Array(4).fill(SHOWS.filter((s) => s.poster).map((s) => `<img src="${s.poster}" alt="">`).join("")).join("")}</div>
+        <div class="hero-inner">
+          <div class="eyebrow">TVmaze · 80 000+ shows</div>
+          <h1 class="display">Find your next obsession.</h1>
+          <p class="lead">Search any show, see its rating and genres — in one dark, quiet place.</p>
+          ${search()}
+        </div>
+      </section>`],
+    ["loading", "Loading — the request is running: a spinner in the field, skeletons in the list", listScreen({ value: "dark", loading: true }, `
+      ${head("dark")}
+      <div class="skeleton-chips" aria-hidden="true">${Array(5).fill(`<div class="skeleton skeleton--chip"></div>`).join("")}</div>
+      <div class="grid" aria-busy="true">${Array(PER_PAGE).fill(skeletonCard).join("")}</div>`)],
+    ["results", "Results — genre chips, 3 cards, page 1 of 3", listScreen({ value: "dark" }, `
+      ${head("dark", `${SHOWS.length} shows`)}${chips(null)}
+      <div class="grid">${page(SHOWS, 1).map(card).join("")}</div>
+      ${pagination(1, Math.ceil(SHOWS.length / PER_PAGE), SHOWS.length)}`)],
+    ["genre", "A genre is selected — «All» resets the filter; pagination counts the filtered shows", listScreen({ value: "dark" }, `
+      ${head("dark", `${drama.length} of ${SHOWS.length} shows · Drama`)}${chips("Drama")}
+      <div class="grid">${page(drama, 2).map(card).join("")}</div>
+      ${pagination(2, Math.ceil(drama.length / PER_PAGE), drama.length)}`)],
+    ["empty", "No results — TVmaze found nothing for the query", listScreen({ value: "qwzx" }, `
+      ${head("qwzx", "0 shows")}
+      <div class="state"><div class="state__icon">${icon("search-off")}</div><h3 class="state__title">Nothing found for “qwzx”</h3>
+        <p class="state__text">Check the spelling or try another title.</p><button class="btn btn--ghost btn--sm">Clear search</button></div>`)],
+    ["error", "Error — the request failed; Retry sends it again", listScreen({ value: "dark" }, `
+      ${head("dark")}
+      <div class="state state--error" role="alert"><div class="state__icon">${icon("alert")}</div><h3 class="state__title">Could not load shows</h3>
+        <p class="state__text">TVmaze did not answer. Check your connection and try again.</p><button class="btn btn--sm">${icon("retry")}Retry</button></div>`)],
+  ];
+
+  document.getElementById("app").innerHTML = SCREENS.map(([id, text, html], i) =>
+    `<p class="caption"><b>${i + 1} · ${id}</b> — ${text}</p><div class="screen" id="${id}">${html}</div>`).join("");
+</script>
+</body>
+</html>

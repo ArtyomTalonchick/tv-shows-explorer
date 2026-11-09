@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premiere — component library</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components.css">
+<link rel="icon" href="../icon/favicon-32.png" sizes="32x32">
+<script src="library.js"></script>
+<!--
+  The showcase of design/library/components.css: every component in every variant and state.
+  Hover, active and focus are drawn statically with .is-hover, .is-active and .is-focus.
+  Open through a local server: npx http-server design, then /library/
+  The layout below (.page, .group, .row, .cell) belongs to the showcase only, not to the library.
+-->
+<style>
+  .page { max-width: var(--sizes-content); margin: 0 auto; padding: var(--spacing-16) var(--spacing-12); }
+  .page > header { margin-bottom: var(--spacing-16); }
+  .page > header .title { margin: var(--spacing-3) 0; }
+  .group { border-top: 1px solid var(--colors-border); padding: var(--spacing-10) 0; }
+  .group > h2 { font-size: var(--fontSizes-2xl); font-weight: var(--fontWeights-extrabold); letter-spacing: var(--letterSpacings-tight); margin-bottom: var(--spacing-2); }
+  .group > p { color: var(--colors-fg-muted); font-size: var(--fontSizes-sm); margin-bottom: var(--spacing-8); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--spacing-8); align-items: flex-start; margin-bottom: var(--spacing-8); }
+  .cell { display: grid; gap: var(--spacing-3); justify-items: start; }
+  .cell > small { color: var(--colors-fg-subtle); font-size: var(--fontSizes-xs); letter-spacing: var(--letterSpacings-eyebrow); text-transform: uppercase; }
+  .cell--wide { width: 100%; max-width: var(--sizes-search); justify-items: stretch; }
+  .app-icons { display: flex; flex-wrap: wrap; gap: var(--spacing-8); align-items: end; }
+  .app-icons img { display: block; }
+  .safe-zone { position: relative; }
+  .safe-zone::after { content: ""; position: absolute; inset: 10%; border: 1px dashed var(--colors-fg-muted); border-radius: var(--radii-full); }
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--spacing-6); }
+  .states { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-6); }
+  @media (max-width: 760px) {
+    .page { padding: var(--spacing-10) var(--spacing-4); }
+    .cards, .states { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-4); }
+    .states { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body class="tokens-pending">
+<div class="page">
+  <header>
+    <div class="eyebrow">design/library</div>
+    <h1 class="title">Components of <em>Premiere</em></h1>
+    <p class="lead">The UI kit of v0.1. Mockups are built from these classes only.</p>
+  </header>
+
+  <section class="group">
+    <h2>App icon</h2>
+    <p>design/icon/ — icon.svg and its exports; the maskable one with the safe zone (a circle of 40% radius) dashed</p>
+    <div class="app-icons">
+      <div class="cell"><small>512 · PWA</small><img src="../icon/icon-512.png" width="160" height="160" alt="App icon"></div>
+      <div class="cell"><small>maskable 512</small><div class="safe-zone"><img src="../icon/icon-maskable-512.png" width="160" height="160" alt="Maskable app icon"></div></div>
+      <div class="cell"><small>192 · PWA</small><img src="../icon/icon-192.png" width="96" height="96" alt="App icon, 192"></div>
+      <div class="cell"><small>180 · apple-touch</small><img src="../icon/apple-touch-icon-180.png" width="90" height="90" alt="Apple touch icon"></div>
+      <div class="cell"><small>32 · favicon</small><img src="../icon/favicon-32.png" width="32" height="32" alt="Favicon"></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Text</h2>
+    <p>.eyebrow · .display · .title · .lead · .logo</p>
+    <div class="row">
+      <div class="cell"><small>logo</small><span class="logo">tv<span>/</span>explorer</span></div>
+      <div class="cell"><small>eyebrow</small><span class="eyebrow">TVmaze · 80 000+ shows</span></div>
+    </div>
+    <div class="cell"><small>display</small><span class="display">Find your next obsession.</span></div>
+    <div class="row" style="margin-top: var(--spacing-8)">
+      <div class="cell"><small>title</small><span class="title">Shows for <em>“dark”</em></span></div>
+      <div class="cell"><small>lead</small><span class="lead">Search any show, see its rating and genres.</span></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Button</h2>
+    <p>.btn · .btn--ghost · .btn--sm — default, hover, active, focus, disabled</p>
+    <div class="row">
+      <div class="cell"><small>default</small><button class="btn">Retry</button></div>
+      <div class="cell"><small>hover</small><button class="btn is-hover">Retry</button></div>
+      <div class="cell"><small>active</small><button class="btn is-active">Retry</button></div>
+      <div class="cell"><small>focus</small><button class="btn is-focus">Retry</button></div>
+      <div class="cell"><small>disabled</small><button class="btn" disabled>Retry</button></div>
+      <div class="cell"><small>with icon</small><button class="btn"><svg class="icon"><use href="#retry"/></svg>Retry</button></div>
+    </div>
+    <div class="row">
+      <div class="cell"><small>ghost</small><button class="btn btn--ghost">Clear search</button></div>
+      <div class="cell"><small>hover</small><button class="btn btn--ghost is-hover">Clear search</button></div>
+      <div class="cell"><small>active</small><button class="btn btn--ghost is-active">Clear search</button></div>
+      <div class="cell"><small>disabled</small><button class="btn btn--ghost" disabled>Clear search</button></div>
+      <div class="cell"><small>small</small><button class="btn btn--sm">Retry</button></div>
+      <div class="cell"><small>small ghost</small><button class="btn btn--ghost btn--sm">Show all</button></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>SearchInput</h2>
+    <p>.search-input · .search-input--sm — no submit button: the query is sent while typing. Clear (×) when there is text, a spinner while loading.</p>
+    <div class="row">
+      <div class="cell cell--wide"><small>empty</small>
+        <label class="search-input"><svg class="icon"><use href="#search"/></svg><input aria-label="Search shows" placeholder="Search shows, e.g. Dark"></label></div>
+      <div class="cell cell--wide"><small>hover</small>
+        <label class="search-input is-hover"><svg class="icon"><use href="#search"/></svg><input aria-label="Search shows" placeholder="Search shows, e.g. Dark"></label></div>
+      <div class="cell cell--wide"><small>focus, with text</small>
+        <label class="search-input is-active"><svg class="icon"><use href="#search"/></svg><input aria-label="Search shows" value="dark"><button class="search-input__clear" aria-label="Clear"><svg class="icon"><use href="#close"/></svg></button></label></div>
+      <div class="cell cell--wide"><small>loading</small>
+        <label class="search-input is-active"><svg class="icon"><use href="#search"/></svg><input aria-label="Search shows" value="dark"><span class="spinner" role="status" aria-label="Loading"></span></label></div>
+      <div class="cell cell--wide"><small>disabled</small>
+        <label class="search-input is-disabled"><svg class="icon"><use href="#search"/></svg><input aria-label="Search shows" placeholder="Search shows, e.g. Dark" disabled></label></div>
+      <div class="cell cell--wide"><small>small, in the header</small>
+        <label class="search-input search-input--sm"><svg class="icon"><use href="#search"/></svg><input aria-label="Search shows" value="dark"><button class="search-input__clear is-hover" aria-label="Clear"><svg class="icon"><use href="#close"/></svg></button></label></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Chip</h2>
+    <p>.chip · .chip--selected (aria-pressed="true") · .chip__count — the genre filter; «All» resets it</p>
+    <div class="row">
+      <div class="cell"><small>default</small><button class="chip">Drama <span class="chip__count">8</span></button></div>
+      <div class="cell"><small>hover</small><button class="chip is-hover">Drama <span class="chip__count">8</span></button></div>
+      <div class="cell"><small>active</small><button class="chip is-active">Drama <span class="chip__count">8</span></button></div>
+      <div class="cell"><small>focus</small><button class="chip is-focus">Drama <span class="chip__count">8</span></button></div>
+      <div class="cell"><small>selected</small><button class="chip" aria-pressed="true">Drama <span class="chip__count">8</span></button></div>
+      <div class="cell"><small>selected hover</small><button class="chip chip--selected is-hover">Drama <span class="chip__count">8</span></button></div>
+      <div class="cell"><small>disabled</small><button class="chip" disabled>Drama <span class="chip__count">8</span></button></div>
+    </div>
+    <div class="cell"><small>group</small>
+      <div class="chips"><button class="chip" aria-pressed="true">All <span class="chip__count">9</span></button><button class="chip">Drama <span class="chip__count">8</span></button><button class="chip">Science-Fiction <span class="chip__count">3</span></button><button class="chip">Crime <span class="chip__count">3</span></button><button class="chip">Thriller <span class="chip__count">1</span></button><button class="chip">Documentary <span class="chip__count">1</span></button></div></div>
+  </section>
+
+  <section class="group">
+    <h2>ShowCard</h2>
+    <p>.show-card — default, hover, with no rating, with no poster and no rating</p>
+    <div class="cards">
+      <div class="cell" style="justify-items: stretch"><small>default</small>
+        <a class="show-card" href="#"><div class="show-card__poster"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg" alt="Dark poster"><span class="show-card__rating">★ 8.2</span></div><h3 class="show-card__name">Dark</h3><p class="show-card__meta">2017–2020 · Drama, Science-Fiction</p></a></div>
+      <div class="cell" style="justify-items: stretch"><small>hover</small>
+        <a class="show-card is-hover" href="#"><div class="show-card__poster"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg" alt="Breaking Bad poster"><span class="show-card__rating">★ 9.2</span></div><h3 class="show-card__name">Breaking Bad</h3><p class="show-card__meta">2008–2019 · Drama, Crime, Thriller</p></a></div>
+      <div class="cell" style="justify-items: stretch"><small>no rating</small>
+        <a class="show-card" href="#"><div class="show-card__poster"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/548/1371406.jpg" alt="Severance poster"></div><h3 class="show-card__name">Severance</h3><p class="show-card__meta">2022– · Drama, Science-Fiction</p></a></div>
+      <div class="cell" style="justify-items: stretch"><small>no poster, no rating</small>
+        <a class="show-card" href="#"><div class="show-card__poster"><div class="show-card__no-poster"><svg class="icon"><use href="#film"/></svg>No poster</div></div><h3 class="show-card__name">Darkroom</h3><p class="show-card__meta">2019 · Documentary</p></a></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Pagination</h2>
+    <p>.pagination · .pagination__item (aria-current="page") · .pagination__gap · .pagination__info</p>
+    <div class="row">
+      <div class="cell"><small>first page</small>
+        <nav class="pagination" aria-label="Pages"><button class="pagination__item" disabled aria-label="Previous page"><svg class="icon"><use href="#chevron-left"/></svg></button><button class="pagination__item" aria-current="page">1</button><button class="pagination__item">2</button><button class="pagination__item">3</button><button class="pagination__item" aria-label="Next page"><svg class="icon"><use href="#chevron-right"/></svg></button></nav></div>
+      <div class="cell"><small>hover on 2</small>
+        <nav class="pagination" aria-label="Pages"><button class="pagination__item" disabled aria-label="Previous page"><svg class="icon"><use href="#chevron-left"/></svg></button><button class="pagination__item" aria-current="page">1</button><button class="pagination__item is-hover">2</button><button class="pagination__item">3</button><button class="pagination__item" aria-label="Next page"><svg class="icon"><use href="#chevron-right"/></svg></button></nav></div>
+    </div>
+    <div class="row">
+      <div class="cell"><small>many pages, with a gap</small>
+        <nav class="pagination" aria-label="Pages"><button class="pagination__item" aria-label="Previous page"><svg class="icon"><use href="#chevron-left"/></svg></button><button class="pagination__item">1</button><span class="pagination__gap">…</span><button class="pagination__item">4</button><button class="pagination__item" aria-current="page">5</button><button class="pagination__item">6</button><span class="pagination__gap">…</span><button class="pagination__item">12</button><button class="pagination__item" aria-label="Next page"><svg class="icon"><use href="#chevron-right"/></svg></button></nav>
+        <p class="pagination__info">Shows 13–15 of 34</p></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Skeleton and Spinner</h2>
+    <p>.skeleton--poster · .skeleton--line · .skeleton--line-short · .skeleton--chip · .spinner · .spinner--lg</p>
+    <div class="row">
+      <div class="cell"><small>spinner</small><span class="spinner" role="status" aria-label="Loading"></span></div>
+      <div class="cell"><small>spinner, large</small><span class="spinner spinner--lg" role="status" aria-label="Loading"></span></div>
+      <div class="cell"><small>chip</small><div class="skeleton skeleton--chip"></div></div>
+    </div>
+    <div class="cards">
+      <div class="cell" style="justify-items: stretch"><small>card</small><div><div class="skeleton skeleton--poster"></div><div class="skeleton skeleton--line"></div><div class="skeleton skeleton--line-short"></div></div></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>EmptyState and ErrorState</h2>
+    <p>.state · .state--error · .state__icon · .state__title · .state__text</p>
+    <div class="states">
+      <div class="cell" style="justify-items: stretch"><small>empty</small>
+        <div class="state"><div class="state__icon"><svg class="icon"><use href="#search-off"/></svg></div><h3 class="state__title">Nothing found for “qwzx”</h3><p class="state__text">Check the spelling or try another title.</p><button class="btn btn--ghost btn--sm">Clear search</button></div></div>
+      <div class="cell" style="justify-items: stretch"><small>error</small>
+        <div class="state state--error" role="alert"><div class="state__icon"><svg class="icon"><use href="#alert"/></svg></div><h3 class="state__title">Could not load shows</h3><p class="state__text">TVmaze did not answer. Check your connection and try again.</p><button class="btn btn--sm"><svg class="icon"><use href="#retry"/></svg>Retry</button></div></div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
