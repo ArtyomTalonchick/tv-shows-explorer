@@ -33,6 +33,8 @@ The loading, no-results and error states belong to the search: see `search.md`.
 
 - From the md breakpoint (768 px): three cards in a row, the poster above the name.
 - Below it: one card per row, a small poster on the left and the name and details beside it.
+- The card skeletons of the loading state keep the same layout as the cards, so the cards replace them without a
+  jump. (#13)
 
 ## Edge cases
 
