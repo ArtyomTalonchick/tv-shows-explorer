@@ -15,13 +15,7 @@ export function App() {
           >
             Coming soon
           </Text>
-          <Heading
-            as="h1"
-            fontSize="display"
-            fontWeight="black"
-            lineHeight="display"
-            letterSpacing="display"
-          >
+          <Heading as="h1" fontSize="display" fontWeight="black" lineHeight="display" letterSpacing="display">
             TV Shows Explorer
           </Heading>
           <Text fontSize="lg" color="fg.muted" mt="8">

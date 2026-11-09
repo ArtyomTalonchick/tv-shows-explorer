@@ -1,0 +1,6 @@
+# Hand-formatted design files: one line per component in CSS, mockups as written.
+design/
+dist/
+.history/
+package-lock.json
+*.md

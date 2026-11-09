@@ -6,3 +6,6 @@
 node_modules
 dist
 *.tsbuildinfo
+
+# VS Code Local History
+.history/
