@@ -10,3 +10,5 @@ the project's gh account.
 Code structure follows the simple-architecture plugin (the `simple-architecture` skill and the
 `architecture-reviewer` agent). Its config — the declared stack and the folder names — is
 `.claude/simple-architecture/config.json`.
+
+The owner's code preferences: `.claude/rules/code-style.md`.

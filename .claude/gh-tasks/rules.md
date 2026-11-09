@@ -48,7 +48,11 @@ These go into the task's commit, not a separate one:
 
 ## Close
 <!-- next-task, after closing: notes to update, knowledge to capture -->
-A new architecture question found during the task goes to the questions log of the simple-architecture plugin.
+- Feedback on the simple-architecture plugin found during the task (a gap in the rules, two rules in conflict, a
+  case the reviewer decided differently on different runs) goes to an issue in the plugin's project
+  (ArtyomTalonchick/claude-simple-architecture), labelled `status:inbox`: a new issue, or a comment on an open
+  feedback issue.
+- A code preference the owner stated during the task goes to `.claude/rules/code-style.md`, with the issue number.
 
 ## Triage
 <!-- triage, while rewriting a body: markers to keep, comment conventions, extra line semantics -->
