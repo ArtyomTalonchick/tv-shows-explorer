@@ -9,3 +9,6 @@ dist
 
 # VS Code Local History
 .history/
+
+# Screenshots and logs of the Playwright MCP browser
+.playwright-mcp/
