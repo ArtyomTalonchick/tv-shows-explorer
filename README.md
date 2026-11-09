@@ -5,8 +5,8 @@ the results three per page, and filter them by genre.
 
 **Live:** https://artyomtalonchick.github.io/tv-shows-explorer/
 
-It is the homework project of the Simple Architecture bootcamp. Each homework grows the same app, and the
-architecture rules written along the way are turned into AI rules (see [AI Rules](#ai-rules)).
+The app is built step by step on the Simple Architecture approach. The architecture rules written along the way
+are turned into AI rules (see [AI Rules](#ai-rules)).
 
 ## Features
 
@@ -20,15 +20,15 @@ What each feature does is described in [`requirements/`](requirements/README.md)
 
 ## Sprint process
 
-One homework = one version (a GitHub milestone `v0.N`) = one sprint. `v0.0` is a clean start: the scaffold,
-CI, deploy and the process itself.
+One sprint = one version (a GitHub milestone `v0.N`). `v0.0` is a clean start: the scaffold, CI, deploy and the
+process itself.
 
 Every sprint goes through five stages:
 
-1. **Rules.** After the lecture the architecture rules are written down and released in
+1. **Rules.** The architecture rules for the sprint are written down and released in
    [`claude-simple-architecture`](https://github.com/ArtyomTalonchick/claude-simple-architecture); the project
    updates the plugin.
-2. **Tasks.** The homework is split into GitHub Issues and planned as a milestone.
+2. **Tasks.** The sprint's scope is split into GitHub Issues and planned as a milestone.
 3. **Design.** The first task of every milestone is its design. It touches no app code; the mockup and its
    screenshots go into git under [`design/`](design/README.md).
 4. **Implementation.** The other tasks are built from the mockup, the `requirements/` files and the
