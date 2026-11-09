@@ -12,6 +12,7 @@ type TvmazeSearchResult = {
     premiered: string | null;
     ended: string | null;
     image: { medium: string; original: string } | null;
+    url: string;
   };
 };
 
@@ -31,5 +32,6 @@ export const searchShows = async (query: string, signal: AbortSignal): Promise<S
     premiered: show.premiered,
     ended: show.ended,
     image: show.image?.medium ?? null,
+    url: show.url,
   }));
 };

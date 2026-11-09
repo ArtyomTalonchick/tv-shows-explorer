@@ -17,7 +17,8 @@ The user finds TV shows by typing a query. TVmaze does the search
 3. The query is trimmed. A request goes out once the user has stopped typing for 400 ms, not on every key.
 4. A new query cancels the request that is still running. An answer that arrives for an older query is never
    shown.
-5. When the answer comes, the results area shows the count («10 shows», «1 show») and the found shows.
+5. When the answer comes, the results area shows the count («10 shows», «1 show») and the found shows as cards
+   by pages (see `results-list.md`).
 6. The × button in the field and the «Clear search» button empty the field and bring back the start screen.
 7. When the request fails, the error state offers Retry; Retry sends the current query again.
 
@@ -48,3 +49,4 @@ The user finds TV shows by typing a query. TVmaze does the search
 - The hero and the header swap with a view transition (the browser's View Transitions API, no animation library)
   lasting `durations.slow` (400 ms), a token added for it. (#8)
 - Until the results list (#9) brings the show cards, the results state shows a plain list of show names. (#8)
+  The cards and pagination replaced it in #9. (#9)

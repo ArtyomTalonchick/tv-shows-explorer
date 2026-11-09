@@ -7,6 +7,8 @@ export type Show = {
   premiered: string | null;
   ended: string | null;
   image: string | null;
+  // The show's page on TVmaze.
+  url: string;
 };
 
 export type SearchStatus = "idle" | "loading" | "results" | "empty" | "error";

@@ -24,7 +24,7 @@ export const usePresenter = ({ status, query, shows, onRetry, onClear }: SearchR
     isEmpty: status === "empty",
     isError: status === "error",
     hasResults: status === "results",
-    names: shows.map(({ id, name }) => ({ id, name })),
+    shows,
     onRetry,
     onClear,
   };

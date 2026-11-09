@@ -10,7 +10,7 @@ export type { SearchResultsProps } from "./usePresenter";
 
 // The results area: the heading, then the component of the current state.
 export const SearchResults = (props: SearchResultsProps) => {
-  const { query, countLabel, isLoading, isEmpty, isError, hasResults, names, onRetry, onClear } = usePresenter(props);
+  const { query, countLabel, isLoading, isEmpty, isError, hasResults, shows, onRetry, onClear } = usePresenter(props);
 
   return (
     <Container
@@ -26,7 +26,7 @@ export const SearchResults = (props: SearchResultsProps) => {
     >
       <ResultsHead query={query} count={countLabel} />
       {isLoading && <ResultsLoading />}
-      {hasResults && <ResultsList names={names} />}
+      {hasResults && <ResultsList shows={shows} />}
       {isEmpty && <ResultsEmpty query={query} onClear={onClear} />}
       {isError && <ResultsError onRetry={onRetry} />}
     </Container>

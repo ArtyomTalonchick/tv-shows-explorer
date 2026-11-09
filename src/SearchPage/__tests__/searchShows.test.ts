@@ -34,6 +34,7 @@ describe("searchShows", () => {
             premiered: "2017-12-01",
             ended: "2020-06-27",
             image: { medium: "m.jpg", original: "o.jpg" },
+            url: "https://www.tvmaze.com/shows/17861/dark",
           },
         },
         {
@@ -46,6 +47,7 @@ describe("searchShows", () => {
             premiered: null,
             ended: null,
             image: null,
+            url: "https://www.tvmaze.com/shows/2/darkroom",
           },
         },
       ]),
@@ -60,8 +62,18 @@ describe("searchShows", () => {
         premiered: "2017-12-01",
         ended: "2020-06-27",
         image: "m.jpg",
+        url: "https://www.tvmaze.com/shows/17861/dark",
       },
-      { id: 2, name: "Darkroom", genres: [], rating: null, premiered: null, ended: null, image: null },
+      {
+        id: 2,
+        name: "Darkroom",
+        genres: [],
+        rating: null,
+        premiered: null,
+        ended: null,
+        image: null,
+        url: "https://www.tvmaze.com/shows/2/darkroom",
+      },
     ]);
   });
 

@@ -15,6 +15,7 @@ const show = (id: number, name: string): Show => ({
   premiered: null,
   ended: null,
   image: null,
+  url: `https://www.tvmaze.com/shows/${id}`,
 });
 
 // A request the test answers by hand.
