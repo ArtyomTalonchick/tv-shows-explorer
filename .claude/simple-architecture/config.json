@@ -1,0 +1,12 @@
+{
+  "stack": ["react", "zustand"],
+  "root": "src",
+  "folders": {
+    "lib": "lib",
+    "uiKit": "lib/components",
+    "components": "components",
+    "hooks": "hooks",
+    "helpers": "helpers"
+  },
+  "maxFileLines": 150
+}
