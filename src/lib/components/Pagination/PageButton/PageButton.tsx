@@ -1,21 +1,17 @@
 import { chakra } from "@chakra-ui/react";
-import type { ReactNode } from "react";
+import { usePresenter, type PageButtonProps } from "./usePresenter";
 
-export type PageButtonProps = {
-  children: ReactNode;
-  onClick: () => void;
-  isCurrent?: boolean;
-  disabled?: boolean;
-  label?: string;
-};
+export type { PageButtonProps } from "./usePresenter";
 
 // .pagination__item of design/library: a round button, filled when it is the current page.
-export const PageButton = ({ children, onClick, isCurrent, disabled, label }: PageButtonProps) => {
+export const PageButton = (props: PageButtonProps) => {
+  const { children, onClick, disabled, label, ariaCurrent } = usePresenter(props);
+
   return (
     <chakra.button
       type="button"
       aria-label={label}
-      aria-current={isCurrent ? "page" : undefined}
+      aria-current={ariaCurrent}
       disabled={disabled}
       onClick={onClick}
       display="grid"
