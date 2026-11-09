@@ -51,7 +51,7 @@ body.tokens-pending { visibility: hidden; }
 
 /* ---------- Chip ---------- */
 .chips { display: flex; flex-wrap: wrap; gap: var(--spacing-2); }
-.chip { display: inline-flex; align-items: center; gap: var(--spacing-2); border: 1px solid var(--colors-border); background: transparent; color: var(--colors-fg-muted); border-radius: var(--radii-full); padding: var(--spacing-2) var(--spacing-4); font: var(--fontWeights-semibold) var(--fontSizes-sm) var(--fonts-body); cursor: pointer; white-space: nowrap; transition: background var(--durations-fast) var(--easings-standard), color var(--durations-fast) var(--easings-standard), border-color var(--durations-fast) var(--easings-standard); }
+.chip { display: inline-flex; align-items: center; gap: var(--spacing-2); border: 1px solid var(--colors-border); background: transparent; color: var(--colors-fg-muted); border-radius: var(--radii-full); padding: var(--spacing-2) var(--spacing-4); font: var(--fontWeights-semibold) var(--fontSizes-sm) / var(--lineHeights-tight) var(--fonts-body); cursor: pointer; white-space: nowrap; transition: background var(--durations-fast) var(--easings-standard), color var(--durations-fast) var(--easings-standard), border-color var(--durations-fast) var(--easings-standard); }
 .chip:hover, .chip.is-hover { background: var(--colors-bg-muted); color: var(--colors-fg); }
 .chip:active, .chip.is-active { background: var(--colors-bg-subtle); }
 .chip--selected, .chip[aria-pressed="true"] { background: var(--colors-accent-solid); border-color: var(--colors-accent-solid); color: var(--colors-accent-contrast); }
@@ -87,7 +87,7 @@ body.tokens-pending { visibility: hidden; }
 .skeleton--poster { aspect-ratio: 2 / 3; border-radius: var(--radii-md); }
 .skeleton--line { height: var(--spacing-4); margin-top: var(--spacing-4); width: 70%; }
 .skeleton--line-short { height: var(--spacing-3); margin-top: var(--spacing-2); width: 45%; }
-.skeleton--chip { height: var(--spacing-10); width: var(--spacing-24); border-radius: var(--radii-full); }
+.skeleton--chip { height: calc(var(--spacing-4) + var(--fontSizes-sm) * var(--lineHeights-tight) + 2px); width: var(--spacing-24); border-radius: var(--radii-full); }
 .spinner { width: var(--spacing-6); height: var(--spacing-6); flex: none; border: 3px solid var(--colors-bg-muted); border-top-color: var(--colors-accent-solid); border-radius: var(--radii-full); animation: spin var(--durations-spin) linear infinite; }
 .spinner--lg { width: var(--spacing-10); height: var(--spacing-10); border-width: 4px; }
 

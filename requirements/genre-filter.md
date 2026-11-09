@@ -32,6 +32,8 @@ the mood for.
 
 - From the md breakpoint (768 px): the chips wrap onto as many lines as they need.
 - Below it: one row that scrolls sideways, from edge to edge of the screen, with no scrollbar.
+- The chip skeletons of the loading state are as tall as the chips, so the cards below do not jump when the chips
+  replace them. (#13)
 
 ## Edge cases
 

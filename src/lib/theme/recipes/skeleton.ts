@@ -18,7 +18,13 @@ export const skeletonRecipe = defineRecipe({
       poster: { aspectRatio: "2 / 3", rounded: "md" },
       line: { h: "4", mt: "4", w: "70%", rounded: "sm" },
       lineShort: { h: "3", mt: "2", w: "45%", rounded: "sm" },
-      chip: { h: "10", w: "24", flexShrink: "0", rounded: "full" },
+      // As tall as Chip: its vertical padding, one line of its text and its border.
+      chip: {
+        h: "calc({spacing.4} + {fontSizes.sm} * {lineHeights.tight} + 2px)",
+        w: "24",
+        flexShrink: "0",
+        rounded: "full",
+      },
     },
   },
   defaultVariants: { shape: "none" },
