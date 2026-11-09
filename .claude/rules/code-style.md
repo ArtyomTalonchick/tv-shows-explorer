@@ -38,6 +38,20 @@ followed by hand. A new preference the owner states during a task is added here 
   // View: {pagination && <Pagination {...pagination} />}
   ```
 
+- Styles that depend on a variant (`size`, `tone`) are a table in the Presenter, checked with `satisfies Record<…>`
+  whose keys come from the props type and whose values are Chakra prop types, not only `as const`: a misspelt
+  style or a missing variant is then a type error. Values are not checked against the tokens (no `strictTokens`);
+  the editor's hints are enough. (#12)
+
+  ```ts
+  type Size = NonNullable<SearchInputProps["size"]>;
+  const SIZE_STYLES = {
+    md: { root: { py: "3" }, input: { fontSize: "lg" } },
+    sm: { root: { py: "2" }, input: { fontSize: "md" } },
+  } satisfies Record<Size, { root: HTMLChakraProps<"label">; input: HTMLChakraProps<"input"> }>;
+  // View: <chakra.label … {...sizeStyles.root}>
+  ```
+
 ## Styles
 
 - A component's styles are style props in its own JSX, not a recipe in the theme. A style repeated inside a
