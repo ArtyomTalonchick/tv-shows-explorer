@@ -10,7 +10,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -b",
     "test": "vitest run",
-    "typegen": "chakra typegen src/theme/system.ts --tsconfig tsconfig.app.json",
+    "typegen": "chakra typegen src/lib/theme/system.ts --tsconfig tsconfig.app.json",
     "postinstall": "npm run typegen",
     "format": "prettier . --write",
     "format:check": "prettier . --check"

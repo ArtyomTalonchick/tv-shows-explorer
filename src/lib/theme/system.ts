@@ -1,5 +1,5 @@
 import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
-import tokens from "../../design/tokens.json";
+import tokens from "../../../design/tokens.json";
 import { buttonRecipe } from "./recipes/button";
 import { iconRecipe } from "./recipes/icon";
 import { searchInputRecipe } from "./recipes/searchInput";
