@@ -30,11 +30,20 @@ followed by hand. A new preference the owner states during a task is added here 
 - Stateful logic is split by concern: the state of a control (value, handler, clear) and a request (debounce,
   cancellation, retry) are separate hooks, joined in the Presenter. (#8)
 - One component per screen and per state (loading, list, empty, error); the parent only chooses which to render. (#8)
+- A Presenter hands a child its props ready, typed by the child's props type, and the View spreads them; the View
+  does not take values apart only to put them back together: (#9)
+
+  ```ts
+  const pagination: PaginationProps | null = pageCount > 1 ? { page, perPage, total, onPageChange } : null;
+  // View: {pagination && <Pagination {...pagination} />}
+  ```
 
 ## Styles
 
-- Styles come from the theme: Chakra recipes and slot recipes for components, text styles for text. Components do
-  not carry long lists of style props. (#8)
+- A component's styles are style props in its own JSX, not a recipe in the theme. A style repeated inside a
+  component becomes a child component (`Pagination/PageButton`), not a shared style object. (#9)
+- The theme holds only what is global: tokens, text styles, global CSS, and overrides of Chakra's own components
+  (button, skeleton, spinner). (#9)
 - An asset has one source: icons are the design sprite, not copies of its paths in code. (#8)
 
 ## Imports and files
