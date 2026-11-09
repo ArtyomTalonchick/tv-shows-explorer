@@ -120,6 +120,7 @@ inside the safe zone (a centred circle of 40% radius), so the platform may cut a
 | `icon-maskable-512.png` | PWA manifest, `purpose: maskable` |
 
 The PNGs are exported from the SVGs (rendered in a browser at the exact size); a change to an SVG re-exports them.
+The app serves copies of the PNGs from `public/`: after an export, copy them there too.
 
 ## Process
 

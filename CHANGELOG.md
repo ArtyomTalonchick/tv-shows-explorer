@@ -10,5 +10,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   opens the show on TVmaze.
 - Filter the results by genre: chips with the genres of the found shows and their counts; «All» or a second click
   on the chip shows all the results again.
+- The app has its own icon and can be installed on a phone or a desktop.
 
 ## 0.0.0 — 2026-11-09

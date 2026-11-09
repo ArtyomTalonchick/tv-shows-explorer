@@ -1,0 +1,14 @@
+{
+  "name": "TV Shows Explorer",
+  "short_name": "TV Shows",
+  "start_url": "/tv-shows-explorer/",
+  "scope": "/tv-shows-explorer/",
+  "display": "standalone",
+  "theme_color": "#0E0E0F",
+  "background_color": "#0E0E0F",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
