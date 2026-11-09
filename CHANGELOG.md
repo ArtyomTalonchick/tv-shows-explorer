@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+## 0.1.0 — 2026-11-09
+
 - Search TV shows by name: results appear as you type, with loading, no-results and error states and Retry.
 - Results are show cards with the poster, rating, years and genres, three per page with pagination; a card
   opens the show on TVmaze.
