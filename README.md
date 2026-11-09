@@ -45,7 +45,7 @@ The tasks are run with the gh-tasks plugin for Claude Code; its project rules ar
 The architecture rules live in their own repository, a Claude Code plugin:
 [`claude-simple-architecture`](https://github.com/ArtyomTalonchick/claude-simple-architecture).
 Its versions follow the project's: this version uses
-[`v0.0.0`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.0.0).
+[`v0.1.0`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.1.0).
 
 In this repository:
 
