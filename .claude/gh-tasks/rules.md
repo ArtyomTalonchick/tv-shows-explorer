@@ -24,6 +24,9 @@ except under `auto`).
 - A design task changes only files under `design/`.
 - An implementation task first reads the mockup in `design/vX.Y/` (X.Y = the milestone version) and the
   `requirements/` files the issue names, then follows the `simple-architecture` skill.
+- Tests live in a `__tests__/` folder next to the code they test (`src/SearchPage/__tests__/useShowsRequest.test.ts`),
+  never beside the source files. Code of the folder that holds `__tests__/` is imported relatively
+  (`../useShowsRequest`); anything else through the `@/` alias.
 - `requirements/` is the source of truth. When the issue, the mockup or the code contradicts it, stop and ask
   the user; record the decision under `## Decisions` in that requirements file.
 

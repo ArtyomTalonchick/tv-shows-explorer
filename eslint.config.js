@@ -25,6 +25,14 @@ export default defineConfig([
     rules: {
       // async / await with try / catch instead of .then chains.
       "promise/prefer-await-to-then": "error",
+      // A component always has a body: when a Presenter call is added, the diff touches only that line.
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "VariableDeclarator[id.name=/^[A-Z]/] > ArrowFunctionExpression[expression=true]",
+          message: "Write a component with a body: `=> { return (...); }`.",
+        },
+      ],
     },
   },
   // Formatting is Prettier's: turn off the ESLint rules that would fight it. Keep this last.

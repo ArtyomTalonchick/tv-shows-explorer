@@ -33,11 +33,12 @@ body.tokens-pending { visibility: hidden; }
 
 /* ---------- SearchInput ---------- */
 /* No submit button: the query is sent while typing (debounced). Clear (×) shows when there is text,
-   the spinner replaces it while a request runs. */
+   the spinner replaces it while a request runs. The input is as tall as the clear button, so the field keeps
+   its height in every state. */
 .search-input { display: flex; align-items: center; gap: var(--spacing-3); width: 100%; max-width: var(--sizes-search); background: var(--colors-bg-glass); border: 1px solid var(--colors-border); border-radius: var(--radii-full); padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-6); color: var(--colors-fg-subtle); backdrop-filter: blur(var(--blurs-glass)); transition: border-color var(--durations-fast) var(--easings-standard); }
 .search-input:hover, .search-input.is-hover { border-color: var(--colors-fg-subtle); }
 .search-input:focus-within, .search-input.is-active { border-color: var(--colors-accent-solid); color: var(--colors-fg-muted); }
-.search-input input { flex: 1; min-width: 0; background: none; border: 0; padding: var(--spacing-1) 0; color: var(--colors-fg); font: var(--fontWeights-medium) var(--fontSizes-lg) var(--fonts-body); outline: none; }
+.search-input input { flex: 1; min-width: 0; background: none; border: 0; padding: var(--spacing-1) 0; color: var(--colors-fg); font: var(--fontWeights-medium) var(--fontSizes-lg) var(--fonts-body); outline: none; min-height: var(--spacing-8); }
 .search-input input::placeholder { color: var(--colors-fg-subtle); }
 .search-input__clear { display: grid; place-items: center; width: var(--spacing-8); height: var(--spacing-8); flex: none; border: 0; border-radius: var(--radii-full); background: var(--colors-bg-muted); color: var(--colors-fg-muted); cursor: pointer; }
 .search-input__clear:hover, .search-input__clear.is-hover { background: var(--colors-border); color: var(--colors-fg); }
