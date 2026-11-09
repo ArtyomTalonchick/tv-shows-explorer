@@ -1,4 +1,5 @@
 import { Container } from "@chakra-ui/react";
+import { GenreFilter } from "./GenreFilter/GenreFilter";
 import { ResultsEmpty } from "./ResultsEmpty/ResultsEmpty";
 import { ResultsError } from "./ResultsError/ResultsError";
 import { ResultsHead } from "./ResultsHead/ResultsHead";
@@ -8,9 +9,10 @@ import { usePresenter, type SearchResultsProps } from "./usePresenter";
 
 export type { SearchResultsProps } from "./usePresenter";
 
-// The results area: the heading, then the component of the current state.
+// The results area: the heading and the genre chips, then the component of the current state.
 export const SearchResults = (props: SearchResultsProps) => {
-  const { query, countLabel, isLoading, isEmpty, isError, hasResults, shows, onRetry, onClear } = usePresenter(props);
+  const { query, countLabel, genreFilter, isLoading, isEmpty, isError, hasResults, shows, onRetry, onClear } =
+    usePresenter(props);
 
   return (
     <Container
@@ -25,6 +27,7 @@ export const SearchResults = (props: SearchResultsProps) => {
       flexDirection="column"
     >
       <ResultsHead query={query} count={countLabel} />
+      {genreFilter && <GenreFilter {...genreFilter} />}
       {isLoading && <ResultsLoading />}
       {hasResults && <ResultsList shows={shows} />}
       {isEmpty && <ResultsEmpty query={query} onClear={onClear} />}

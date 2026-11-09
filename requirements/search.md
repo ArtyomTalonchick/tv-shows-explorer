@@ -18,7 +18,7 @@ The user finds TV shows by typing a query. TVmaze does the search
 4. A new query cancels the request that is still running. An answer that arrives for an older query is never
    shown.
 5. When the answer comes, the results area shows the count («10 shows», «1 show») and the found shows as cards
-   by pages (see `results-list.md`).
+   by pages (see `results-list.md`), with the genre chips above them (see `genre-filter.md`).
 6. The × button in the field and the «Clear search» button empty the field and bring back the start screen.
 7. When the request fails, the error state offers Retry; Retry sends the current query again.
 
@@ -27,7 +27,7 @@ The user finds TV shows by typing a query. TVmaze does the search
 | State | What the user sees |
 |---|---|
 | Idle | The start hero with the search field; no results area |
-| Loading | A spinner in the field instead of ×, three card skeletons in the list |
+| Loading | A spinner in the field instead of ×, five chip skeletons and three card skeletons in the list |
 | Results | The count and the found shows |
 | No results | «0 shows» and «Nothing found for “<query>”» with «Clear search» |
 | Error | «Could not load shows» with Retry |

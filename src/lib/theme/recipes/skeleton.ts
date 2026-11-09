@@ -18,6 +18,7 @@ export const skeletonRecipe = defineRecipe({
       poster: { aspectRatio: "2 / 3", rounded: "md" },
       line: { h: "4", mt: "4", w: "70%", rounded: "sm" },
       lineShort: { h: "3", mt: "2", w: "45%", rounded: "sm" },
+      chip: { h: "10", w: "24", flexShrink: "0", rounded: "full" },
     },
   },
   defaultVariants: { shape: "none" },
