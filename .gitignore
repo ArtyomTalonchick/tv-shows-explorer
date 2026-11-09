@@ -1,3 +1,8 @@
+# Local notes and files that never go to git
+.local/
+
 .claude/gh-tasks/config.local.json
-Homework.txt
-SimpleArchitecture.txt
+
+node_modules
+dist
+*.tsbuildinfo

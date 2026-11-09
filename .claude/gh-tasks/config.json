@@ -2,7 +2,7 @@
   "language": "en",
   "milestones": true,
   "version": { "scheme": "minor" },
-  "checks": [],
+  "checks": ["npm run lint", "npm run typecheck", "npm run test"],
   "commit": {
     "format": "type(scope): subject",
     "example": "feat(search): debounce the query and cancel the previous request",
