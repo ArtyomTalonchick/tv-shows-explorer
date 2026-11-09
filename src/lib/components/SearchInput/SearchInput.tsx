@@ -4,14 +4,41 @@ import { usePresenter, type SearchInputProps } from "./usePresenter";
 
 export type { SearchInputProps } from "./usePresenter";
 
-// The search field of design/library; the styles are the `searchInput` slot recipe of the theme.
+// .search-input of design/library: a pill with an icon, the field, and the clear button or the spinner.
 // No submit button: the query is sent while typing.
 export const SearchInput = (props: SearchInputProps) => {
-  const { styles, rootCss, label, placeholder, autoFocus, value, handleChange, onClear, isLoading, showClear } =
-    usePresenter(props);
+  const {
+    sizeStyles,
+    viewTransitionName,
+    label,
+    placeholder,
+    autoFocus,
+    value,
+    handleChange,
+    onClear,
+    isLoading,
+    showClear,
+  } = usePresenter(props);
 
   return (
-    <chakra.label css={rootCss}>
+    <chakra.label
+      display="flex"
+      alignItems="center"
+      gap="3"
+      w="full"
+      maxW="search"
+      bg="bg.glass"
+      borderWidth="1px"
+      borderColor="border"
+      rounded="full"
+      color="fg.subtle"
+      backdropFilter="blur({blurs.glass})"
+      transition="border-color {durations.fast} {easings.standard}"
+      viewTransitionName={viewTransitionName}
+      _hover={{ borderColor: "fg.subtle" }}
+      _focusWithin={{ borderColor: "accent.solid", color: "fg.muted" }}
+      {...sizeStyles.root}
+    >
       <Icon name="search" />
       <chakra.input
         type="search"
@@ -20,16 +47,42 @@ export const SearchInput = (props: SearchInputProps) => {
         value={value}
         onChange={handleChange}
         autoFocus={autoFocus}
-        css={styles.input}
+        flex="1"
+        minW="0"
+        bg="transparent"
+        border="0"
+        py="1"
+        // As tall as the clear button: the field keeps its height with the button, the spinner or neither.
+        minH="8"
+        color="fg"
+        fontWeight="medium"
+        lineHeight="tight"
+        outline="none"
+        _placeholder={{ color: "fg.subtle" }}
+        css={{ "&::-webkit-search-cancel-button": { display: "none" } }}
+        {...sizeStyles.input}
       />
       {isLoading && (
-        <chakra.span css={styles.spinner}>
+        <chakra.span display="flex" mx="2">
           <Spinner role="status" aria-label="Loading" />
         </chakra.span>
       )}
       {showClear && (
-        <chakra.button type="button" aria-label="Clear search" onClick={onClear} css={styles.clear}>
-          <Icon name="close" />
+        <chakra.button
+          type="button"
+          aria-label="Clear search"
+          onClick={onClear}
+          display="grid"
+          placeItems="center"
+          boxSize="8"
+          flex="none"
+          rounded="full"
+          bg="bg.muted"
+          color="fg.muted"
+          cursor="pointer"
+          _hover={{ bg: "border", color: "fg" }}
+        >
+          <Icon name="close" boxSize="4" />
         </chakra.button>
       )}
     </chakra.label>

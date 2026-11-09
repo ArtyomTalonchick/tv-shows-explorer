@@ -2,15 +2,14 @@ import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 import tokens from "../../../design/tokens.json";
 import { buttonRecipe } from "./recipes/button";
 import { iconRecipe } from "./recipes/icon";
-import { searchInputRecipe } from "./recipes/searchInput";
 import { skeletonRecipe } from "./recipes/skeleton";
 import { spinnerRecipe } from "./recipes/spinner";
-import { stateMessageRecipe } from "./recipes/stateMessage";
 import { textStyles } from "./textStyles";
 import { viewTransitionCss, viewTransitionKeyframes } from "./viewTransitions";
 
 // The theme is built from the design tokens as is: see design/README.md.
-// The components of design/library are recipes and text styles here; after a change, run `npm run typegen`.
+// It holds only what is global: tokens, text styles, global CSS and overrides of Chakra's own components; a
+// component of design/library keeps its styles in its own JSX. After a change, run `npm run typegen`.
 const config = defineConfig({
   theme: {
     tokens: tokens.tokens,
@@ -22,10 +21,6 @@ const config = defineConfig({
       icon: iconRecipe,
       skeleton: skeletonRecipe,
       spinner: spinnerRecipe,
-    },
-    slotRecipes: {
-      searchInput: searchInputRecipe,
-      stateMessage: stateMessageRecipe,
     },
   },
   globalCss: {

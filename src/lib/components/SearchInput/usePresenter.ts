@@ -1,4 +1,4 @@
-import { useSlotRecipe } from "@chakra-ui/react";
+import type { HTMLChakraProps } from "@chakra-ui/react";
 import type { ChangeEvent } from "react";
 
 export type SearchInputProps = {
@@ -14,6 +14,20 @@ export type SearchInputProps = {
   viewTransitionName?: string;
 };
 
+type Size = NonNullable<SearchInputProps["size"]>;
+
+// What changes between the sizes of the field: the padding of the pill and the size of the text.
+const SIZE_STYLES = {
+  md: {
+    root: { py: "3", ps: "6", pe: "3" },
+    input: { fontSize: "lg" },
+  },
+  sm: {
+    root: { py: "2", ps: "4", pe: "2" },
+    input: { fontSize: "md" },
+  },
+} satisfies Record<Size, { root: HTMLChakraProps<"label">; input: HTMLChakraProps<"input"> }>;
+
 export const usePresenter = ({
   value,
   onChange,
@@ -25,12 +39,9 @@ export const usePresenter = ({
   viewTransitionName,
   autoFocus,
 }: SearchInputProps) => {
-  const recipe = useSlotRecipe({ key: "searchInput" });
-  const styles = recipe({ size });
-
   return {
-    styles,
-    rootCss: { ...styles.root, viewTransitionName },
+    sizeStyles: SIZE_STYLES[size],
+    viewTransitionName,
     label,
     placeholder,
     autoFocus,
