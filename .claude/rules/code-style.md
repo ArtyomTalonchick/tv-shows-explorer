@@ -38,7 +38,14 @@ followed by hand. A new preference the owner states during a task is added here 
   ```
 
 - Stateful logic is split by concern: the state of a control (value, handler, clear) and a request (debounce,
-  cancellation, retry) are separate hooks, joined in the Presenter. (#8)
+  cancellation, retry) are separate hooks, joined in the Presenter. (#8) State of the screen is no exception: which
+  screen is shown and the swap between them is a hook of its own (`useScreenSwap`), so the Presenter only joins
+  hooks and hands out props, with no `useState` of its own. (#18)
+- A component that wraps a Chakra element takes that element's props, and declares only what it adds or changes:
+  `Omit<HTMLChakraProps<"input">, "value" | "onChange" | "size"> & { value: string; onChange: (value: string) => void; … }`.
+  The Presenter passes the rest on (`...inputProps`); the View spreads it after the component's own styles, so a
+  caller can change one, and before the attributes the component relies on, so a caller cannot replace them. `ref` is
+  declared by hand: Chakra's prop types leave it out. (#18)
 - One component per screen and per state (loading, list, empty, error); the parent only chooses which to render. (#8)
 - A Presenter hands a child its props ready, typed by the child's props type, and the View spreads them; the View
   does not take values apart only to put them back together: (#9)
