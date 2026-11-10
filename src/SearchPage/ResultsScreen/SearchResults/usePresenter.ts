@@ -1,5 +1,6 @@
 import type { SearchStatus, Show } from "@/SearchPage/types";
 import type { GenreFilterProps } from "./GenreFilter/GenreFilter";
+import type { ResultsHeadProps } from "./ResultsHead/ResultsHead";
 import { useGenreFilter } from "./useGenreFilter";
 
 export type SearchResultsProps = {
@@ -11,10 +12,12 @@ export type SearchResultsProps = {
 };
 
 type UsePresenterResult = Pick<SearchResultsProps, "query" | "shows" | "onRetry" | "onClear"> & {
-  // «9 shows», or «4 of 9 shows · Drama» while a genre is selected.
-  countLabel: string | null;
+  // «Shows for “dark”» with «9 shows», or «4 of 9 shows · Drama» while a genre is selected; hidden with an empty
+  // field.
+  head: ResultsHeadProps | null;
   // Hidden when no show of the results has a genre.
   genreFilter: GenreFilterProps | null;
+  isIdle: boolean;
   isLoading: boolean;
   isEmpty: boolean;
   isError: boolean;
@@ -41,11 +44,14 @@ export const usePresenter = ({ status, query, shows, onRetry, onClear }: SearchR
 
   const genreFilter: GenreFilterProps | null =
     hasResults && genres.length > 0 ? { genres, total: shows.length, selected: genre, onSelect: select } : null;
+  const trimmed = query.trim();
+  const head: ResultsHeadProps | null = status === "idle" ? null : { query: trimmed, count: countLabel };
 
   return {
-    query: query.trim(),
-    countLabel,
+    query: trimmed,
+    head,
     genreFilter,
+    isIdle: status === "idle",
     isLoading: status === "loading",
     isEmpty: status === "empty",
     isError: status === "error",

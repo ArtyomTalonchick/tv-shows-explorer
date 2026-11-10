@@ -8,18 +8,8 @@ export type { SearchInputProps } from "./usePresenter";
 // .search-input of design/library: a pill with an icon, the field, and the clear button or the spinner.
 // No submit button: the query is sent while typing.
 export const SearchInput: FC<SearchInputProps> = (props) => {
-  const {
-    sizeStyles,
-    viewTransitionName,
-    label,
-    placeholder,
-    autoFocus,
-    value,
-    handleChange,
-    onClear,
-    isLoading,
-    showClear,
-  } = usePresenter(props);
+  const { inputProps, sizeStyles, viewTransitionName, label, value, handleChange, onClear, isLoading, showClear } =
+    usePresenter(props);
 
   return (
     <chakra.label
@@ -42,12 +32,6 @@ export const SearchInput: FC<SearchInputProps> = (props) => {
     >
       <Icon name="search" />
       <chakra.input
-        type="search"
-        aria-label={label}
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        autoFocus={autoFocus}
         flex="1"
         minW="0"
         bg="transparent"
@@ -62,6 +46,12 @@ export const SearchInput: FC<SearchInputProps> = (props) => {
         _placeholder={{ color: "fg.subtle" }}
         css={{ "&::-webkit-search-cancel-button": { display: "none" } }}
         {...sizeStyles.input}
+        // After the styles, so a caller can change one; before the field's own props, so it cannot replace them.
+        {...inputProps}
+        type="search"
+        aria-label={label}
+        value={value}
+        onChange={handleChange}
       />
       {isLoading && (
         <chakra.span display="flex" mx="2">

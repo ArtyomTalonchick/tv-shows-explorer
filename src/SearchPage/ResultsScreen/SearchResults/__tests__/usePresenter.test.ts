@@ -22,7 +22,7 @@ describe("SearchResults usePresenter", () => {
   it("counts all the shows and offers their genres", () => {
     const { result } = render("results", SHOWS);
 
-    expect(result.current.countLabel).toBe("3 shows");
+    expect(result.current.head).toEqual({ query: "dark", count: "3 shows" });
     expect(result.current.genreFilter).toMatchObject({ total: 3, selected: null });
     expect(result.current.genreFilter?.genres.map(({ genre }) => genre)).toEqual(["Drama", "Comedy"]);
   });
@@ -32,19 +32,27 @@ describe("SearchResults usePresenter", () => {
 
     act(() => result.current.genreFilter?.onSelect("Comedy"));
 
-    expect(result.current.countLabel).toBe("1 of 3 shows · Comedy");
+    expect(result.current.head?.count).toBe("1 of 3 shows · Comedy");
     expect(result.current.shows.map(({ id }) => id)).toEqual([2]);
   });
 
   it("hides the chips when no show has a genre", () => {
     const { result } = render("results", [show(1, [])]);
 
-    expect(result.current.countLabel).toBe("1 show");
+    expect(result.current.head?.count).toBe("1 show");
     expect(result.current.genreFilter).toBeNull();
   });
 
   it("hides the chips outside the results", () => {
     expect(render("loading", []).result.current.genreFilter).toBeNull();
-    expect(render("empty", []).result.current.countLabel).toBe("0 shows");
+    expect(render("empty", []).result.current.head?.count).toBe("0 shows");
+  });
+
+  it("shows only the idle message for an empty field, with no heading", () => {
+    const { result } = render("idle", []);
+
+    expect(result.current.isIdle).toBe(true);
+    expect(result.current.head).toBeNull();
+    expect(result.current.genreFilter).toBeNull();
   });
 });

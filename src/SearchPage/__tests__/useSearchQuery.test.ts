@@ -5,7 +5,7 @@ describe("useSearchQuery", () => {
   it("starts empty", () => {
     const { result } = renderHook(() => useSearchQuery());
 
-    expect(result.current).toMatchObject({ value: "", trimmed: "", isEmpty: true });
+    expect(result.current).toMatchObject({ value: "", trimmed: "" });
   });
 
   it("keeps what the user typed and trims the query", () => {
@@ -13,7 +13,7 @@ describe("useSearchQuery", () => {
 
     act(() => result.current.handleChange("  dark "));
 
-    expect(result.current).toMatchObject({ value: "  dark ", trimmed: "dark", isEmpty: false });
+    expect(result.current).toMatchObject({ value: "  dark ", trimmed: "dark" });
   });
 
   it("treats a blank field as empty", () => {
@@ -21,7 +21,7 @@ describe("useSearchQuery", () => {
 
     act(() => result.current.handleChange("   "));
 
-    expect(result.current).toMatchObject({ value: "   ", trimmed: "", isEmpty: true });
+    expect(result.current).toMatchObject({ value: "   ", trimmed: "" });
   });
 
   it("clears the field", () => {
@@ -30,6 +30,6 @@ describe("useSearchQuery", () => {
 
     act(() => result.current.clear());
 
-    expect(result.current).toMatchObject({ value: "", isEmpty: true });
+    expect(result.current).toMatchObject({ value: "" });
   });
 });

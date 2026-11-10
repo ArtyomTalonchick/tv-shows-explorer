@@ -1,39 +1,35 @@
-import { withViewTransition } from "@/lib/helpers/withViewTransition";
+import type { ResultsScreenProps } from "./ResultsScreen/ResultsScreen";
+import type { SearchHeroProps } from "./SearchHero/SearchHero";
+import { useScreenSwap } from "./useScreenSwap";
 import { useSearchQuery } from "./useSearchQuery";
-import { useShowsRequest, type UseShowsRequestResult } from "./useShowsRequest";
+import { useShowsRequest } from "./useShowsRequest";
 
-// The results area names `shownQuery`, the query of the shown results, which may lag behind the field.
-type UsePresenterResult = UseShowsRequestResult & {
-  // The hero is shown until the field holds a query.
+type UsePresenterResult = {
   isStart: boolean;
-  query: string;
-  changeQuery: (next: string) => void;
-  clear: () => void;
+  hero: SearchHeroProps;
+  results: ResultsScreenProps;
 };
 
+// Joins the field, the request for its query and the screen swap. Typing and clearing stay on the results screen.
 export const usePresenter = (): UsePresenterResult => {
-  const { value, trimmed, isEmpty, handleChange, clear } = useSearchQuery();
+  const { value, trimmed, handleChange, clear } = useSearchQuery();
   const { status, shows, shownQuery, isLoading, retry } = useShowsRequest(trimmed);
-
-  // Swapping the start hero and the results screen is animated; typing within one of them is not.
-  const changeQuery = (next: string): void => {
-    const staysEmpty = next.trim() === "";
-    if (staysEmpty === isEmpty) {
-      handleChange(next);
-    } else {
-      withViewTransition(() => handleChange(next));
-    }
-  };
+  const { isStart, isSwapping, open, goHome } = useScreenSwap(clear);
 
   return {
-    isStart: isEmpty,
-    query: value,
-    shownQuery,
-    status,
-    shows,
-    isLoading,
-    changeQuery,
-    clear: () => withViewTransition(clear),
-    retry,
+    isStart,
+    hero: { query: value, onQueryChange: handleChange, onOpen: open },
+    results: {
+      query: value,
+      shownQuery,
+      status,
+      shows,
+      isLoading,
+      caretHidden: isSwapping,
+      onQueryChange: handleChange,
+      onClear: clear,
+      onRetry: retry,
+      onHome: goHome,
+    },
   };
 };

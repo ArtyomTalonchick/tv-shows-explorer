@@ -4,7 +4,6 @@ export type UseSearchQueryResult = {
   value: string;
   // Spaces around the query are not sent; a blank field counts as empty.
   trimmed: string;
-  isEmpty: boolean;
   handleChange: (value: string) => void;
   clear: () => void;
 };
@@ -17,7 +16,6 @@ export const useSearchQuery = (): UseSearchQueryResult => {
   return {
     value,
     trimmed,
-    isEmpty: trimmed === "",
     handleChange: setValue,
     clear: () => setValue(""),
   };

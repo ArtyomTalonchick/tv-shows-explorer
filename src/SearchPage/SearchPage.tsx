@@ -3,24 +3,13 @@ import { ResultsScreen } from "./ResultsScreen/ResultsScreen";
 import { SearchHero } from "./SearchHero/SearchHero";
 import { usePresenter } from "./usePresenter";
 
-// Decides which screen to show: the start hero, or the results screen once there is a query.
+// Decides which screen to show: the start hero, or the results screen once the field was focused.
 export const SearchPage: FC = () => {
-  const { isStart, query, shownQuery, status, shows, isLoading, changeQuery, clear, retry } = usePresenter();
+  const { isStart, hero, results } = usePresenter();
 
   if (isStart) {
-    return <SearchHero query={query} onQueryChange={changeQuery} />;
+    return <SearchHero {...hero} />;
   }
 
-  return (
-    <ResultsScreen
-      query={query}
-      shownQuery={shownQuery}
-      status={status}
-      shows={shows}
-      isLoading={isLoading}
-      onQueryChange={changeQuery}
-      onClear={clear}
-      onRetry={retry}
-    />
-  );
+  return <ResultsScreen {...results} />;
 };

@@ -9,9 +9,10 @@ export type { SearchHeroProps } from "./usePresenter";
 
 const layer = { content: '""', position: "absolute", inset: "0" } as const;
 
-// The start screen: the full-viewport hero with the search field only.
+// The start screen: the full-viewport hero with the search field only. The field is not focused on start:
+// focusing it opens the results screen.
 export const SearchHero: FC<SearchHeroProps> = (props) => {
-  const { query, onQueryChange, wall } = usePresenter(props);
+  const { query, onQueryChange, onOpen, handleTouchEnd, wall } = usePresenter(props);
 
   return (
     <Box
@@ -59,7 +60,10 @@ export const SearchHero: FC<SearchHeroProps> = (props) => {
           placeholder={SEARCH_PLACEHOLDER}
           value={query}
           onChange={onQueryChange}
-          autoFocus
+          onFocus={onOpen}
+          onTouchEnd={handleTouchEnd}
+          // The field hands the focus on at once; iOS would draw its caret flying away.
+          caretColor="transparent"
           viewTransitionName="search-field"
         />
       </Box>

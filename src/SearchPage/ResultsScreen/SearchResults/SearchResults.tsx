@@ -4,15 +4,17 @@ import { GenreFilter } from "./GenreFilter/GenreFilter";
 import { ResultsEmpty } from "./ResultsEmpty/ResultsEmpty";
 import { ResultsError } from "./ResultsError/ResultsError";
 import { ResultsHead } from "./ResultsHead/ResultsHead";
+import { ResultsIdle } from "./ResultsIdle/ResultsIdle";
 import { ResultsList } from "./ResultsList/ResultsList";
 import { ResultsLoading } from "./ResultsLoading/ResultsLoading";
 import { usePresenter, type SearchResultsProps } from "./usePresenter";
 
 export type { SearchResultsProps } from "./usePresenter";
 
-// The results area: the heading and the genre chips, then the component of the current state.
+// The results area: the heading and the genre chips, then the component of the current state. An empty field
+// shows only the idle message.
 export const SearchResults: FC<SearchResultsProps> = (props) => {
-  const { query, countLabel, genreFilter, isLoading, isEmpty, isError, hasResults, shows, onRetry, onClear } =
+  const { query, head, genreFilter, isIdle, isLoading, isEmpty, isError, hasResults, shows, onRetry, onClear } =
     usePresenter(props);
 
   return (
@@ -27,8 +29,9 @@ export const SearchResults: FC<SearchResultsProps> = (props) => {
       display="flex"
       flexDirection="column"
     >
-      <ResultsHead query={query} count={countLabel} />
+      {head && <ResultsHead {...head} />}
       {genreFilter && <GenreFilter {...genreFilter} />}
+      {isIdle && <ResultsIdle />}
       {isLoading && <ResultsLoading />}
       {hasResults && <ResultsList shows={shows} />}
       {isEmpty && <ResultsEmpty query={query} onClear={onClear} />}
