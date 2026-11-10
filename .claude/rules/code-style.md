@@ -38,9 +38,7 @@ followed by hand. A new preference the owner states during a task is added here 
   ```
 
 - Stateful logic is split by concern: the state of a control (value, handler, clear) and a request (debounce,
-  cancellation, retry) are separate hooks, joined in the Presenter. (#8) State of the screen is no exception: which
-  screen is shown and the swap between them is a hook of its own (`useScreenSwap`), so the Presenter only joins
-  hooks and hands out props, with no `useState` of its own. (#18)
+  cancellation, retry) are separate hooks, joined in the Presenter. (#8)
 - A component that wraps a Chakra element takes that element's props, and declares only what it adds or changes:
   `Omit<HTMLChakraProps<"input">, "value" | "onChange" | "size"> & { value: string; onChange: (value: string) => void; … }`.
   The Presenter passes the rest on (`...inputProps`); the View spreads it after the component's own styles, so a
