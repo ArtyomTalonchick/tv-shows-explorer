@@ -65,3 +65,5 @@ The user finds TV shows by typing a query. TVmaze does the search
 - Skeletons only when there are no found shows to keep on screen; otherwise the shown results stay until the
   answer to the next query arrives, and the heading names the query of the shown results, not the one in the
   field. The old results are not dimmed. (#17)
+- An emptied field passes the debounce at once, so the request in flight is cancelled and the same query typed
+  back within 400 ms is sent again instead of waiting for the old answer forever. (#20)

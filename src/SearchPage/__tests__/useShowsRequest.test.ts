@@ -211,4 +211,43 @@ describe("useShowsRequest", () => {
 
     expect(result.current).toMatchObject({ status: "loading", shows: [], shownQuery: "lost", isLoading: true });
   });
+
+  it("sends the query again when it is typed back within the debounce after the field was emptied", async () => {
+    const dark = [show(1, "Dark")];
+    searchMock.mockResolvedValue(dark);
+    const { result, rerender } = render();
+    rerender({ query: "dark" });
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+
+    rerender({ query: "" });
+    wait(100);
+    rerender({ query: "dark" });
+    expect(result.current).toMatchObject({ status: "loading", isLoading: true });
+
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+
+    expect(searchMock).toHaveBeenCalledTimes(2);
+    expect(result.current).toMatchObject({ status: "results", shows: dark, isLoading: false });
+  });
+
+  it("does not send the old query when another one is typed within the debounce after the field was emptied", async () => {
+    searchMock.mockResolvedValueOnce([show(1, "Dark")]).mockReturnValueOnce(new Promise(() => {}));
+    const { result, rerender } = render();
+    rerender({ query: "dark" });
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+
+    rerender({ query: "" });
+    wait(100);
+    rerender({ query: "d" });
+    await flush();
+
+    expect(searchMock).toHaveBeenCalledTimes(1);
+    expect(result.current).toMatchObject({ status: "loading", shows: [], shownQuery: "d" });
+
+    wait(SEARCH_DEBOUNCE_MS);
+    expect(searchMock).toHaveBeenLastCalledWith("d", expect.any(AbortSignal));
+  });
 });
