@@ -51,6 +51,9 @@ The user finds TV shows by typing a query. TVmaze does the search
 - The query is trimmed before it is sent; a whitespace-only query counts as empty. (#8)
 - Retry repeats the current query. (#8)
 - Requests are handled by the app's own code (`useEffect` + `AbortController`), without a query library. (#8)
+- TVmaze is asked through an API layer with no React in it: `SearchPage/searchShows` (the TVmaze URL and the
+  mapping to `Show`) over `lib/helpers/fetchJson` (`fetch`, the non-2xx check, `json()`). The caller passes the
+  `AbortSignal`; debounce, cancellation and Retry stay in `useShowsRequest`. (#16)
 - The hero and the header swap with a view transition (the browser's View Transitions API, no animation library)
   lasting `durations.slow` (400 ms), a token added for it. (#8)
 - Until the results list (#9) brings the show cards, the results state shows a plain list of show names. (#8)

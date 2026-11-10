@@ -10,6 +10,8 @@ export const SEARCH_DEBOUNCE_MS = 400;
 type Outcome = { key: string; query: string; shows: Show[] } | { key: string; query: string; failed: true };
 
 // The TVmaze request for a trimmed query: debounce, one request at a time, Retry.
+// The request part (cancellation, the answer kept by key, Retry) can become a generic `useRequest(key, fn)` in
+// `lib/hooks` once a second request appears; with one user it stays here.
 export const useShowsRequest = (query: string) => {
   const [attempt, setAttempt] = useState(0);
   const [outcome, setOutcome] = useState<Outcome | null>(null);

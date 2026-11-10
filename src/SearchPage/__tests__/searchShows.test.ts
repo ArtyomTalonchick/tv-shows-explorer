@@ -77,9 +77,9 @@ describe("searchShows", () => {
     ]);
   });
 
-  it("rejects on a non-2xx answer", async () => {
+  it("rejects when the request fails", async () => {
     vi.stubGlobal("fetch", respond({ message: "busy" }, 503));
 
-    await expect(searchShows("dark", new AbortController().signal)).rejects.toThrow("TVmaze answered 503");
+    await expect(searchShows("dark", new AbortController().signal)).rejects.toThrow("503");
   });
 });
