@@ -1,4 +1,5 @@
 import { Box, Container } from "@chakra-ui/react";
+import type { FC } from "react";
 import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
 import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/constants";
 import { Logo } from "@/SearchPage/components/Logo/Logo";
@@ -12,7 +13,7 @@ export type SearchBarProps = {
 
 // The compact header shown once there is a query. Its field takes over the focus from the hero's field,
 // and the view transition moves the field and the logo here from the hero.
-export const SearchBar = ({ query, isLoading, onQueryChange, onClear }: SearchBarProps) => {
+export const SearchBar: FC<SearchBarProps> = ({ query, isLoading, onQueryChange, onClear }) => {
   return (
     <Box
       as="header"

@@ -1,10 +1,11 @@
 import { Icon as ChakraIcon } from "@chakra-ui/react";
+import type { FC } from "react";
 import { usePresenter, type IconProps } from "./usePresenter";
 
 export type { IconName, IconProps } from "./usePresenter";
 
 // An icon of the design/library sprite. The attributes are the sprite's contract: 24x24, a line in currentColor.
-export const Icon = (props: IconProps) => {
+export const Icon: FC<IconProps> = (props) => {
   const { href, rest } = usePresenter(props);
 
   return (

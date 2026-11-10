@@ -9,12 +9,17 @@ export type ChipProps = {
   disabled?: boolean;
 };
 
-export const usePresenter = ({ selected = false, count, ...rest }: ChipProps) => {
+type UsePresenterResult = Omit<ChipProps, "selected"> & {
+  hasCount: boolean;
+  // A toggle button: screen readers hear «pressed», and the filled style (`_pressed`) follows it.
+  ariaPressed: boolean;
+};
+
+export const usePresenter = ({ selected = false, count, ...rest }: ChipProps): UsePresenterResult => {
   return {
     ...rest,
     count,
     hasCount: count !== undefined,
-    // A toggle button: screen readers hear «pressed», and the filled style (`_pressed`) follows it.
     ariaPressed: selected,
   };
 };

@@ -9,13 +9,19 @@ export type GenreFilterProps = {
   onSelect: (genre: string | null) => void;
 };
 
-export const usePresenter = ({ genres, total, selected, onSelect }: GenreFilterProps) => {
-  const all: { key: string; props: ChipProps } = {
+type ChipItem = { key: string; props: ChipProps };
+
+type UsePresenterResult = {
+  chips: ChipItem[];
+};
+
+export const usePresenter = ({ genres, total, selected, onSelect }: GenreFilterProps): UsePresenterResult => {
+  const all: ChipItem = {
     key: "",
     props: { children: "All", count: total, selected: selected === null, onClick: () => onSelect(null) },
   };
 
-  const chips = genres.map(({ genre, count }): { key: string; props: ChipProps } => ({
+  const chips = genres.map(({ genre, count }): ChipItem => ({
     key: genre,
     props: { children: genre, count, selected: genre === selected, onClick: () => onSelect(genre) },
   }));

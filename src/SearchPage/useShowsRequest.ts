@@ -1,12 +1,16 @@
 import { useDebouncedValue } from "@/lib/hooks/useDebouncedValue";
 import { useRequest } from "@/lib/hooks/useRequest";
-import { getSearchView } from "./getSearchView";
+import { getSearchView, type SearchView } from "./getSearchView";
 import { searchShows } from "./searchShows";
 
 export const SEARCH_DEBOUNCE_MS = 400;
 
+export type UseShowsRequestResult = SearchView & {
+  retry: () => void;
+};
+
 // The TVmaze request for a trimmed query: sent once typing stops, cancelled by the next one, repeated by Retry.
-export const useShowsRequest = (query: string) => {
+export const useShowsRequest = (query: string): UseShowsRequestResult => {
   // An emptied field passes at once: the same query typed back is then a new request, not the old one kept.
   const debounced = useDebouncedValue(query, query === "" ? 0 : SEARCH_DEBOUNCE_MS);
   const { latest, current, retry, reset } = useRequest(searchShows, debounced === "" ? null : debounced);

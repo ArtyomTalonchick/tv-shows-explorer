@@ -15,7 +15,16 @@ type SearchViewInput = {
 };
 
 // What the results area shows for the query in the field.
-export const getSearchView = ({ query, debounced, current, latest }: SearchViewInput) => {
+export type SearchView = {
+  status: SearchStatus;
+  shows: Show[];
+  // The query the shown answer belongs to; the query being loaded while there is none.
+  shownQuery: string;
+  // The request for the query as it is now has not answered yet.
+  isLoading: boolean;
+};
+
+export const getSearchView = ({ query, debounced, current, latest }: SearchViewInput): SearchView => {
   // The answer to the query as it is now.
   const answer = query !== "" && query === debounced ? current : null;
   // Found shows stay on screen while the next query waits and loads; an empty or failed answer does not.
@@ -40,9 +49,7 @@ export const getSearchView = ({ query, debounced, current, latest }: SearchViewI
   return {
     status,
     shows,
-    // The query the shown answer belongs to; the query being loaded while there is none.
     shownQuery: shown?.params ?? query,
-    // The request for the query as it is now has not answered yet.
     isLoading: query !== "" && answer === null,
   };
 };

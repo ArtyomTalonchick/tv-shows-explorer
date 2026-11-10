@@ -2,7 +2,7 @@ import { flushSync } from "react-dom";
 
 // Runs a React state update as a view transition: the browser animates from the page before the update to the
 // page after it. Without the View Transitions API the update just runs.
-export const withViewTransition = (update: () => void) => {
+export const withViewTransition = (update: () => void): void => {
   if (typeof document.startViewTransition !== "function") {
     update();
     return;

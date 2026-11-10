@@ -8,11 +8,24 @@ export type RequestAnswer<P, T> = {
   failed: boolean;
 };
 
+export type UseRequestResult<P, T> = {
+  // The last answer, to these params or to earlier ones.
+  latest: RequestAnswer<P, T> | null;
+  // The answer to these params and this attempt, once it has arrived.
+  current: RequestAnswer<P, T> | null;
+  retry: () => void;
+  // Forgets the last answer.
+  reset: () => void;
+};
+
 // Runs `request(params, signal)` whenever `params` changes or Retry is pressed; `null` params send nothing.
 // A new request cancels the previous one, and an answer to it, if it still arrives, is dropped.
 // `params` are compared with `===`: a string, a number or a stable object. `request` must be stable too
 // (declared at module level), or every render sends a new request.
-export const useRequest = <P, T>(request: (params: P, signal: AbortSignal) => Promise<T>, params: P | null) => {
+export const useRequest = <P, T>(
+  request: (params: P, signal: AbortSignal) => Promise<T>,
+  params: P | null,
+): UseRequestResult<P, T> => {
   const [attempt, setAttempt] = useState(0);
   const [latest, setLatest] = useState<RequestAnswer<P, T> | null>(null);
 
@@ -23,7 +36,7 @@ export const useRequest = <P, T>(request: (params: P, signal: AbortSignal) => Pr
 
     // New params or a Retry run the cleanup first: the previous request is cancelled.
     const controller = new AbortController();
-    const load = async () => {
+    const load = async (): Promise<void> => {
       try {
         const data = await request(params, controller.signal);
         if (!controller.signal.aborted) {
@@ -41,12 +54,9 @@ export const useRequest = <P, T>(request: (params: P, signal: AbortSignal) => Pr
   }, [request, params, attempt]);
 
   return {
-    // The last answer, to these params or to earlier ones.
     latest,
-    // The answer to these params and this attempt, once it has arrived.
     current: latest !== null && latest.params === params && latest.attempt === attempt ? latest : null,
     retry: () => setAttempt((n) => n + 1),
-    // Forgets the last answer.
     reset: () => setLatest(null),
   };
 };

@@ -1,4 +1,5 @@
 import { Box, Button } from "@chakra-ui/react";
+import type { FC } from "react";
 import { StateMessage } from "@/lib/components/StateMessage/StateMessage";
 
 export type ResultsEmptyProps = {
@@ -7,7 +8,7 @@ export type ResultsEmptyProps = {
 };
 
 // No results: TVmaze found nothing for the query.
-export const ResultsEmpty = ({ query, onClear }: ResultsEmptyProps) => {
+export const ResultsEmpty: FC<ResultsEmptyProps> = ({ query, onClear }) => {
   return (
     <Box flex="1" display="grid" mt="4">
       <StateMessage

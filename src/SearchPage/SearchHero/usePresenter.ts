@@ -19,7 +19,12 @@ export type SearchHeroProps = {
   onQueryChange: (query: string) => void;
 };
 
-export const usePresenter = ({ query, onQueryChange }: SearchHeroProps) => {
+type UsePresenterResult = SearchHeroProps & {
+  // The posters behind the hero.
+  wall: { key: string; src: string }[];
+};
+
+export const usePresenter = ({ query, onQueryChange }: SearchHeroProps): UsePresenterResult => {
   const wall = useMemo(
     () =>
       POSTER_PATHS.flatMap((path, i) =>

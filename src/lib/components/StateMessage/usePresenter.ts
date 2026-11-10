@@ -12,17 +12,24 @@ export type StateMessageProps = {
 
 type Tone = NonNullable<StateMessageProps["tone"]>;
 
+type ToneStyles = { borderStyle: BoxProps["borderStyle"]; indicatorColor: BoxProps["color"] };
+
 // What changes between the tones: an error has a solid border and an accent icon.
 const TONE_STYLES = {
   neutral: { borderStyle: "dashed", indicatorColor: "fg.muted" },
   error: { borderStyle: "solid", indicatorColor: "accent.fg" },
-} satisfies Record<Tone, { borderStyle: BoxProps["borderStyle"]; indicatorColor: BoxProps["color"] }>;
+} satisfies Record<Tone, ToneStyles>;
 
-export const usePresenter = ({ tone = "neutral", ...rest }: StateMessageProps) => {
+type UsePresenterResult = Omit<StateMessageProps, "tone"> &
+  ToneStyles & {
+    // An error is announced to screen readers as soon as it appears.
+    role: "alert" | undefined;
+  };
+
+export const usePresenter = ({ tone = "neutral", ...rest }: StateMessageProps): UsePresenterResult => {
   return {
     ...rest,
     ...TONE_STYLES[tone],
-    // An error is announced to screen readers as soon as it appears.
     role: tone === "error" ? "alert" : undefined,
   };
 };

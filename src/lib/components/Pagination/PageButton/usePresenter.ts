@@ -8,10 +8,14 @@ export type PageButtonProps = {
   label?: string;
 };
 
-export const usePresenter = ({ isCurrent, ...rest }: PageButtonProps) => {
+type UsePresenterResult = Omit<PageButtonProps, "isCurrent"> & {
+  // Marks the current page for screen readers and for the filled style (`_currentPage`).
+  ariaCurrent: "page" | undefined;
+};
+
+export const usePresenter = ({ isCurrent, ...rest }: PageButtonProps): UsePresenterResult => {
   return {
     ...rest,
-    // Marks the current page for screen readers and for the filled style (`_currentPage`).
-    ariaCurrent: isCurrent ? ("page" as const) : undefined,
+    ariaCurrent: isCurrent ? "page" : undefined,
   };
 };

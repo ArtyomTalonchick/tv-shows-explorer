@@ -1,5 +1,6 @@
+import type { FC } from "react";
 import { SearchPage } from "./SearchPage/SearchPage";
 
-export function App() {
+export const App: FC = () => {
   return <SearchPage />;
-}
+};

@@ -10,11 +10,21 @@ export type SearchResultsProps = {
   onClear: () => void;
 };
 
-export const usePresenter = ({ status, query, shows, onRetry, onClear }: SearchResultsProps) => {
+type UsePresenterResult = Pick<SearchResultsProps, "query" | "shows" | "onRetry" | "onClear"> & {
+  // «9 shows», or «4 of 9 shows · Drama» while a genre is selected.
+  countLabel: string | null;
+  // Hidden when no show of the results has a genre.
+  genreFilter: GenreFilterProps | null;
+  isLoading: boolean;
+  isEmpty: boolean;
+  isError: boolean;
+  hasResults: boolean;
+};
+
+export const usePresenter = ({ status, query, shows, onRetry, onClear }: SearchResultsProps): UsePresenterResult => {
   const { genre, genres, filteredShows, select } = useGenreFilter(shows);
   const hasResults = status === "results";
 
-  // «9 shows», or «4 of 9 shows · Drama» while a genre is selected.
   const countLabel = ((): string | null => {
     if (status === "empty") {
       return "0 shows";
@@ -29,7 +39,6 @@ export const usePresenter = ({ status, query, shows, onRetry, onClear }: SearchR
     return `${filteredShows.length} of ${all} · ${genre}`;
   })();
 
-  // Hidden when no show of the results has a genre.
   const genreFilter: GenreFilterProps | null =
     hasResults && genres.length > 0 ? { genres, total: shows.length, selected: genre, onSelect: select } : null;
 

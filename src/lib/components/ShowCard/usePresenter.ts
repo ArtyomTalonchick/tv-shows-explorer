@@ -8,14 +8,21 @@ export type ShowCardProps = {
   meta: string;
 };
 
-export const usePresenter = ({ name, href, image, rating, meta }: ShowCardProps) => {
+type UsePresenterResult = Pick<ShowCardProps, "name" | "href" | "meta"> & {
+  imageSrc: string | undefined;
+  imageAlt: string;
+  hasImage: boolean;
+  // A whole rating keeps its decimal: «★ 8.0», like «★ 8.2».
+  ratingLabel: string | null;
+};
+
+export const usePresenter = ({ name, href, image, rating, meta }: ShowCardProps): UsePresenterResult => {
   return {
     name,
     href,
     imageSrc: image ?? undefined,
     imageAlt: `${name} poster`,
     hasImage: image !== null,
-    // A whole rating keeps its decimal: «★ 8.0», like «★ 8.2».
     ratingLabel: rating === null ? null : `★ ${rating.toFixed(1)}`,
     meta,
   };

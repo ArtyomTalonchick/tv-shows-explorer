@@ -15,6 +15,16 @@ followed by hand. A new preference the owner states during a task is added here 
 
 ## Code
 
+- A function declares its return type, so a reader sees what it returns without scrolling to its end. ESLint
+  `@typescript-eslint/explicit-function-return-type`; callbacks typed by their place (`onClick={() => …}`,
+  `.map(…)`) and tests are left out. (#19)
+  - A component is typed by its variable: `export const Chip: FC<ChipProps> = (props) => { … }`, with
+    `import type { FC } from "react"`; never `function Name()`. ESLint `no-restricted-syntax`.
+  - A hook that returns an object has an exported named type, `UseRequestResult<P, T>`; a `usePresenter` has a
+    local `UsePresenterResult`, reusing the props type where it passes props on
+    (`Omit<ChipProps, "selected"> & { … }`). A comment on a returned field goes on the type's field.
+  - A function inside a hook says it too: `const select = (next: string | null): void => { … }`.
+
 - `const` over `let`. A value chosen by several branches is an IIFE with early returns, not a `let` reassigned in
   `if` / `else`: (#8)
 

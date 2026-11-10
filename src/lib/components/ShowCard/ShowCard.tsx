@@ -1,4 +1,5 @@
 import { Box, chakra, Heading, Text } from "@chakra-ui/react";
+import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { usePresenter, type ShowCardProps } from "./usePresenter";
 
@@ -6,7 +7,7 @@ export type { ShowCardProps } from "./usePresenter";
 
 // ShowCard of design/library: the poster with the rating, the name and one line of details. From md the poster is
 // above the text; below it, a thumbnail sits beside the text, as in the one-column list of design/v0.1.
-export const ShowCard = (props: ShowCardProps) => {
+export const ShowCard: FC<ShowCardProps> = (props) => {
   const { name, href, imageSrc, imageAlt, hasImage, ratingLabel, meta } = usePresenter(props);
 
   return (

@@ -1,4 +1,5 @@
 import { Box, Button } from "@chakra-ui/react";
+import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { StateMessage } from "@/lib/components/StateMessage/StateMessage";
 
@@ -7,7 +8,7 @@ export type ResultsErrorProps = {
 };
 
 // Error: the request failed; Retry sends the current query again.
-export const ResultsError = ({ onRetry }: ResultsErrorProps) => {
+export const ResultsError: FC<ResultsErrorProps> = ({ onRetry }) => {
   return (
     <Box flex="1" display="grid" mt="4">
       <StateMessage

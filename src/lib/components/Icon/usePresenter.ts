@@ -18,7 +18,12 @@ export type IconName = (typeof ICON_NAMES)[number];
 
 export type IconProps = Omit<ChakraIconProps, "children"> & { name: IconName };
 
-export const usePresenter = ({ name, ...rest }: IconProps) => ({
+type UsePresenterResult = {
+  href: string;
+  rest: Omit<IconProps, "name">;
+};
+
+export const usePresenter = ({ name, ...rest }: IconProps): UsePresenterResult => ({
   href: `${spriteUrl}#${name}`,
   rest,
 });

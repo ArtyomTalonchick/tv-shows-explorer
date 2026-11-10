@@ -1,4 +1,5 @@
 import { Box, Skeleton } from "@chakra-ui/react";
+import type { FC } from "react";
 import { SkeletonCard } from "@/lib/components/SkeletonCard/SkeletonCard";
 
 // Placeholders for a row of genre chips.
@@ -8,7 +9,7 @@ const CHIP_SKELETONS = [1, 2, 3, 4, 5];
 const CARD_SKELETONS = [1, 2, 3];
 
 // Loading: chip and card skeletons while the request runs.
-export const ResultsLoading = () => {
+export const ResultsLoading: FC = () => {
   return (
     <Box>
       <Box

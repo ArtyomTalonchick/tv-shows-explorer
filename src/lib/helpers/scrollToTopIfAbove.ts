@@ -1,6 +1,6 @@
 // Scrolls the page to the top when the start of `element` has gone above the viewport, so the user sees the
 // beginning of what changed. Smooth, unless the user asks for reduced motion.
-export const scrollToTopIfAbove = (element: HTMLElement | null) => {
+export const scrollToTopIfAbove = (element: HTMLElement | null): void => {
   if (!element || element.getBoundingClientRect().top >= 0) {
     return;
   }

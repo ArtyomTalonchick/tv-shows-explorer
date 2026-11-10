@@ -16,6 +16,8 @@ export type SearchInputProps = {
 
 type Size = NonNullable<SearchInputProps["size"]>;
 
+type SizeStyles = { root: HTMLChakraProps<"label">; input: HTMLChakraProps<"input"> };
+
 // What changes between the sizes of the field: the padding of the pill and the size of the text.
 const SIZE_STYLES = {
   md: {
@@ -26,7 +28,18 @@ const SIZE_STYLES = {
     root: { py: "2", ps: "4", pe: "2" },
     input: { fontSize: "md" },
   },
-} satisfies Record<Size, { root: HTMLChakraProps<"label">; input: HTMLChakraProps<"input"> }>;
+} satisfies Record<Size, SizeStyles>;
+
+type UsePresenterResult = Pick<
+  SearchInputProps,
+  "value" | "onClear" | "label" | "placeholder" | "autoFocus" | "viewTransitionName"
+> & {
+  sizeStyles: SizeStyles;
+  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  isLoading: boolean;
+  // The spinner replaces the clear button while a request runs.
+  showClear: boolean;
+};
 
 export const usePresenter = ({
   value,
@@ -38,7 +51,7 @@ export const usePresenter = ({
   placeholder,
   viewTransitionName,
   autoFocus,
-}: SearchInputProps) => {
+}: SearchInputProps): UsePresenterResult => {
   return {
     sizeStyles: SIZE_STYLES[size],
     viewTransitionName,
@@ -49,7 +62,6 @@ export const usePresenter = ({
     handleChange: (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.value),
     onClear,
     isLoading,
-    // The spinner replaces the clear button while a request runs.
     showClear: !isLoading && value !== "" && onClear !== undefined,
   };
 };

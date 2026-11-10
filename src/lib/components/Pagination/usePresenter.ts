@@ -9,9 +9,20 @@ export type PaginationProps = {
   onPageChange: (page: number) => void;
 };
 
+type UsePresenterResult = {
+  pages: { number: number; isCurrent: boolean }[];
+  isFirst: boolean;
+  isLast: boolean;
+  // «Shows 4–6 of 8»; a page of one item names just it: «Shows 10 of 10».
+  info: string;
+  goTo: (page: number) => void;
+  goBack: () => void;
+  goNext: () => void;
+};
+
 // Every page gets a button: lists here are short (TVmaze search returns at most 10 shows), so the «…» gap of
 // design/library is not needed yet.
-export const usePresenter = ({ page, perPage, total, onPageChange }: PaginationProps) => {
+export const usePresenter = ({ page, perPage, total, onPageChange }: PaginationProps): UsePresenterResult => {
   const pageCount = getPageCount(total, perPage);
   const first = (page - 1) * perPage + 1;
   const last = Math.min(page * perPage, total);
@@ -23,7 +34,6 @@ export const usePresenter = ({ page, perPage, total, onPageChange }: PaginationP
     })),
     isFirst: page === 1,
     isLast: page === pageCount,
-    // «Shows 4–6 of 8»; a page of one item names just it: «Shows 10 of 10».
     info: first === last ? `Shows ${first} of ${total}` : `Shows ${first}–${last} of ${total}`,
     goTo: onPageChange,
     goBack: () => onPageChange(page - 1),

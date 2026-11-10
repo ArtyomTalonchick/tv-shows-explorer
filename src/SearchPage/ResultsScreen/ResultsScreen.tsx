@@ -1,4 +1,5 @@
 import { Box } from "@chakra-ui/react";
+import type { FC } from "react";
 import type { SearchStatus, Show } from "@/SearchPage/types";
 import { SearchBar } from "./SearchBar/SearchBar";
 import { SearchResults } from "./SearchResults/SearchResults";
@@ -16,7 +17,7 @@ export type ResultsScreenProps = {
 };
 
 // The screen with a query: the compact search bar and the results below it.
-export const ResultsScreen = ({
+export const ResultsScreen: FC<ResultsScreenProps> = ({
   query,
   shownQuery,
   status,
@@ -25,7 +26,7 @@ export const ResultsScreen = ({
   onQueryChange,
   onClear,
   onRetry,
-}: ResultsScreenProps) => {
+}) => {
   return (
     <Box as="main" minH="100dvh" display="flex" flexDirection="column">
       <SearchBar query={query} isLoading={isLoading} onQueryChange={onQueryChange} onClear={onClear} />

@@ -1,4 +1,5 @@
 import { Container } from "@chakra-ui/react";
+import type { FC } from "react";
 import { GenreFilter } from "./GenreFilter/GenreFilter";
 import { ResultsEmpty } from "./ResultsEmpty/ResultsEmpty";
 import { ResultsError } from "./ResultsError/ResultsError";
@@ -10,7 +11,7 @@ import { usePresenter, type SearchResultsProps } from "./usePresenter";
 export type { SearchResultsProps } from "./usePresenter";
 
 // The results area: the heading and the genre chips, then the component of the current state.
-export const SearchResults = (props: SearchResultsProps) => {
+export const SearchResults: FC<SearchResultsProps> = (props) => {
   const { query, countLabel, genreFilter, isLoading, isEmpty, isError, hasResults, shows, onRetry, onClear } =
     usePresenter(props);
 

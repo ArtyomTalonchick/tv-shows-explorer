@@ -1,4 +1,5 @@
 import { Box, Heading, Image, Text } from "@chakra-ui/react";
+import type { FC } from "react";
 import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
 import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/constants";
 import { Logo } from "@/SearchPage/components/Logo/Logo";
@@ -9,7 +10,7 @@ export type { SearchHeroProps } from "./usePresenter";
 const layer = { content: '""', position: "absolute", inset: "0" } as const;
 
 // The start screen: the full-viewport hero with the search field only.
-export const SearchHero = (props: SearchHeroProps) => {
+export const SearchHero: FC<SearchHeroProps> = (props) => {
   const { query, onQueryChange, wall } = usePresenter(props);
 
   return (

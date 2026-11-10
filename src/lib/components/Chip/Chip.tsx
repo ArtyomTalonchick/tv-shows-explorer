@@ -1,10 +1,11 @@
 import { chakra } from "@chakra-ui/react";
+import type { FC } from "react";
 import { usePresenter, type ChipProps } from "./usePresenter";
 
 export type { ChipProps } from "./usePresenter";
 
 // .chip of design/library: a round toggle button with a label and a count, filled when it is selected.
-export const Chip = (props: ChipProps) => {
+export const Chip: FC<ChipProps> = (props) => {
   const { children, count, hasCount, ariaPressed, onClick, disabled } = usePresenter(props);
 
   return (

@@ -1,4 +1,5 @@
 import { Box, chakra, Heading, Text } from "@chakra-ui/react";
+import type { FC } from "react";
 
 export type ResultsHeadProps = {
   query: string;
@@ -6,7 +7,7 @@ export type ResultsHeadProps = {
 };
 
 // «Results / Shows for “dark”» and the count on the right.
-export const ResultsHead = ({ query, count }: ResultsHeadProps) => {
+export const ResultsHead: FC<ResultsHeadProps> = ({ query, count }) => {
   return (
     <Box
       display="flex"

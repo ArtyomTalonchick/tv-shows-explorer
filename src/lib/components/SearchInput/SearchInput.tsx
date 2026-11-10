@@ -1,4 +1,5 @@
 import { chakra, Spinner } from "@chakra-ui/react";
+import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { usePresenter, type SearchInputProps } from "./usePresenter";
 
@@ -6,7 +7,7 @@ export type { SearchInputProps } from "./usePresenter";
 
 // .search-input of design/library: a pill with an icon, the field, and the clear button or the spinner.
 // No submit button: the query is sent while typing.
-export const SearchInput = (props: SearchInputProps) => {
+export const SearchInput: FC<SearchInputProps> = (props) => {
   const {
     sizeStyles,
     viewTransitionName,
