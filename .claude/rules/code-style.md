@@ -52,6 +52,14 @@ followed by hand. A new preference the owner states during a task is added here 
   // View: <chakra.label … {...sizeStyles.root}>
   ```
 
+- A result that can succeed or fail is a flat object with a flag and a nullable field, not a union checked with
+  `in`: `{ data: T | null; failed: boolean }`, read as `if (shown.failed)` and `shown?.data ?? []`. (#16)
+- What every request repeats — the `AbortController`, the cancel in the effect cleanup, dropping a late answer,
+  Retry — lives once in `lib/hooks/useRequest`, not in each request hook; a request hook adds only what is its own
+  (debounce, reset). The transport (`fetch`, the non-2xx check, `json()`) is `lib/helpers/fetchJson`. (#16)
+- A hook is split until each part has one job, but along real seams: steps of one request stay together, and a
+  value computed from state is a plain helper (`getSearchView`), not another hook with state of its own. (#16)
+
 ## Styles
 
 - A component's styles are style props in its own JSX, not a recipe in the theme. A style repeated inside a
