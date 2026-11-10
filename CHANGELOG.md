@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+## 0.1.1 — 2026-11-10
+
 - Editing the query no longer resets the genre and the page: the shown results stay on screen until the
   next query answers, with a spinner in the field meanwhile.
 - Emptying the field and typing the same query back quickly no longer leaves the results loading for good.
