@@ -5,6 +5,8 @@ import { SearchResults } from "./SearchResults/SearchResults";
 
 export type ResultsScreenProps = {
   query: string;
+  // The query of the shown results; the field may already hold the next one.
+  shownQuery: string;
   status: SearchStatus;
   shows: Show[];
   isLoading: boolean;
@@ -16,6 +18,7 @@ export type ResultsScreenProps = {
 // The screen with a query: the compact search bar and the results below it.
 export const ResultsScreen = ({
   query,
+  shownQuery,
   status,
   shows,
   isLoading,
@@ -26,7 +29,7 @@ export const ResultsScreen = ({
   return (
     <Box as="main" minH="100dvh" display="flex" flexDirection="column">
       <SearchBar query={query} isLoading={isLoading} onQueryChange={onQueryChange} onClear={onClear} />
-      <SearchResults status={status} query={query} shows={shows} onRetry={onRetry} onClear={onClear} />
+      <SearchResults status={status} query={shownQuery} shows={shows} onRetry={onRetry} onClear={onClear} />
     </Box>
   );
 };

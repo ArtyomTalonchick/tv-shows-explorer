@@ -134,4 +134,81 @@ describe("useShowsRequest", () => {
     wait(SEARCH_DEBOUNCE_MS);
     expect(searchMock).toHaveBeenCalledTimes(1);
   });
+
+  it("keeps the shown results while the next query waits and loads", async () => {
+    const next = deferred();
+    const forest = [show(1, "Forest")];
+    searchMock.mockResolvedValueOnce(forest).mockReturnValueOnce(next.promise);
+    const { result, rerender } = render();
+    rerender({ query: "forest" });
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+
+    rerender({ query: "forests" });
+    expect(result.current).toMatchObject({ status: "results", shownQuery: "forest", isLoading: true });
+    expect(result.current.shows).toBe(forest);
+
+    wait(SEARCH_DEBOUNCE_MS);
+    expect(result.current).toMatchObject({ status: "results", shownQuery: "forest", isLoading: true });
+    expect(result.current.shows).toBe(forest);
+
+    next.resolve([show(2, "Forests")]);
+    await flush();
+    expect(result.current).toMatchObject({
+      status: "results",
+      shows: [show(2, "Forests")],
+      shownQuery: "forests",
+      isLoading: false,
+    });
+  });
+
+  it("changes nothing when the query is typed back within the debounce", async () => {
+    const forest = [show(1, "Forest")];
+    searchMock.mockResolvedValue(forest);
+    const { result, rerender } = render();
+    rerender({ query: "forest" });
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+
+    rerender({ query: "fores" });
+    wait(SEARCH_DEBOUNCE_MS - 100);
+    rerender({ query: "forest" });
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+
+    expect(searchMock).toHaveBeenCalledTimes(1);
+    expect(result.current).toMatchObject({ status: "results", shownQuery: "forest", isLoading: false });
+    expect(result.current.shows).toBe(forest);
+  });
+
+  it("loads with skeletons after an empty or failed answer", async () => {
+    searchMock.mockResolvedValueOnce([]).mockRejectedValueOnce(new Error("offline"));
+    const { result, rerender } = render();
+    rerender({ query: "qwzx" });
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+
+    rerender({ query: "qwz" });
+    expect(result.current).toMatchObject({ status: "loading", shownQuery: "qwz", isLoading: true });
+
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+    expect(result.current.status).toBe("error");
+
+    rerender({ query: "qw" });
+    expect(result.current).toMatchObject({ status: "loading", shownQuery: "qw", isLoading: true });
+  });
+
+  it("loads with skeletons after the field was emptied", async () => {
+    searchMock.mockResolvedValueOnce([show(1, "Dark")]).mockReturnValueOnce(new Promise(() => {}));
+    const { result, rerender } = render();
+    rerender({ query: "dark" });
+    wait(SEARCH_DEBOUNCE_MS);
+    await flush();
+
+    rerender({ query: "" });
+    rerender({ query: "lost" });
+
+    expect(result.current).toMatchObject({ status: "loading", shows: [], shownQuery: "lost", isLoading: true });
+  });
 });

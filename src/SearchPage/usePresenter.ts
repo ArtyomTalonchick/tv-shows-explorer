@@ -4,7 +4,7 @@ import { useShowsRequest } from "./useShowsRequest";
 
 export const usePresenter = () => {
   const { value, trimmed, isEmpty, handleChange, clear } = useSearchQuery();
-  const { status, shows, retry } = useShowsRequest(trimmed);
+  const { status, shows, shownQuery, isLoading, retry } = useShowsRequest(trimmed);
 
   // Swapping the start hero and the results screen is animated; typing within one of them is not.
   const changeQuery = (next: string) => {
@@ -20,9 +20,11 @@ export const usePresenter = () => {
     // The hero is shown until the field holds a query.
     isStart: isEmpty,
     query: value,
+    // The results area names the query of the shown results, which may lag behind the field.
+    shownQuery,
     status,
     shows,
-    isLoading: status === "loading",
+    isLoading,
     changeQuery,
     clear: () => withViewTransition(clear),
     retry,
