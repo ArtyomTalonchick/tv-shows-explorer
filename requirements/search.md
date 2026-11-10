@@ -54,6 +54,10 @@ The user finds TV shows by typing a query. TVmaze does the search
 - TVmaze is asked through an API layer with no React in it: `SearchPage/searchShows` (the TVmaze URL and the
   mapping to `Show`) over `lib/helpers/fetchJson` (`fetch`, the non-2xx check, `json()`). The caller passes the
   `AbortSignal`; debounce, cancellation and Retry stay in `useShowsRequest`. (#16)
+- Cancelling a request, dropping a late answer and Retry are done by the shared hook `lib/hooks/useRequest`, made
+  now although search is its only user, so the next request does not repeat them. `useShowsRequest` adds the
+  debounce and drops the answer when the field is emptied; `getSearchView`, a plain function, decides what the
+  results area shows. (#16)
 - The hero and the header swap with a view transition (the browser's View Transitions API, no animation library)
   lasting `durations.slow` (400 ms), a token added for it. (#8)
 - Until the results list (#9) brings the show cards, the results state shows a plain list of show names. (#8)
