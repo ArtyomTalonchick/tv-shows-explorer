@@ -13,7 +13,7 @@
   v0.1: the search screen in every state the user can see. Components come from ../library/components.css only;
   the styles below are page layout (screens, header, hero, grid) and the captions of this mockup.
   Open through a local server: npx http-server design, then /v0.1/mockup.html
-  Each state is a .screen with an id: start, loading, results, genre, empty, error.
+  Each state is a .screen with an id: start, idle, home, loading, results, genre, empty, error.
 -->
 <style>
   .caption { max-width: var(--sizes-content); margin: 0 auto; padding: var(--spacing-12) var(--spacing-12) var(--spacing-4); color: var(--colors-fg-subtle); font-size: var(--fontSizes-xs); letter-spacing: var(--letterSpacings-eyebrow); text-transform: uppercase; }
@@ -89,9 +89,9 @@
   const icon = (id) => `<svg class="icon"><use href="#${id}"/></svg>`;
 
   // Components: the markup of ../library/index.html, filled with data.
-  const logo = (cls = "") => `<a class="logo ${cls}" href="#">tv<span>/</span>explorer</a>`;
-  const search = ({ value = "", loading = false, small = false } = {}) => `
-    <label class="search-input ${small ? "search-input--sm" : ""}">${icon("search")}
+  const logo = (cls = "") => `<a class="logo ${cls}" href="#" aria-label="tv/explorer — back to start">tv<span>/</span>explorer</a>`;
+  const search = ({ value = "", loading = false, small = false, focused = false } = {}) => `
+    <label class="search-input ${small ? "search-input--sm" : ""} ${focused ? "is-active" : ""}">${icon("search")}
       <input aria-label="Search shows" placeholder="Search shows, e.g. Dark" value="${value}">
       ${loading ? `<span class="spinner" role="status" aria-label="Loading"></span>`
         : value ? `<button class="search-input__clear" aria-label="Clear search">${icon("close")}</button>` : ""}
@@ -123,10 +123,15 @@
   const skeletonCard = `<div class="skeleton-card"><div class="skeleton skeleton--poster"></div><div class="skeleton skeleton--line"></div><div class="skeleton skeleton--line-short"></div></div>`;
 
   // Page layout
-  const bar = (opts) => `<header class="bar"><div class="container">${logo()}${search({ small: true, ...opts })}</div></header>`;
+  const bar = ({ logoFocused = false, ...opts } = {}) =>
+    `<header class="bar"><div class="container">${logo(logoFocused ? "is-focus" : "")}${search({ small: true, ...opts })}</div></header>`;
   const head = (query, count) => `<div class="head"><div><div class="eyebrow">Results</div><h2 class="title">Shows for <em>“${query}”</em></h2></div>${count ? `<div class="count">${count}</div>` : ""}</div>`;
   const listScreen = (opts, body) => `${bar(opts)}<section class="list container">${body}</section>`;
   const page = (shows, n) => shows.slice((n - 1) * PER_PAGE, n * PER_PAGE);
+
+  const idle = `
+    <div class="state"><div class="state__icon">${icon("search")}</div><h3 class="state__title">Search for a show</h3>
+      <p class="state__text">Type a title — results appear as you type.</p></div>`;
 
   const drama = SHOWS.filter((s) => s.genres.includes("Drama"));
   const SCREENS = [
@@ -141,6 +146,8 @@
           ${search()}
         </div>
       </section>`],
+    ["idle", "An empty field — after focusing the hero field, the × button or «Clear search»; the field keeps the focus, no heading, no count", listScreen({ focused: true }, idle)],
+    ["home", "The logo is a link back to the start screen (shown with the keyboard focus); a click resets the query, the genre and the page", listScreen({ logoFocused: true }, idle)],
     ["loading", "Loading — the request is running: a spinner in the field, skeletons in the list", listScreen({ value: "dark", loading: true }, `
       ${head("dark")}
       <div class="skeleton-chips" aria-hidden="true">${Array(5).fill(`<div class="skeleton skeleton--chip"></div>`).join("")}</div>
