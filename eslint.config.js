@@ -8,20 +8,12 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default defineConfig([
-  globalIgnores(["dist", "design", ".history"]),
+  globalIgnores(["**/dist", "design", ".history"]),
   {
     files: ["**/*.{ts,tsx}"],
-    extends: [
-      js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-    ],
+    extends: [js.configs.recommended, tseslint.configs.recommended],
     plugins: { promise },
-    languageOptions: {
-      ecmaVersion: 2022,
-      globals: globals.browser,
-    },
+    languageOptions: { ecmaVersion: 2022 },
     rules: {
       // async / await with try / catch instead of .then chains.
       "promise/prefer-await-to-then": "error",
@@ -49,6 +41,17 @@ export default defineConfig([
         { allowExpressions: true, allowTypedFunctionExpressions: true },
       ],
     },
+  },
+  {
+    // The client runs in the browser, with React.
+    files: ["client/**/*.{ts,tsx}"],
+    extends: [reactHooks.configs.flat.recommended, reactRefresh.configs.vite],
+    languageOptions: { globals: globals.browser },
+  },
+  {
+    // The server and its configs run in Node.
+    files: ["server/**/*.ts", "client/vite.config.ts"],
+    languageOptions: { globals: globals.node },
   },
   {
     // Tests: short helpers around `renderHook` and fixtures, where a return type adds only noise.

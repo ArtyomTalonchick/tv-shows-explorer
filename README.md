@@ -23,7 +23,7 @@ What each feature does is described in [`requirements/`](requirements/README.md)
 The architecture rules live in their own repository, a Claude Code plugin:
 [`claude-simple-architecture`](https://github.com/ArtyomTalonchick/claude-simple-architecture).
 Its versions follow the project's: this version uses
-[`v0.1.0`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.1.0).
+[`v0.2.1`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.2.1).
 
 In this repository:
 
@@ -33,26 +33,33 @@ In this repository:
 
 ## Stack
 
-React 19, TypeScript, Chakra UI v3, Zustand, Vite, Vitest with Testing Library, ESLint.
+An npm workspaces monorepo in TypeScript:
+
+- **Client:** React 19, Chakra UI v3, Zustand, Vite, Vitest with Testing Library.
+- **Server:** Node, Hono, Vitest.
+- **Tooling:** ESLint and Prettier for the whole repository.
 
 ## Repository layout
 
 | Path | What it is |
 |---|---|
-| `src/` | The app |
+| `client/` | The app (Vite, React); deployed to GitHub Pages |
+| `server/` | The API server (Hono) |
+| `shared/` | The API types the client and the server share: types only |
 | `design/` | Design tokens, mockups and screenshots of each version |
 | `requirements/` | What each feature does: the source of truth for the code |
-| `.github/workflows/` | CI (lint, type check, tests) and the GitHub Pages deploy |
+| `.github/workflows/` | CI (lint, format, type check, tests of every package) and the GitHub Pages deploy |
 | `.claude/` | Claude Code settings and the gh-tasks rules |
 | `CHANGELOG.md` | Changes per version |
 
 ## Scripts
 
 ```sh
-npm install
-npm run dev        # dev server
-npm run build      # type check and production build
-npm run lint       # ESLint
-npm run typecheck  # TypeScript
-npm run test       # Vitest
+npm install           # installs all three packages
+npm run dev           # the client (Vite) and the server (port 3000, or PORT) together
+npm run build         # type check and production build of the client
+npm run lint          # ESLint, every package
+npm run format:check  # Prettier, every package
+npm run typecheck     # TypeScript, every package
+npm run test          # Vitest, every package
 ```

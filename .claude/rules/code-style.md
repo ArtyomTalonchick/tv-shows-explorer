@@ -94,3 +94,5 @@ followed by hand. A new preference the owner states during a task is added here 
 
 - Familiar, standard tools over clever ones: Prettier and ESLint presets, the browser's View Transitions API
   rather than an animation library for one transition. (#8)
+- A new library is chosen as the most modern and simple of the established ones, not the oldest: Hono on web
+  standards rather than Express for the server. (#24)

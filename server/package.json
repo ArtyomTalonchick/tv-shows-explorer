@@ -1,0 +1,20 @@
+{
+  "name": "@tv-shows-explorer/server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.8",
+    "@tv-shows-explorer/shared": "*",
+    "hono": "^4.13.19"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.20.6",
+    "vitest": "^5.1.0"
+  }
+}

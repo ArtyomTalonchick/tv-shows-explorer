@@ -1,6 +1,9 @@
 {
-  "stack": ["react", "zustand"],
-  "root": "src",
+  "apps": {
+    "client": { "root": "client/src", "stack": ["react", "zustand"] },
+    "server": { "root": "server/src", "stack": [] }
+  },
+  "shared": "shared/src",
   "folders": {
     "lib": "lib",
     "uiKit": "lib/components",
