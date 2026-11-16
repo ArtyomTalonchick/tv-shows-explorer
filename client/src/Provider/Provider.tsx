@@ -3,9 +3,9 @@ import type { FC, ReactNode } from "react";
 import { system } from "@/lib/theme/system";
 
 type ProviderProps = {
-  children: ReactNode;
+    children: ReactNode;
 };
 
 export const Provider: FC<ProviderProps> = ({ children }) => {
-  return <ChakraProvider value={system}>{children}</ChakraProvider>;
+    return <ChakraProvider value={system}>{children}</ChakraProvider>;
 };

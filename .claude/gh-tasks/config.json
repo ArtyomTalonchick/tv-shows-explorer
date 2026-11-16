@@ -1,13 +1,13 @@
 {
-  "language": "en",
-  "milestones": true,
-  "version": { "scheme": "minor" },
-  "checks": ["npm run lint", "npm run format:check", "npm run typecheck", "npm run test"],
-  "commit": {
-    "format": "type(scope): subject",
-    "example": "feat(search): debounce the query and cancel the previous request",
-    "types": ["feat", "fix", "design", "refactor", "test", "build", "docs", "chore"],
-    "trailers": false
-  },
-  "release": { "tag": "v{version}", "githubRelease": true, "publishedBy": "skill", "push": true }
+    "language": "en",
+    "milestones": true,
+    "version": { "scheme": "minor" },
+    "checks": ["npm run lint", "npm run format:check", "npm run typecheck", "npm run test"],
+    "commit": {
+        "format": "type(scope): subject",
+        "example": "feat(search): debounce the query and cancel the previous request",
+        "types": ["feat", "fix", "design", "refactor", "test", "build", "docs", "chore"],
+        "trailers": false
+    },
+    "release": { "tag": "v{version}", "githubRelease": true, "publishedBy": "skill", "push": true }
 }

@@ -1,4 +1,5 @@
 {
-  "printWidth": 120,
-  "objectWrap": "preserve"
+    "printWidth": 120,
+    "tabWidth": 4,
+    "objectWrap": "preserve"
 }

@@ -6,20 +6,20 @@ export type { IconName, IconProps } from "./logic/usePresenter";
 
 // An icon of the design/library sprite. The attributes are the sprite's contract: 24x24, a line in currentColor.
 export const Icon: FC<IconProps> = (props) => {
-  const { href, rest } = usePresenter(props);
+    const { href, rest } = usePresenter(props);
 
-  return (
-    <ChakraIcon {...rest}>
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <use href={href} />
-      </svg>
-    </ChakraIcon>
-  );
+    return (
+        <ChakraIcon {...rest}>
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            >
+                <use href={href} />
+            </svg>
+        </ChakraIcon>
+    );
 };

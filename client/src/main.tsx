@@ -11,13 +11,13 @@ import { Provider } from "./Provider/Provider";
 
 const root = document.getElementById("root");
 if (!root) {
-  throw new Error("No #root element in index.html");
+    throw new Error("No #root element in index.html");
 }
 
 createRoot(root).render(
-  <StrictMode>
-    <Provider>
-      <App />
-    </Provider>
-  </StrictMode>,
+    <StrictMode>
+        <Provider>
+            <App />
+        </Provider>
+    </StrictMode>,
 );

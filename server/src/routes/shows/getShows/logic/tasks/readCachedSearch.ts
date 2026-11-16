@@ -4,10 +4,10 @@ import { SEARCH_CACHE_TTL_MS } from "@/routes/shows/getShows/constants";
 
 // The shows saved for `query` if they are younger than 5 minutes; otherwise null, and TVmaze is to be asked.
 export const readCachedSearch = (query: string): Show[] | null => {
-  const cached = searchCache.get(query);
-  if (cached === undefined || Date.now() - cached.savedAt >= SEARCH_CACHE_TTL_MS) {
-    return null;
-  }
+    const cached = searchCache.get(query);
+    if (cached === undefined || Date.now() - cached.savedAt >= SEARCH_CACHE_TTL_MS) {
+        return null;
+    }
 
-  return cached.shows;
+    return cached.shows;
 };

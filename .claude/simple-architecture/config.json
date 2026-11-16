@@ -1,17 +1,17 @@
 {
-  "apps": {
-    "client": { "root": "client/src", "stack": ["react", "zustand"] },
-    "server": { "root": "server/src", "stack": [] }
-  },
-  "shared": "shared/src",
-  "folders": {
-    "lib": "lib",
-    "uiKit": "lib/components",
-    "components": "components",
-    "hooks": "hooks",
-    "helpers": "helpers",
-    "tasks": "tasks",
-    "logic": "logic"
-  },
-  "maxFileLines": 120
+    "apps": {
+        "client": { "root": "client/src", "stack": ["react", "zustand"] },
+        "server": { "root": "server/src", "stack": [] }
+    },
+    "shared": "shared/src",
+    "folders": {
+        "lib": "lib",
+        "uiKit": "lib/components",
+        "components": "components",
+        "hooks": "hooks",
+        "helpers": "helpers",
+        "tasks": "tasks",
+        "logic": "logic"
+    },
+    "maxFileLines": 120
 }

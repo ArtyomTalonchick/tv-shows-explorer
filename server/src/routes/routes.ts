@@ -7,5 +7,5 @@ import { shows } from "./shows/shows";
 // `GET /api/shows`). `createApp` serves the table under `/api`.
 // prettier-ignore
 export const routes = new Hono()
-  .route("/health", health)
-  .route("/shows", shows);
+    .route("/health", health)
+    .route("/shows", shows);

@@ -1,33 +1,33 @@
 {
-  "name": "tv-shows-explorer",
-  "private": true,
-  "version": "0.1.1",
-  "type": "module",
-  "workspaces": [
-    "client",
-    "server",
-    "shared"
-  ],
-  "scripts": {
-    "dev": "concurrently --names client,server --prefix-colors cyan,magenta \"npm run dev -w client\" \"npm run dev -w server\"",
-    "build": "npm run build -w client",
-    "lint": "eslint .",
-    "typecheck": "npm run typecheck --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
-    "format": "prettier . --write",
-    "format:check": "prettier . --check"
-  },
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "concurrently": "^9.2.1",
-    "eslint": "^10.14.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-promise": "^7.3.0",
-    "eslint-plugin-react-hooks": "^7.1.1",
-    "eslint-plugin-react-refresh": "^0.5.7",
-    "globals": "^17.14.0",
-    "prettier": "^3.9.10",
-    "typescript": "^6.0.3",
-    "typescript-eslint": "^8.72.1"
-  }
+    "name": "tv-shows-explorer",
+    "private": true,
+    "version": "0.1.1",
+    "type": "module",
+    "workspaces": [
+        "client",
+        "server",
+        "shared"
+    ],
+    "scripts": {
+        "dev": "concurrently --names client,server --prefix-colors cyan,magenta \"npm run dev -w client\" \"npm run dev -w server\"",
+        "build": "npm run build -w client",
+        "lint": "eslint .",
+        "typecheck": "npm run typecheck --workspaces --if-present",
+        "test": "npm run test --workspaces --if-present",
+        "format": "prettier . --write",
+        "format:check": "prettier . --check"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "concurrently": "^9.2.1",
+        "eslint": "^10.14.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-promise": "^7.3.0",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "eslint-plugin-react-refresh": "^0.5.7",
+        "globals": "^17.14.0",
+        "prettier": "^3.9.10",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.72.1"
+    }
 }

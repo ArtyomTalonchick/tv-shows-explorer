@@ -5,11 +5,11 @@ import { usePresenter } from "./logic/usePresenter";
 
 // Decides which screen to show: the start hero, or the results screen once the field was focused.
 export const SearchPage: FC = () => {
-  const { isStart, hero, results } = usePresenter();
+    const { isStart, hero, results } = usePresenter();
 
-  if (isStart) {
-    return <SearchHero {...hero} />;
-  }
+    if (isStart) {
+        return <SearchHero {...hero} />;
+    }
 
-  return <ResultsScreen {...results} />;
+    return <ResultsScreen {...results} />;
 };

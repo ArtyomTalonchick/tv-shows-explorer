@@ -5,31 +5,31 @@ const render = (query: string) => renderHook(({ query }) => useDebouncedQuery(qu
 const wait = (ms: number) => act(() => vi.advanceTimersByTime(ms));
 
 describe("useDebouncedQuery", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+    afterEach(() => {
+        vi.useRealTimers();
+    });
 
-  it("passes the query once typing has stopped for the debounce", () => {
-    const { result, rerender } = render("");
+    it("passes the query once typing has stopped for the debounce", () => {
+        const { result, rerender } = render("");
 
-    rerender({ query: "dark" });
-    wait(SEARCH_DEBOUNCE_MS - 1);
-    expect(result.current).toBe("");
+        rerender({ query: "dark" });
+        wait(SEARCH_DEBOUNCE_MS - 1);
+        expect(result.current).toBe("");
 
-    wait(1);
-    expect(result.current).toBe("dark");
-  });
+        wait(1);
+        expect(result.current).toBe("dark");
+    });
 
-  it("passes an emptied field at once", () => {
-    const { result, rerender } = render("dark");
+    it("passes an emptied field at once", () => {
+        const { result, rerender } = render("dark");
 
-    rerender({ query: "" });
-    wait(0);
+        rerender({ query: "" });
+        wait(0);
 
-    expect(result.current).toBe("");
-  });
+        expect(result.current).toBe("");
+    });
 });

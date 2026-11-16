@@ -4,5 +4,5 @@ import { createApp } from "./createApp";
 const PORT = Number(process.env.PORT ?? 4310);
 
 serve({ fetch: createApp().fetch, port: PORT }, (info) => {
-  console.log(`Server listening on http://localhost:${info.port}`);
+    console.log(`Server listening on http://localhost:${info.port}`);
 });
