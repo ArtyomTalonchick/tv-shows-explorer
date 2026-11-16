@@ -1,5 +1,5 @@
 import type { RequestAnswer } from "@/lib/hooks/useRequest";
-import type { SearchStatus, Show } from "./types";
+import type { SearchStatus, SearchView, Show } from "../types";
 
 type ShowsAnswer = RequestAnswer<string, Show[]>;
 
@@ -12,16 +12,6 @@ type SearchViewInput = {
   current: ShowsAnswer | null;
   // The last answer, to this query or to an earlier one.
   latest: ShowsAnswer | null;
-};
-
-// What the results area shows for the query in the field.
-export type SearchView = {
-  status: SearchStatus;
-  shows: Show[];
-  // The query the shown answer belongs to; the query being loaded while there is none.
-  shownQuery: string;
-  // The request for the query as it is now has not answered yet.
-  isLoading: boolean;
 };
 
 export const getSearchView = ({ query, debounced, current, latest }: SearchViewInput): SearchView => {

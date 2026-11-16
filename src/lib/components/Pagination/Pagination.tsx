@@ -2,9 +2,9 @@ import { Box, Text } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { PageButton } from "./PageButton/PageButton";
-import { usePresenter, type PaginationProps } from "./usePresenter";
+import { usePresenter, type PaginationProps } from "./logic/usePresenter";
 
-export type { PaginationProps } from "./usePresenter";
+export type { PaginationProps } from "./logic/usePresenter";
 
 // Pagination of design/library: ‹ 1 2 3 › and «Shows 1–3 of 9».
 export const Pagination: FC<PaginationProps> = (props) => {

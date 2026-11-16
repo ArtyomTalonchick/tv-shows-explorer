@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { Show } from "@/SearchPage/types";
 import { collectGenres } from "./collectGenres";
 import { filterByGenre } from "./filterByGenre";
-import type { GenreCount } from "./types";
+import type { GenreCount } from "../types";
 
 export type UseGenreFilterResult = {
   genre: string | null;

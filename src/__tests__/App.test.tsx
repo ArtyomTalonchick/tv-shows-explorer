@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { App } from "../App";
-import { Provider } from "../app/Provider";
+import { Provider } from "../Provider/Provider";
 
 const renderApp = (): void => {
   render(

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import type { SearchStatus, Show } from "@/SearchPage/types";
-import type { SearchBarProps } from "./SearchBar/SearchBar";
-import type { SearchResultsProps } from "./SearchResults/SearchResults";
+import type { SearchBarProps } from "../SearchBar/SearchBar";
+import type { SearchResultsProps } from "../SearchResults/SearchResults";
 
 export type ResultsScreenProps = {
   query: string;

@@ -7,7 +7,7 @@ import "@fontsource/archivo/900.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
-import { Provider } from "./app/Provider";
+import { Provider } from "./Provider/Provider";
 
 const root = document.getElementById("root");
 if (!root) {

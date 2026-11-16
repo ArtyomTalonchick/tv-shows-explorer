@@ -6,7 +6,9 @@
     "uiKit": "lib/components",
     "components": "components",
     "hooks": "hooks",
-    "helpers": "helpers"
+    "helpers": "helpers",
+    "tasks": "tasks",
+    "logic": "logic"
   },
-  "maxFileLines": 150
+  "maxFileLines": 120
 }

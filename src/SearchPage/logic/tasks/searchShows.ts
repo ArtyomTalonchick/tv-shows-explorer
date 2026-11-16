@@ -1,5 +1,5 @@
-import { fetchJson } from "@/lib/helpers/fetchJson";
-import type { Show } from "./types";
+import { fetchJson } from "@/lib/tasks/fetchJson";
+import type { Show } from "../../types";
 
 const TVMAZE_API = "https://api.tvmaze.com";
 

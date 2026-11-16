@@ -1,9 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
-import { searchShows } from "../searchShows";
-import type { Show } from "../types";
+import { searchShows } from "../tasks/searchShows";
+import type { Show } from "../../types";
 import { SEARCH_DEBOUNCE_MS, useShowsRequest } from "../useShowsRequest";
 
-vi.mock("../searchShows", () => ({ searchShows: vi.fn() }));
+vi.mock("../tasks/searchShows", () => ({ searchShows: vi.fn() }));
 
 const searchMock = vi.mocked(searchShows);
 

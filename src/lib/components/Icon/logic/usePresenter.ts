@@ -1,6 +1,6 @@
 import type { IconProps as ChakraIconProps } from "@chakra-ui/react";
 // The sprite of design/library, as a file: <use> cannot point into a data: URL, so it must not be inlined.
-import spriteUrl from "../../../../design/library/icons.svg?no-inline";
+import spriteUrl from "../../../../../design/library/icons.svg?no-inline";
 
 // The ids of the symbols in design/library/icons.svg. A test checks that each one is in the sprite.
 export const ICON_NAMES = [

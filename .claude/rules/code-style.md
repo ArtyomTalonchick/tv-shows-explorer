@@ -71,7 +71,8 @@ followed by hand. A new preference the owner states during a task is added here 
   `in`: `{ data: T | null; failed: boolean }`, read as `if (shown.failed)` and `shown?.data ?? []`. (#16)
 - What every request repeats — the `AbortController`, the cancel in the effect cleanup, dropping a late answer,
   Retry — lives once in `lib/hooks/useRequest`, not in each request hook; a request hook adds only what is its own
-  (debounce, reset). The transport (`fetch`, the non-2xx check, `json()`) is `lib/helpers/fetchJson`. (#16)
+  (debounce, reset). The transport (`fetch`, the non-2xx check, `json()`) is `lib/tasks/fetchJson`: it calls the
+  server, so by the architecture rules it is a task, not a helper. (#16, #30)
 - A hook is split until each part has one job, but along real seams: steps of one request stay together, and a
   value computed from state is a plain helper (`getSearchView`), not another hook with state of its own. (#16)
 

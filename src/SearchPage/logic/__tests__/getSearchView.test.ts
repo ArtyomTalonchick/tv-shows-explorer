@@ -1,6 +1,6 @@
 import type { RequestAnswer } from "@/lib/hooks/useRequest";
 import { getSearchView } from "../getSearchView";
-import type { Show } from "../types";
+import type { Show } from "../../types";
 
 const show = (id: number, name: string): Show => ({
   id,

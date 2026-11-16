@@ -1,7 +1,8 @@
 import { useDebouncedValue } from "@/lib/hooks/useDebouncedValue";
 import { useRequest } from "@/lib/hooks/useRequest";
-import { getSearchView, type SearchView } from "./getSearchView";
-import { searchShows } from "./searchShows";
+import type { SearchView } from "../types";
+import { getSearchView } from "./getSearchView";
+import { searchShows } from "./tasks/searchShows";
 
 export const SEARCH_DEBOUNCE_MS = 400;
 

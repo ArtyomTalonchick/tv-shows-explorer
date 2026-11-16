@@ -1,4 +1,4 @@
-import sprite from "../../../../../design/library/icons.svg?raw";
+import sprite from "../../../../../../design/library/icons.svg?raw";
 import { ICON_NAMES } from "../usePresenter";
 
 describe("Icon", () => {

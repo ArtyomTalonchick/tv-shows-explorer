@@ -1,5 +1,5 @@
-import type { ResultsScreenProps } from "./ResultsScreen/ResultsScreen";
-import type { SearchHeroProps } from "./SearchHero/SearchHero";
+import type { ResultsScreenProps } from "../ResultsScreen/ResultsScreen";
+import type { SearchHeroProps } from "../SearchHero/SearchHero";
 import { useScreenSwap } from "./useScreenSwap";
 import { useSearchQuery } from "./useSearchQuery";
 import { useShowsRequest } from "./useShowsRequest";

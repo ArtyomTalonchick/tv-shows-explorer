@@ -1,6 +1,6 @@
 import type { SearchStatus, Show } from "@/SearchPage/types";
-import type { GenreFilterProps } from "./GenreFilter/GenreFilter";
-import type { ResultsHeadProps } from "./ResultsHead/ResultsHead";
+import type { GenreFilterProps } from "../GenreFilter/GenreFilter";
+import type { ResultsHeadProps } from "../ResultsHead/ResultsHead";
 import { useGenreFilter } from "./useGenreFilter";
 
 export type SearchResultsProps = {
