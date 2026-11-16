@@ -1,0 +1,13 @@
+# The indent every editor uses in this project; Prettier formats the code with the same (.prettierrc.json).
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+
+# Markdown is written by hand and continues a list item with 2 spaces.
+[*.md]
+indent_size = 2
