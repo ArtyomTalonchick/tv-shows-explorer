@@ -33,6 +33,11 @@ export default defineConfig([
           selector: "FunctionDeclaration[id.name=/^[A-Z]/]",
           message: "Write a component as `const Name: FC<NameProps> = (props) => { ... }`.",
         },
+        // A collection is walked by its own methods (`forEach`, `map`, `filter`, `reduce`), not by a loop.
+        {
+          selector: "ForOfStatement, ForInStatement",
+          message: "Walk a collection with its methods (`forEach`, `map`, ...), not with `for...of` / `for...in`.",
+        },
       ],
       // A function says what it returns. Callbacks typed by their place (`onClick={() => ...}`, `.map(...)`)
       // are left alone.

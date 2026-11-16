@@ -37,6 +37,17 @@ followed by hand. A new preference the owner states during a task is added here 
   })();
   ```
 
+- A collection is walked by its own methods — `forEach`, `map`, `filter`, `reduce` — not by `for...of` or
+  `for...in`; a test over several inputs is `it.each`. ESLint `no-restricted-syntax`. (#26)
+
+- One statement does one thing: a value is assigned on one line and used or exported on the next, not assigned
+  inside an expression: (#26)
+
+  ```ts
+  globalStore.searchCache ??= new Map<string, CachedSearch>();
+  export const searchCache = globalStore.searchCache;
+  ```
+
 - Stateful logic is split by concern: the state of a control (value, handler, clear) and a request (debounce,
   cancellation, retry) are separate hooks, joined in the Presenter. (#8)
 - A component that wraps a Chakra element takes that element's props, and declares only what it adds or changes:

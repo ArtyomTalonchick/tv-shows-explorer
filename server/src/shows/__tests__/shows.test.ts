@@ -1,4 +1,5 @@
 import { createApp } from "@/createApp";
+import { searchCache } from "@/stores/searchCache";
 
 const tvmazeShow = (id: number, genres: string[]) => ({
   score: 1,
@@ -20,6 +21,7 @@ const respond = (body: unknown, status = 200) =>
 describe("GET /api/shows", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
+    searchCache.clear();
   });
 
   it("searches TVmaze and answers the asked page of the genre", async () => {

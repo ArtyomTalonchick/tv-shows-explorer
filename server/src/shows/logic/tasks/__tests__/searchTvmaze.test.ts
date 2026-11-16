@@ -1,11 +1,53 @@
+import { searchCache } from "@/stores/searchCache";
 import { searchTvmaze } from "../searchTvmaze";
 
 const respond = (body: unknown, status = 200) =>
-  vi.fn().mockResolvedValue(new Response(JSON.stringify(body), { status }));
+  vi.fn().mockImplementation(async () => new Response(JSON.stringify(body), { status }));
+
+const MINUTE = 60 * 1000;
 
 describe("searchTvmaze", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.useRealTimers();
+    searchCache.clear();
+  });
+
+  it("answers a query repeated within 5 minutes from the cache, without TVmaze", async () => {
+    vi.useFakeTimers();
+    const fetchMock = respond([]);
+    vi.stubGlobal("fetch", fetchMock);
+    const { signal } = new AbortController();
+
+    await searchTvmaze("dark", signal);
+    vi.advanceTimersByTime(5 * MINUTE - 1);
+    await searchTvmaze("dark", signal);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("asks TVmaze again after 5 minutes", async () => {
+    vi.useFakeTimers();
+    const fetchMock = respond([]);
+    vi.stubGlobal("fetch", fetchMock);
+    const { signal } = new AbortController();
+
+    await searchTvmaze("dark", signal);
+    vi.advanceTimersByTime(5 * MINUTE);
+    await searchTvmaze("dark", signal);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not cache a failed answer, so Retry asks TVmaze again", async () => {
+    vi.stubGlobal("fetch", respond({ message: "busy" }, 503));
+    await expect(searchTvmaze("dark", new AbortController().signal)).rejects.toThrow("503");
+
+    const fetchMock = respond([]);
+    vi.stubGlobal("fetch", fetchMock);
+    await searchTvmaze("dark", new AbortController().signal);
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
   it("asks TVmaze with the encoded query and the signal", async () => {

@@ -19,9 +19,7 @@ describe("parseShowsQuery", () => {
     expect(parseShowsQuery({ q: "   " })).toBeNull();
   });
 
-  it("makes no request of a page that is not a whole number from 1", () => {
-    for (const page of ["0", "-1", "1.5", "01", "two", ""]) {
-      expect(parseShowsQuery({ q: "dark", page })).toBeNull();
-    }
+  it.each(["0", "-1", "1.5", "01", "two", ""])("makes no request of the page %j", (page) => {
+    expect(parseShowsQuery({ q: "dark", page })).toBeNull();
   });
 });

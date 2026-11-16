@@ -18,7 +18,9 @@ The user finds TV shows by typing a query. TVmaze does the search
    transitions, the screens swap at once.
 3. The query is trimmed. A request to the server goes out once the user has stopped typing for 400 ms, not on every
    key. The server asks TVmaze, filters the found shows by the genre and cuts the page; the browser never calls
-   TVmaze.
+   TVmaze. The server keeps TVmaze's answer to a query for 5 minutes: within them the same query — with any genre or
+   page — is answered from the cache, without TVmaze; after them TVmaze is asked again and the kept answer replaced.
+   A failed answer is not kept, so Retry asks TVmaze again.
 4. A new query cancels the request that is still running. An answer that arrives for an older query is never
    shown.
 5. While the next query waits for the debounce and loads, the found shows on screen stay, with their genre and
@@ -85,6 +87,14 @@ The user finds TV shows by typing a query. TVmaze does the search
 - The query once typing stops is `useDebouncedQuery`; what is asked with it (the genre and the page chosen for that
   query) is `useShowsParams`; the request and what the area shows are `useShowsRequest` and `getSearchView`.
   TVmaze’s URL and the mapping to `Show` moved to the server (`server/src/shows`). (#25)
+- TVmaze's answers are cached in the server's memory for 5 minutes, keyed by the trimmed query; no database. The
+  cache is a store of its own, `server/src/stores/searchCache` — a `Map` on `globalThis`, so a query such as
+  «constructor» is not found on an object's prototype — reached only by the tasks `readCachedSearch`,
+  `writeCachedSearch` and `dropExpiredSearches`, which `searchTvmaze` calls. An entry 5 minutes old or older is
+  expired; before each write the expired entries are dropped, so the cache holds no more than the queries of the
+  last 5 minutes. Failed and cancelled requests
+  are not cached. The cache is lost when the server restarts or sleeps; that is accepted. It replaces a cache on
+  the client (#22). (#26)
 - Skeletons only when there are no found shows to keep on screen; otherwise the shown results stay until the
   answer to the next query arrives, and the heading names the query of the shown results, not the one in the
   field. (#17) While they wait they are dimmed and cannot be pressed (`inert`, `aria-busy`): the dimming comes
