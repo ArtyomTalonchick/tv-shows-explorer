@@ -32,6 +32,9 @@
   .safe-zone::after { content: ""; position: absolute; inset: 10%; border: 1px dashed var(--colors-fg-muted); border-radius: var(--radii-full); }
   .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--spacing-6); }
   .states { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-6); }
+  .on-poster { padding: var(--spacing-3); border-radius: var(--radii-md); background: center / cover url("https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg"); }
+  .drawer-demo { position: relative; height: 34rem; overflow: hidden; border: 1px solid var(--colors-border); border-radius: var(--radii-lg); }
+  .drawer-demo .drawer-layer { position: absolute; }
   @media (max-width: 760px) {
     .page { padding: var(--spacing-10) var(--spacing-4); }
     .cards, .states { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--spacing-4); }
@@ -44,7 +47,7 @@
   <header>
     <div class="eyebrow">design/library</div>
     <h1 class="title">Components of <em>Premiere</em></h1>
-    <p class="lead">The UI kit of v0.1. Mockups are built from these classes only.</p>
+    <p class="lead">The UI kit of v0.2. Mockups are built from these classes only.</p>
   </header>
 
   <section class="group">
@@ -141,6 +144,80 @@
         <a class="show-card" href="#"><div class="show-card__poster"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/548/1371406.jpg" alt="Severance poster"></div><h3 class="show-card__name">Severance</h3><p class="show-card__meta">2022– · Drama, Science-Fiction</p></a></div>
       <div class="cell" style="justify-items: stretch"><small>no poster, no rating</small>
         <a class="show-card" href="#"><div class="show-card__poster"><div class="show-card__no-poster"><svg class="icon"><use href="#film"/></svg>No poster</div></div><h3 class="show-card__name">Darkroom</h3><p class="show-card__meta">2019 · Documentary</p></a></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>FavouriteToggle</h2>
+    <p>.fav-toggle (aria-pressed) · .fav-toggle--plain — a bookmark, not a star: the star marks the rating. Off, on, hover, press, focus; on a poster and on a flat surface</p>
+    <div class="row">
+      <div class="cell"><small>off</small><div class="on-poster"><button class="fav-toggle" aria-pressed="false" aria-label="Add Dark to favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+      <div class="cell"><small>off, hover</small><div class="on-poster"><button class="fav-toggle is-hover" aria-pressed="false" aria-label="Add Dark to favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+      <div class="cell"><small>press</small><div class="on-poster"><button class="fav-toggle is-active" aria-pressed="false" aria-label="Add Dark to favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+      <div class="cell"><small>on</small><div class="on-poster"><button class="fav-toggle" aria-pressed="true" aria-label="Remove Dark from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+      <div class="cell"><small>on, hover</small><div class="on-poster"><button class="fav-toggle is-hover" aria-pressed="true" aria-label="Remove Dark from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+      <div class="cell"><small>focus</small><div class="on-poster"><button class="fav-toggle is-focus" aria-pressed="true" aria-label="Remove Dark from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+    </div>
+    <div class="row">
+      <div class="cell"><small>plain, off</small><button class="fav-toggle fav-toggle--plain" aria-pressed="false" aria-label="Add Dark to favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div>
+      <div class="cell"><small>plain, hover</small><button class="fav-toggle fav-toggle--plain is-hover" aria-pressed="false" aria-label="Add Dark to favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div>
+      <div class="cell"><small>plain, on</small><button class="fav-toggle fav-toggle--plain" aria-pressed="true" aria-label="Remove Dark from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div>
+      <div class="cell"><small>plain, on, hover</small><button class="fav-toggle fav-toggle--plain is-hover" aria-pressed="true" aria-label="Remove Dark from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div>
+    </div>
+    <p>.show-card-wrap — a ShowCard with the toggle laid over the poster, outside the card link</p>
+    <div class="cards">
+      <div class="cell" style="justify-items: stretch"><small>not in favourites</small>
+        <div class="show-card-wrap"><a class="show-card" href="#"><div class="show-card__poster"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg" alt="Dark poster"><span class="show-card__rating">★ 8.2</span></div><h3 class="show-card__name">Dark</h3><p class="show-card__meta">2017–2020 · Drama, Science-Fiction</p></a><button class="fav-toggle" aria-pressed="false" aria-label="Add Dark to favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+      <div class="cell" style="justify-items: stretch"><small>in favourites</small>
+        <div class="show-card-wrap"><a class="show-card" href="#"><div class="show-card__poster"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg" alt="Breaking Bad poster"><span class="show-card__rating">★ 9.2</span></div><h3 class="show-card__name">Breaking Bad</h3><p class="show-card__meta">2008–2019 · Drama, Crime, Thriller</p></a><button class="fav-toggle" aria-pressed="true" aria-label="Remove Breaking Bad from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+      <div class="cell" style="justify-items: stretch"><small>card hover, toggle hover</small>
+        <div class="show-card-wrap"><a class="show-card is-hover" href="#"><div class="show-card__poster"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/548/1371406.jpg" alt="Severance poster"><span class="show-card__rating">★ 7.7</span></div><h3 class="show-card__name">Severance</h3><p class="show-card__meta">2022– · Drama, Science-Fiction</p></a><button class="fav-toggle is-hover" aria-pressed="false" aria-label="Add Severance to favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+      <div class="cell" style="justify-items: stretch"><small>no poster</small>
+        <div class="show-card-wrap"><a class="show-card" href="#"><div class="show-card__poster"><div class="show-card__no-poster"><svg class="icon"><use href="#film"/></svg>No poster</div></div><h3 class="show-card__name">Darkroom</h3><p class="show-card__meta">2019 · Documentary</p></a><button class="fav-toggle" aria-pressed="false" aria-label="Add Darkroom to favourites"><svg class="icon"><use href="#bookmark"/></svg></button></div></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>FavouritesButton</h2>
+    <p>.fav-button · .fav-button__count (--zero) — opens the favourites list; the counter is always shown</p>
+    <div class="row">
+      <div class="cell"><small>zero</small><button class="fav-button"><svg class="icon"><use href="#bookmark"/></svg><span class="fav-button__label">Favourites</span><span class="fav-button__count fav-button__count--zero">0</span></button></div>
+      <div class="cell"><small>with shows</small><button class="fav-button"><svg class="icon"><use href="#bookmark"/></svg><span class="fav-button__label">Favourites</span><span class="fav-button__count">3</span></button></div>
+      <div class="cell"><small>hover</small><button class="fav-button is-hover"><svg class="icon"><use href="#bookmark"/></svg><span class="fav-button__label">Favourites</span><span class="fav-button__count">3</span></button></div>
+      <div class="cell"><small>active</small><button class="fav-button is-active"><svg class="icon"><use href="#bookmark"/></svg><span class="fav-button__label">Favourites</span><span class="fav-button__count">3</span></button></div>
+      <div class="cell"><small>focus</small><button class="fav-button is-focus"><svg class="icon"><use href="#bookmark"/></svg><span class="fav-button__label">Favourites</span><span class="fav-button__count">3</span></button></div>
+      <div class="cell"><small>many</small><button class="fav-button"><svg class="icon"><use href="#bookmark"/></svg><span class="fav-button__label">Favourites</span><span class="fav-button__count">128</span></button></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Toast</h2>
+    <p>.toast · .toast--added · .toast__action · .toast-region — bottom centre, leaves after 4 s; «removed» has Undo</p>
+    <div class="row">
+      <div class="cell"><small>added</small><div class="toast toast--added" role="status"><svg class="icon"><use href="#bookmark"/></svg><p class="toast__text">Added <b>Dark</b> to favourites</p></div></div>
+      <div class="cell"><small>removed</small><div class="toast" role="status"><svg class="icon"><use href="#bookmark"/></svg><p class="toast__text">Removed <b>Dark</b> from favourites</p><button class="toast__action">Undo</button></div></div>
+      <div class="cell"><small>removed, Undo hover</small><div class="toast" role="status"><svg class="icon"><use href="#bookmark"/></svg><p class="toast__text">Removed <b>Dark</b> from favourites</p><button class="toast__action is-hover">Undo</button></div></div>
+    </div>
+  </section>
+
+  <section class="group">
+    <h2>Drawer and FavouriteRow</h2>
+    <p>.drawer-layer · .drawer · __header, __title, __count, __close, __body · .fav-list · .fav-row, __link, __thumb, __name, __meta — the favourites list, filled and empty</p>
+    <div class="states">
+      <div class="cell" style="justify-items: stretch"><small>filled · second row hovered</small>
+        <div class="drawer-demo"><div class="drawer-layer"><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="fav-title-1">
+          <header class="drawer__header"><div><div class="eyebrow">Your list</div><h2 class="drawer__title" id="fav-title-1">Favourites <span class="drawer__count">3</span></h2></div><button class="drawer__close" aria-label="Close favourites"><svg class="icon"><use href="#close"/></svg></button></header>
+          <div class="drawer__body"><ul class="fav-list">
+            <li class="fav-row"><a class="fav-row__link" href="#"><span class="fav-row__thumb"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/501/1253519.jpg" alt=""></span><span class="fav-row__text"><span class="fav-row__name">Breaking Bad</span><span class="fav-row__meta">2008–2019 · Drama, Crime, Thriller</span></span></a><button class="fav-toggle fav-toggle--plain" aria-pressed="true" aria-label="Remove Breaking Bad from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></li>
+            <li class="fav-row is-hover"><a class="fav-row__link" href="#"><span class="fav-row__thumb"><img src="https://static.tvmaze.com/uploads/images/medium_portrait/548/1371406.jpg" alt=""></span><span class="fav-row__text"><span class="fav-row__name">Severance</span><span class="fav-row__meta">2022– · Drama, Science-Fiction</span></span></a><button class="fav-toggle fav-toggle--plain" aria-pressed="true" aria-label="Remove Severance from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></li>
+            <li class="fav-row"><a class="fav-row__link" href="#"><span class="fav-row__thumb"><svg class="icon"><use href="#film"/></svg></span><span class="fav-row__text"><span class="fav-row__name">Darkroom</span><span class="fav-row__meta">2019 · Documentary</span></span></a><button class="fav-toggle fav-toggle--plain" aria-pressed="true" aria-label="Remove Darkroom from favourites"><svg class="icon"><use href="#bookmark"/></svg></button></li>
+          </ul></div>
+        </aside></div></div></div>
+      <div class="cell" style="justify-items: stretch"><small>empty</small>
+        <div class="drawer-demo"><div class="drawer-layer"><aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="fav-title-2">
+          <header class="drawer__header"><div><div class="eyebrow">Your list</div><h2 class="drawer__title" id="fav-title-2">Favourites <span class="drawer__count">0</span></h2></div><button class="drawer__close is-hover" aria-label="Close favourites"><svg class="icon"><use href="#close"/></svg></button></header>
+          <div class="drawer__body"><div class="state"><div class="state__icon"><svg class="icon"><use href="#bookmark"/></svg></div><h3 class="state__title">No favourites yet</h3><p class="state__text">Tap the bookmark on a show to keep it here.</p></div></div>
+        </aside></div></div></div>
     </div>
   </section>
 

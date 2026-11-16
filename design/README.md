@@ -13,7 +13,8 @@ A dark, cinematic, hero-centric look, based on the
   catalogue hard to use.
 - **The poster is the backdrop.** TVmaze gives portrait posters only, with no wide stills, so a hero background
   is the same poster, blurred and darkened. The sharp poster sits next to the title.
-- **One accent.** Ember orange `#FF6B35` marks CTAs, eyebrows and ratings, and nothing else.
+- **One accent.** Ember orange `#FF6B35` marks CTAs, eyebrows, ratings and a saved favourite (from v0.2), and
+  nothing else.
 - **Archivo**, from regular to black: an oversized display headline (`clamp()`), a small uppercase eyebrow
   above it, and one short sentence below.
 
@@ -33,6 +34,8 @@ Contrast (WCAG AA): primary text 17.7:1, secondary text 7.7:1, accent text 6.8:1
 | `library/screens/*.png` | Screenshots of the showcase: desktop 1440px and mobile 390px |
 | `v0.1/mockup.html` | The search screen of v0.1 in every state, built from the library |
 | `v0.1/screens/*.png` | One screenshot per state: `desktop-<state>.png` (1440px) and `mobile-<state>.png` (390px) |
+| `v0.2/mockup.html` | Favourites on top of the v0.1 search screen: the bookmark on the cards, the toasts, the favourites button and the list in a drawer |
+| `v0.2/screens/*.png` | One screenshot per state, named as in v0.1 |
 | `icon/` | The app icon: `icon.svg`, `icon-maskable.svg` and their PNG exports |
 
 ## Tokens
@@ -93,6 +96,11 @@ component there. A component goes into the code when the first implementation ta
 | Pagination | `.pagination`, `__item` / `aria-current`, `__gap`, `__info` | current, hover, disabled arrows, a gap |
 | Skeleton, Spinner | `.skeleton--poster`, `--line`, `--line-short`, `--chip`, `.spinner`, `.spinner--lg` | — |
 | EmptyState, ErrorState | `.state`, `.state--error`, `__icon`, `__title`, `__text` | — |
+| FavouriteToggle | `.fav-toggle` / `aria-pressed`, `.fav-toggle--plain`, `.show-card-wrap` | off, on, hover, press, focus; on a poster and plain. A bookmark, not a star: the star marks the rating |
+| FavouritesButton | `.fav-button`, `__label`, `__count`, `__count--zero` | zero, with shows, hover, active, focus |
+| Toast | `.toast-region`, `.toast`, `.toast--added`, `__text`, `__action` | added, removed with Undo |
+| Drawer | `.drawer-layer`, `.drawer`, `__header`, `__title`, `__count`, `__close`, `__body` | filled, empty (an EmptyState inside) |
+| FavouriteRow | `.fav-list`, `.fav-row`, `__link`, `__thumb`, `__name`, `__meta` | default, hover, no poster |
 
 Rules:
 

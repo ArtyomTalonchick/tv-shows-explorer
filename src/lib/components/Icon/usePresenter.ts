@@ -11,6 +11,7 @@ export const ICON_NAMES = [
   "film",
   "search-off",
   "alert",
+  "bookmark",
   "retry",
 ] as const;
 

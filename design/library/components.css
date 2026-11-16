@@ -11,7 +11,6 @@ body { background: var(--colors-bg); color: var(--colors-fg); font-family: var(-
 body.tokens-pending { visibility: hidden; }
 :focus-visible, .is-focus { outline: 3px solid var(--colors-accent-solid); outline-offset: 3px; }
 .icon { width: 1.25em; height: 1.25em; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
 /* ---------- Text ---------- */
 .eyebrow { font-size: var(--fontSizes-xs); font-weight: var(--fontWeights-semibold); letter-spacing: var(--letterSpacings-eyebrow); text-transform: uppercase; color: var(--colors-accent-fg); }
 .display { font-family: var(--fonts-heading); font-size: var(--fontSizes-display); line-height: var(--lineHeights-display); font-weight: var(--fontWeights-black); letter-spacing: var(--letterSpacings-display); }
@@ -100,6 +99,71 @@ body.tokens-pending { visibility: hidden; }
 .state .btn { margin-top: var(--spacing-3); }
 .state--error { border-style: solid; }
 .state--error .state__icon { color: var(--colors-accent-fg); }
+
+/* ---------- FavouriteToggle ---------- */
+/* The bookmark that adds a show to the favourites or removes it; aria-pressed="true" when the show is in them,
+   and the icon fills. Not a star: the star marks the rating. --plain drops the glass for a row on a flat surface. */
+.fav-toggle { display: grid; place-items: center; width: var(--spacing-10); height: var(--spacing-10); flex: none; padding: 0; border: 1px solid var(--colors-border); border-radius: var(--radii-full); background: var(--colors-bg-glass); color: var(--colors-fg); backdrop-filter: blur(var(--blurs-glass)); cursor: pointer; transition: color var(--durations-fast) var(--easings-standard), border-color var(--durations-fast) var(--easings-standard), background var(--durations-fast) var(--easings-standard), transform var(--durations-fast) var(--easings-standard); }
+.fav-toggle:hover, .fav-toggle.is-hover { border-color: var(--colors-fg-subtle); }
+.fav-toggle:active, .fav-toggle.is-active { transform: scale(0.9); }
+.fav-toggle[aria-pressed="true"] { color: var(--colors-accent-fg); }
+.fav-toggle[aria-pressed="true"] .icon { fill: currentColor; }
+.fav-toggle[aria-pressed="true"]:hover, .fav-toggle[aria-pressed="true"].is-hover { color: var(--colors-accent-hover); }
+.fav-toggle--plain { background: transparent; border-color: transparent; backdrop-filter: none; color: var(--colors-fg-muted); }
+.fav-toggle--plain:hover, .fav-toggle--plain.is-hover { background: var(--colors-border); border-color: transparent; color: var(--colors-fg); }
+
+/* A ShowCard with a FavouriteToggle: the toggle sits outside the card link (a button cannot be inside a link) and
+   is laid over the top-right corner of the poster; the rating keeps the top-left. */
+.show-card-wrap { position: relative; min-width: 0; }
+.show-card-wrap > .fav-toggle { position: absolute; top: var(--spacing-3); right: var(--spacing-3); }
+
+/* ---------- FavouritesButton ---------- */
+/* Opens the favourites list. The counter is always shown; at zero it is muted (--zero). */
+.fav-button { display: inline-flex; align-items: center; gap: var(--spacing-2); flex: none; border: 1px solid var(--colors-border); border-radius: var(--radii-full); background: var(--colors-bg-glass); color: var(--colors-fg); padding: var(--spacing-2) var(--spacing-2) var(--spacing-2) var(--spacing-4); font: var(--fontWeights-semibold) var(--fontSizes-sm) / var(--lineHeights-tight) var(--fonts-body); white-space: nowrap; cursor: pointer; backdrop-filter: blur(var(--blurs-glass)); transition: background var(--durations-fast) var(--easings-standard), border-color var(--durations-fast) var(--easings-standard); }
+.fav-button:hover, .fav-button.is-hover { border-color: var(--colors-fg-subtle); background: var(--colors-bg-muted); }
+.fav-button:active, .fav-button.is-active { background: var(--colors-bg-subtle); }
+.fav-button__count { display: grid; place-items: center; min-width: var(--spacing-6); height: var(--spacing-6); padding: 0 var(--spacing-2); border-radius: var(--radii-full); background: var(--colors-accent-solid); color: var(--colors-accent-contrast); font-size: var(--fontSizes-xs); font-weight: var(--fontWeights-extrabold); }
+.fav-button__count--zero { background: var(--colors-bg-muted); color: var(--colors-fg-muted); }
+
+/* ---------- Toast ---------- */
+/* The answer to adding or removing a favourite. .toast-region places it at the bottom centre above everything;
+   a toast leaves after durations.toast. --added fills the bookmark; «removed» has Undo. */
+.toast-region { position: fixed; left: 50%; bottom: var(--spacing-6); z-index: var(--zIndex-toast); transform: translateX(-50%); display: grid; gap: var(--spacing-2); width: max-content; max-width: calc(100% - var(--spacing-8)); }
+.toast { display: flex; align-items: center; gap: var(--spacing-3); padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-4); min-height: var(--spacing-12); border: 1px solid var(--colors-border); border-radius: var(--radii-md); background: var(--colors-bg-muted); color: var(--colors-fg); box-shadow: var(--shadows-overlay); font-size: var(--fontSizes-sm); }
+/* The icon is as tall as the capitals of the text, so neither looks higher than the other. */
+.toast > .icon { width: var(--spacing-4); height: var(--spacing-4); color: var(--colors-fg-muted); }
+.toast--added > .icon { color: var(--colors-accent-fg); fill: currentColor; }
+.toast__text { min-width: 0; }
+.toast__text b { font-weight: var(--fontWeights-bold); }
+.toast__action { flex: none; margin-left: var(--spacing-2); border: 0; border-radius: var(--radii-sm); background: transparent; color: var(--colors-accent-fg); padding: var(--spacing-1) var(--spacing-2); font: var(--fontWeights-bold) var(--fontSizes-sm) var(--fonts-body); cursor: pointer; transition: background var(--durations-fast) var(--easings-standard); }
+.toast__action:hover, .toast__action.is-hover { background: var(--colors-border); }
+
+/* ---------- Drawer ---------- */
+/* A panel from the right edge over a dimmed page: sizes.drawer wide on desktop, full width on a phone.
+   .drawer-layer is the backdrop (a click on it closes the drawer); × and Escape close it too. */
+.drawer-layer { position: fixed; inset: 0; z-index: var(--zIndex-overlay); display: flex; justify-content: flex-end; background: var(--colors-bg-scrim); }
+.drawer { display: flex; flex-direction: column; width: 100%; max-width: var(--sizes-drawer); height: 100%; border-left: 1px solid var(--colors-border); background: var(--colors-bg-subtle); box-shadow: var(--shadows-overlay); }
+.drawer__header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--spacing-4); padding: var(--spacing-6); border-bottom: 1px solid var(--colors-border); }
+.drawer__title { margin-top: var(--spacing-2); font-size: var(--fontSizes-2xl); font-weight: var(--fontWeights-extrabold); letter-spacing: var(--letterSpacings-tight); line-height: var(--lineHeights-tight); }
+.drawer__count { color: var(--colors-fg-subtle); font-weight: var(--fontWeights-semibold); }
+.drawer__close { display: grid; place-items: center; width: var(--spacing-10); height: var(--spacing-10); flex: none; border: 0; border-radius: var(--radii-full); background: var(--colors-bg-muted); color: var(--colors-fg-muted); cursor: pointer; transition: background var(--durations-fast) var(--easings-standard), color var(--durations-fast) var(--easings-standard); }
+.drawer__close:hover, .drawer__close.is-hover { background: var(--colors-border); color: var(--colors-fg); }
+.drawer__body { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; padding: var(--spacing-3); }
+.drawer__body > .state { flex: 1; align-content: center; margin: var(--spacing-3); }
+
+/* ---------- FavouriteRow ---------- */
+/* One show in the favourites list: a link to the show (thumbnail, name, details) and a plain FavouriteToggle that
+   removes it. */
+.fav-list { display: grid; gap: var(--spacing-1); padding: 0; list-style: none; }
+.fav-row { display: flex; align-items: center; gap: var(--spacing-2); padding: var(--spacing-2); border-radius: var(--radii-md); transition: background var(--durations-fast) var(--easings-standard); }
+.fav-row:hover, .fav-row.is-hover { background: var(--colors-bg-muted); }
+.fav-row__link { flex: 1; min-width: 0; display: flex; align-items: center; gap: var(--spacing-4); color: inherit; text-decoration: none; border-radius: var(--radii-sm); }
+.fav-row__thumb { display: grid; place-items: center; width: var(--spacing-12); aspect-ratio: 2 / 3; flex: none; overflow: hidden; border: 1px solid var(--colors-border); border-radius: var(--radii-sm); background: var(--colors-bg); color: var(--colors-fg-subtle); }
+.fav-row__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.fav-row__text { min-width: 0; }
+.fav-row__name { display: block; font-size: var(--fontSizes-md); font-weight: var(--fontWeights-bold); line-height: var(--lineHeights-tight); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--durations-fast) var(--easings-standard); }
+.fav-row:hover .fav-row__name, .fav-row.is-hover .fav-row__name { color: var(--colors-accent-fg); }
+.fav-row__meta { display: block; margin-top: var(--spacing-1); color: var(--colors-fg-muted); font-size: var(--fontSizes-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
