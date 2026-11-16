@@ -1,13 +1,11 @@
 import { Hono } from "hono";
-import { health } from "./health/health";
-import { shows } from "./shows/shows";
+import { routes } from "./routes/routes";
 
-// The server's routes, without listening: `index` serves them, tests call `app.request()`.
+// The server: the API routes under `/api`, without listening. `index` serves it, tests call `app.request()`.
 export const createApp = (): Hono => {
   const app = new Hono();
 
-  app.route("/api/health", health);
-  app.route("/api/shows", shows);
+  app.route("/api", routes);
 
   return app;
 };

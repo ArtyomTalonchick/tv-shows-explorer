@@ -86,7 +86,7 @@ The user finds TV shows by typing a query. TVmaze does the search
   browser cancels cancels the server’s TVmaze request too. In development Vite passes `/api` on to the server. (#25)
 - The query once typing stops is `useDebouncedQuery`; what is asked with it (the genre and the page chosen for that
   query) is `useShowsParams`; the request and what the area shows are `useShowsRequest` and `getSearchView`.
-  TVmaze’s URL and the mapping to `Show` moved to the server (`server/src/shows`). (#25)
+  TVmaze’s URL and the mapping to `Show` moved to the server (`server/src/routes/shows/getShows`). (#25)
 - TVmaze's answers are cached in the server's memory for 5 minutes, keyed by the trimmed query; no database. The
   cache is a store of its own, `server/src/stores/searchCache` — a `Map` on `globalThis`, so a query such as
   «constructor» is not found on an object's prototype — reached only by the tasks `readCachedSearch`,

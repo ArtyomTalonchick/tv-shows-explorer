@@ -1,4 +1,5 @@
-import { createApp } from "@/createApp";
+import { Hono } from "hono";
+import { getShows } from "../getShows";
 import { searchCache } from "@/stores/searchCache";
 
 const tvmazeShow = (id: number, genres: string[]) => ({
@@ -15,6 +16,8 @@ const tvmazeShow = (id: number, genres: string[]) => ({
   },
 });
 
+const app = new Hono().get("/", getShows);
+
 const respond = (body: unknown, status = 200) =>
   vi.fn().mockResolvedValue(new Response(JSON.stringify(body), { status }));
 
@@ -28,7 +31,7 @@ describe("GET /api/shows", () => {
     const fetchMock = respond([1, 2, 3, 4, 5].map((id) => tvmazeShow(id, id === 3 ? [] : ["Drama"])));
     vi.stubGlobal("fetch", fetchMock);
 
-    const response = await createApp().request("/api/shows?q=doctor+who&genre=Drama&page=2");
+    const response = await app.request("/?q=doctor+who&genre=Drama&page=2");
 
     expect(response.status).toBe(200);
     expect(fetchMock).toHaveBeenCalledWith(
@@ -50,16 +53,16 @@ describe("GET /api/shows", () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
 
-    expect((await createApp().request("/api/shows")).status).toBe(400);
-    expect((await createApp().request("/api/shows?q=%20")).status).toBe(400);
-    expect((await createApp().request("/api/shows?q=dark&page=0")).status).toBe(400);
+    expect((await app.request("/")).status).toBe(400);
+    expect((await app.request("/?q=%20")).status).toBe(400);
+    expect((await app.request("/?q=dark&page=0")).status).toBe(400);
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("answers 502 when TVmaze fails", async () => {
     vi.stubGlobal("fetch", respond({ message: "busy" }, 503));
 
-    const response = await createApp().request("/api/shows?q=dark");
+    const response = await app.request("/?q=dark");
 
     expect(response.status).toBe(502);
   });
