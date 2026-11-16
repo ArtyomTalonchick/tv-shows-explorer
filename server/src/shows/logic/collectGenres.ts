@@ -1,5 +1,4 @@
-import type { Show } from "@tv-shows-explorer/shared";
-import type { GenreCount } from "../types";
+import type { GenreCount, Show } from "@tv-shows-explorer/shared";
 
 // The unique genres of the shows with their counts: the most common first, a tie in alphabetical order.
 export const collectGenres = (shows: Pick<Show, "genres">[]): GenreCount[] => {

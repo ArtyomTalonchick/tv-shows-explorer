@@ -56,7 +56,7 @@ An npm workspaces monorepo in TypeScript:
 
 ```sh
 npm install           # installs all three packages
-npm run dev           # the client (Vite) and the server (port 3000, or PORT) together
+npm run dev           # the client (Vite) and the server (port 4310, or PORT) together
 npm run build         # type check and production build of the client
 npm run lint          # ESLint, every package
 npm run format:check  # Prettier, every package

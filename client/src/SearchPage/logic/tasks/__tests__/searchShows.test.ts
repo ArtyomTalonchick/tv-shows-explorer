@@ -8,78 +8,32 @@ describe("searchShows", () => {
     vi.unstubAllGlobals();
   });
 
-  it("asks TVmaze with the encoded query and the signal", async () => {
-    const fetchMock = respond([]);
+  it("asks the server for the encoded query, the page and the genre, with the signal", async () => {
+    const answer = { shows: [], genres: [], found: 0, genre: "Science-Fiction", total: 0, page: 2, perPage: 3 };
+    const fetchMock = respond(answer);
     vi.stubGlobal("fetch", fetchMock);
     const { signal } = new AbortController();
 
-    await searchShows("doctor who & co", signal);
+    const result = await searchShows({ query: "doctor who & co", genre: "Science-Fiction", page: 2 }, signal);
 
-    expect(fetchMock).toHaveBeenCalledWith("https://api.tvmaze.com/search/shows?q=doctor%20who%20%26%20co", {
-      signal,
-    });
+    expect(result).toEqual(answer);
+    expect(fetchMock).toHaveBeenCalledWith("/api/shows?q=doctor+who+%26+co&page=2&genre=Science-Fiction", { signal });
   });
 
-  it("maps the results, with no rating and no image as null", async () => {
-    vi.stubGlobal(
-      "fetch",
-      respond([
-        {
-          score: 0.9,
-          show: {
-            id: 1,
-            name: "Dark",
-            genres: ["Drama"],
-            rating: { average: 8.2 },
-            premiered: "2017-12-01",
-            ended: "2020-06-27",
-            image: { medium: "m.jpg", original: "o.jpg" },
-            url: "https://www.tvmaze.com/shows/17861/dark",
-          },
-        },
-        {
-          score: 0.5,
-          show: {
-            id: 2,
-            name: "Darkroom",
-            genres: [],
-            rating: { average: null },
-            premiered: null,
-            ended: null,
-            image: null,
-            url: "https://www.tvmaze.com/shows/2/darkroom",
-          },
-        },
-      ]),
-    );
+  it("leaves the genre out when there is none", async () => {
+    const fetchMock = respond({});
+    vi.stubGlobal("fetch", fetchMock);
 
-    await expect(searchShows("dark", new AbortController().signal)).resolves.toEqual([
-      {
-        id: 1,
-        name: "Dark",
-        genres: ["Drama"],
-        rating: 8.2,
-        premiered: "2017-12-01",
-        ended: "2020-06-27",
-        image: "m.jpg",
-        url: "https://www.tvmaze.com/shows/17861/dark",
-      },
-      {
-        id: 2,
-        name: "Darkroom",
-        genres: [],
-        rating: null,
-        premiered: null,
-        ended: null,
-        image: null,
-        url: "https://www.tvmaze.com/shows/2/darkroom",
-      },
-    ]);
+    await searchShows({ query: "dark", genre: null, page: 1 }, new AbortController().signal);
+
+    expect(fetchMock.mock.calls[0]?.[0]).toBe("/api/shows?q=dark&page=1");
   });
 
   it("rejects when the request fails", async () => {
-    vi.stubGlobal("fetch", respond({ message: "busy" }, 503));
+    vi.stubGlobal("fetch", respond({ error: "TVmaze did not answer" }, 502));
 
-    await expect(searchShows("dark", new AbortController().signal)).rejects.toThrow("503");
+    await expect(searchShows({ query: "dark", genre: null, page: 1 }, new AbortController().signal)).rejects.toThrow(
+      "502",
+    );
   });
 });

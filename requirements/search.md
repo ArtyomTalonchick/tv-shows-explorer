@@ -3,7 +3,7 @@
 ## Purpose
 
 The user finds TV shows by typing a query. TVmaze does the search
-(`https://api.tvmaze.com/search/shows?q=<query>`); the app shows what it finds.
+(`https://api.tvmaze.com/search/shows?q=<query>`); the app’s server asks it, and the app shows what it finds.
 
 ## Behaviour
 
@@ -16,11 +16,13 @@ The user finds TV shows by typing a query. TVmaze does the search
    rises in (400 ms). On a touch screen the keyboard opens on that first tap and stays open, and the page does not
    scroll. Typing within the results screen is not animated; with reduced motion, or in a browser without view
    transitions, the screens swap at once.
-3. The query is trimmed. A request goes out once the user has stopped typing for 400 ms, not on every key.
+3. The query is trimmed. A request to the server goes out once the user has stopped typing for 400 ms, not on every
+   key. The server asks TVmaze, filters the found shows by the genre and cuts the page; the browser never calls
+   TVmaze.
 4. A new query cancels the request that is still running. An answer that arrives for an older query is never
    shown.
 5. While the next query waits for the debounce and loads, the found shows on screen stay, with their genre and
-   page; the spinner in the field shows the request, and the heading keeps naming the query of the shown results.
+   page, dimmed (see 10), and the heading keeps naming the query of the shown results.
    The new answer replaces them and opens page 1 with no genre selected.
 6. When the answer comes, the results area shows the count («10 shows», «1 show») and the found shows as cards
    by pages (see `results-list.md`), with the genre chips above them (see `genre-filter.md`).
@@ -30,6 +32,9 @@ The user finds TV shows by typing a query. TVmaze does the search
 9. The logo in the header is a button back to the start screen: it resets the query, the results, the genre and the
    page, and plays the change of 2 backwards. Only the logo brings back the start screen; `Esc` and the browser's
    Back do not.
+10. While the shown results wait for an answer — to a new query, another genre or another page — nothing in them
+    can be pressed or focused, and after 150 ms they dim to half their opacity (at once with reduced motion), so a
+    quick answer does not flash. The field stays as it is: the user keeps typing.
 
 ## States
 
@@ -37,7 +42,7 @@ The user finds TV shows by typing a query. TVmaze does the search
 |---|---|
 | Start | The start hero with the search field; no results area |
 | Idle | The results screen with an empty field: «Search for a show» and «Type a title — results appear as you type.»; no heading, no count |
-| Loading | A spinner in the field instead of ×. With no found shows on screen (the first request, or after an empty or failed one): five chip skeletons and three card skeletons in the list. With found shows on screen: they stay as they are |
+| Loading | The field keeps its × button. With no found shows on screen (the first request, or after an empty or failed one): five chip skeletons and three card skeletons in the list. With found shows on screen: they stay, dimmed, and cannot be pressed |
 | Results | The count and the found shows |
 | No results | «0 shows» and «Nothing found for “<query>”» with «Clear search» |
 | Error | «Could not load shows» with Retry |
@@ -49,7 +54,10 @@ The user finds TV shows by typing a query. TVmaze does the search
 - Typing back to the query whose answer is on screen within 400 ms sends no new request and changes nothing on
   screen: the genre, the page and the list stay.
 - After the field is emptied, the next query loads with skeletons again.
-- Special characters are URL-encoded («doctor who & co» → `q=doctor%20who%20%26%20co`).
+- Special characters are URL-encoded on the way to the server («doctor who & co» → `q=doctor+who+%26+co`) and to
+  TVmaze (`q=doctor%20who%20%26%20co`).
+- The server answers 400 to a missing or blank query and to a page that is not a whole number from 1, and 502
+  when TVmaze fails; the app shows the error state for both.
 - A show without a rating or a poster comes through with `null` in that field.
 
 ## Decisions
@@ -60,7 +68,8 @@ The user finds TV shows by typing a query. TVmaze does the search
 - Requests are handled by the app's own code (`useEffect` + `AbortController`), without a query library. (#8)
 - TVmaze is asked through an API layer with no React in it: `SearchPage/searchShows` (the TVmaze URL and the
   mapping to `Show`) over `lib/helpers/fetchJson` (`fetch`, the non-2xx check, `json()`). The caller passes the
-  `AbortSignal`; debounce, cancellation and Retry stay in `useShowsRequest`. (#16)
+  `AbortSignal`; debounce, cancellation and Retry stay in `useShowsRequest`. (#16) Since #25 `searchShows` asks the
+  app’s server, and the debounce is in `useDebouncedQuery`. (#25)
 - Cancelling a request, dropping a late answer and Retry are done by the shared hook `lib/hooks/useRequest`, made
   now although search is its only user, so the next request does not repeat them. `useShowsRequest` adds the
   debounce and drops the answer when the field is emptied; `getSearchView`, a plain function, decides what the
@@ -69,9 +78,19 @@ The user finds TV shows by typing a query. TVmaze does the search
   lasting `durations.slow` (400 ms), a token added for it. (#8)
 - Until the results list (#9) brings the show cards, the results state shows a plain list of show names. (#8)
   The cards and pagination replaced it in #9. (#9)
+- The search goes through the app’s server (`GET /api/shows`), which asks TVmaze, filters by the genre and cuts the
+  page; the browser sends no request to TVmaze. The request carries the query, the genre and the page, so a change of
+  the genre or the page is a new request; the server cache (#26) keeps it from reaching TVmaze. A request the
+  browser cancels cancels the server’s TVmaze request too. In development Vite passes `/api` on to the server. (#25)
+- The query once typing stops is `useDebouncedQuery`; what is asked with it (the genre and the page chosen for that
+  query) is `useShowsParams`; the request and what the area shows are `useShowsRequest` and `getSearchView`.
+  TVmaze’s URL and the mapping to `Show` moved to the server (`server/src/shows`). (#25)
 - Skeletons only when there are no found shows to keep on screen; otherwise the shown results stay until the
   answer to the next query arrives, and the heading names the query of the shown results, not the one in the
-  field. The old results are not dimmed. (#17)
+  field. (#17) While they wait they are dimmed and cannot be pressed (`inert`, `aria-busy`): the dimming comes
+  after 150 ms, so a quick answer does not flash; this replaces «the old results are not dimmed» of #17. (#25)
+- The field shows no spinner: it turned for a change of the genre or the page too, far from the field, and the
+  dimmed results already show the wait. The × button stays while a request runs. (#25)
 - An emptied field passes the debounce at once, so the request in flight is cancelled and the same query typed
   back within 400 ms is sent again instead of waiting for the old answer forever. (#20)
 - The results screen opens on the focus of the hero field, not on the first letter, and an empty field keeps it:

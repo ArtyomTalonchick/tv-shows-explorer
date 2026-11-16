@@ -7,10 +7,11 @@ feature file.
 ## Product
 
 TV Shows Explorer searches TV shows with the public [TVmaze API](https://www.tvmaze.com/api)
-(`https://api.tvmaze.com/search/shows?q=<query>`).
+(`https://api.tvmaze.com/search/shows?q=<query>`). The browser asks the app’s own server
+(`GET /api/shows?q=<query>&genre=<genre>&page=<page>`), and the server asks TVmaze. (#25)
 
-- **Search.** The app starts with an empty list and a search field. The query goes to TVmaze, which does the
-  filtering.
+- **Search.** The app starts with an empty list and a search field. The query goes through the server to TVmaze,
+  which does the search.
 - **List and pagination.** Results are shown as cards, three per page; the user switches between pages.
 - **Genre filter.** The unique genres of the current results are shown as chips above the list. A chip keeps
   only the shows of that genre; the filter can be reset to all results.

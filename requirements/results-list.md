@@ -15,7 +15,8 @@ The shows TVmaze finds are shown as cards, three per page, so the user can look 
 5. When the user switches the page and the start of the cards is above the screen (the pagination is at the
    bottom of a long page on mobile), the page scrolls to the top, so the new cards are seen from the first one.
    The scroll is smooth, or instant with reduced motion.
-6. A new search result opens page 1, and so does a change of the genre filter: the list shows the shows of the
+6. A page is asked from the server; the shown cards stay, dimmed, until its answer (see `search.md`).
+7. A new search result opens page 1, and so does a change of the genre filter: the list shows the shows of the
    selected genre (see `genre-filter.md`).
 
 ## States
@@ -49,6 +50,9 @@ The loading, no-results and error states belong to the search: see `search.md`.
 ## Decisions
 
 - Paging is done on the client: TVmaze search returns all its results (at most 10) in one response. (#9)
+- Paging moved to the server: the client sends the page, and the server answers three shows of it with the totals
+  the pagination needs; a page past the last one gives the last. The page button is marked at once; the cards come
+  with the answer and, until then, the shown ones stay dimmed and not pressable (see `search.md`). (#25)
 - Every page gets a button; the «…» gap of the design library is not used, as 10 results make at most 4 pages. (#9)
 - A card links to the show's page on TVmaze, in a new tab, until the app has a show page of its own. (#9)
 - Switching the page scrolls to the top when the start of the cards is above the screen. (#9)

@@ -1,25 +1,22 @@
-import { useDebouncedValue } from "@/lib/hooks/useDebouncedValue";
 import { useRequest } from "@/lib/hooks/useRequest";
+import type { ShowsQuery } from "@tv-shows-explorer/shared";
 import type { SearchView } from "../types";
 import { getSearchView } from "./getSearchView";
 import { searchShows } from "./tasks/searchShows";
-
-export const SEARCH_DEBOUNCE_MS = 400;
 
 export type UseShowsRequestResult = SearchView & {
   retry: () => void;
 };
 
-// The TVmaze request for a trimmed query: sent once typing stops, cancelled by the next one, repeated by Retry.
-export const useShowsRequest = (query: string): UseShowsRequestResult => {
-  // An emptied field passes at once: the same query typed back is then a new request, not the old one kept.
-  const debounced = useDebouncedValue(query, query === "" ? 0 : SEARCH_DEBOUNCE_MS);
-  const { latest, current, retry, reset } = useRequest(searchShows, debounced === "" ? null : debounced);
+// The server request for `params`: cancelled by the next one, repeated by Retry. `query` is the trimmed field, which
+// `params` follow once typing stops.
+export const useShowsRequest = (query: string, params: ShowsQuery | null): UseShowsRequestResult => {
+  const { latest, current, retry, reset } = useRequest(searchShows, params);
 
   // An emptied field drops the answer, so the next query starts from the skeletons again.
   if (query === "" && latest !== null) {
     reset();
   }
 
-  return { ...getSearchView({ query, debounced, current, latest }), retry };
+  return { ...getSearchView({ query, params, current, latest }), retry };
 };

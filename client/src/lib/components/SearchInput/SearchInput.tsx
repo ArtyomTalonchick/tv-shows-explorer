@@ -1,14 +1,14 @@
-import { chakra, Spinner } from "@chakra-ui/react";
+import { chakra } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { usePresenter, type SearchInputProps } from "./logic/usePresenter";
 
 export type { SearchInputProps } from "./logic/usePresenter";
 
-// .search-input of design/library: a pill with an icon, the field, and the clear button or the spinner.
+// .search-input of design/library: a pill with an icon, the field, and the clear button.
 // No submit button: the query is sent while typing.
 export const SearchInput: FC<SearchInputProps> = (props) => {
-  const { inputProps, sizeStyles, viewTransitionName, label, value, handleChange, onClear, isLoading, showClear } =
+  const { inputProps, sizeStyles, viewTransitionName, label, value, handleChange, onClear, showClear } =
     usePresenter(props);
 
   return (
@@ -37,7 +37,7 @@ export const SearchInput: FC<SearchInputProps> = (props) => {
         bg="transparent"
         border="0"
         py="1"
-        // As tall as the clear button: the field keeps its height with the button, the spinner or neither.
+        // As tall as the clear button: the field keeps its height with the button or without it.
         minH="8"
         color="fg"
         fontWeight="medium"
@@ -53,11 +53,6 @@ export const SearchInput: FC<SearchInputProps> = (props) => {
         value={value}
         onChange={handleChange}
       />
-      {isLoading && (
-        <chakra.span display="flex" mx="2">
-          <Spinner role="status" aria-label="Loading" />
-        </chakra.span>
-      )}
       {showClear && (
         <chakra.button
           type="button"

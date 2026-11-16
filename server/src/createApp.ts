@@ -1,14 +1,13 @@
-import type { HealthResponse } from "@tv-shows-explorer/shared";
 import { Hono } from "hono";
+import { health } from "./health/health";
+import { shows } from "./shows/shows";
 
 // The server's routes, without listening: `index` serves them, tests call `app.request()`.
 export const createApp = (): Hono => {
   const app = new Hono();
 
-  app.get("/api/health", (context) => {
-    const body: HealthResponse = { status: "ok" };
-    return context.json(body);
-  });
+  app.route("/api/health", health);
+  app.route("/api/shows", shows);
 
   return app;
 };

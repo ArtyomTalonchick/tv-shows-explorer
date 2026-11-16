@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+- While the next results load — a new query, another genre or another page — the shown ones dim and cannot be
+  pressed; the chosen genre or page is marked at once. The search field no longer shows a spinner.
+
 ## 0.1.1 — 2026-11-10
 
 - Editing the query no longer resets the genre and the page: the shown results stay on screen until the

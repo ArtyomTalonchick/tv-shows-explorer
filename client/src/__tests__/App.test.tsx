@@ -44,7 +44,10 @@ describe("App", () => {
   it("opens the results screen on focus, stays there on Clear and goes back to the hero from the logo", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () => new Response("[]")),
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ shows: [], genres: [], found: 0, genre: null, total: 0, page: 1, perPage: 3 })),
+      ),
     );
     renderApp();
 
@@ -55,7 +58,7 @@ describe("App", () => {
     expect(searchbox()).toHaveFocus();
 
     fireEvent.change(searchbox(), { target: { value: "dark" } });
-    // The × button replaces the spinner once the request has answered.
+    // Cleared after the answer, so no request is left running.
     await screen.findByText(/Nothing found/);
     fireEvent.click(screen.getByLabelText("Clear search", { selector: "button" }));
 

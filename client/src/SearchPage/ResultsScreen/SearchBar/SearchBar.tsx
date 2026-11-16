@@ -6,7 +6,6 @@ import { Logo } from "@/SearchPage/components/Logo/Logo";
 
 export type SearchBarProps = {
   query: string;
-  isLoading: boolean;
   // Hidden while the screens swap.
   caretColor: SearchInputProps["caretColor"];
   inputRef: Ref<HTMLInputElement>;
@@ -17,15 +16,7 @@ export type SearchBarProps = {
 
 // The compact header of the results screen. Its field takes over the focus from the hero's field, and the view
 // transition moves the field and the logo here from the hero. The logo leads back to the hero.
-export const SearchBar: FC<SearchBarProps> = ({
-  query,
-  isLoading,
-  caretColor,
-  inputRef,
-  onQueryChange,
-  onClear,
-  onHome,
-}) => {
+export const SearchBar: FC<SearchBarProps> = ({ query, caretColor, inputRef, onQueryChange, onClear, onHome }) => {
   return (
     <Box
       as="header"
@@ -66,7 +57,6 @@ export const SearchBar: FC<SearchBarProps> = ({
             value={query}
             onChange={onQueryChange}
             onClear={onClear}
-            isLoading={isLoading}
             caretColor={caretColor}
             autoFocus
             viewTransitionName="search-field"

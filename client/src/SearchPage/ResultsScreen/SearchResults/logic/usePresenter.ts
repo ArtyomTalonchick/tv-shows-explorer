@@ -1,63 +1,85 @@
-import type { Show } from "@tv-shows-explorer/shared";
+import type { ShowsPage } from "@tv-shows-explorer/shared";
 import type { SearchStatus } from "@/SearchPage/types";
 import type { GenreFilterProps } from "../GenreFilter/GenreFilter";
 import type { ResultsHeadProps } from "../ResultsHead/ResultsHead";
-import { useGenreFilter } from "./useGenreFilter";
+import type { ResultsListProps } from "../ResultsList/ResultsList";
 
 export type SearchResultsProps = {
   status: SearchStatus;
   query: string;
-  shows: Show[];
+  // The answer on screen.
+  result: ShowsPage | null;
+  // The genre and the page to mark: the asked ones, before their answer comes.
+  genre: string | null;
+  page: number;
+  // A request is on its way; the shown results wait for it.
+  isLoading: boolean;
   onRetry: () => void;
   onClear: () => void;
+  onGenreSelect: (genre: string | null) => void;
+  onPageChange: (page: number) => void;
 };
 
-type UsePresenterResult = Pick<SearchResultsProps, "query" | "shows" | "onRetry" | "onClear"> & {
-  // «Shows for “dark”» with «9 shows», or «4 of 9 shows · Drama» while a genre is selected; hidden with an empty
-  // field.
+type UsePresenterResult = Pick<SearchResultsProps, "query" | "onRetry" | "onClear"> & {
+  // «Shows for “dark”» with «9 shows», or «4 of 9 shows · Drama» for a genre; hidden with an empty field.
   head: ResultsHeadProps | null;
-  // Hidden when no show of the results has a genre.
+  // Hidden when no found show has a genre.
   genreFilter: GenreFilterProps | null;
+  list: ResultsListProps | null;
+  // The shown results wait for the next answer: dimmed, and nothing in them can be pressed.
+  isBusy: boolean;
   isIdle: boolean;
   isLoading: boolean;
   isEmpty: boolean;
   isError: boolean;
-  hasResults: boolean;
 };
 
-export const usePresenter = ({ status, query, shows, onRetry, onClear }: SearchResultsProps): UsePresenterResult => {
-  const { genre, genres, filteredShows, select } = useGenreFilter(shows);
-  const hasResults = status === "results";
+export const usePresenter = ({
+  status,
+  query,
+  result,
+  genre,
+  page,
+  isLoading,
+  onRetry,
+  onClear,
+  onGenreSelect,
+  onPageChange,
+}: SearchResultsProps): UsePresenterResult => {
+  const shown = status === "results" ? result : null;
 
   const countLabel = ((): string | null => {
     if (status === "empty") {
       return "0 shows";
     }
-    if (!hasResults) {
+    if (shown === null) {
       return null;
     }
-    const all = `${shows.length} ${shows.length === 1 ? "show" : "shows"}`;
-    if (genre === null) {
+    const all = `${shown.found} ${shown.found === 1 ? "show" : "shows"}`;
+    if (shown.genre === null) {
       return all;
     }
-    return `${filteredShows.length} of ${all} · ${genre}`;
+    return `${shown.total} of ${all} · ${shown.genre}`;
   })();
 
   const genreFilter: GenreFilterProps | null =
-    hasResults && genres.length > 0 ? { genres, total: shows.length, selected: genre, onSelect: select } : null;
+    shown !== null && shown.genres.length > 0
+      ? { genres: shown.genres, total: shown.found, selected: genre, onSelect: onGenreSelect }
+      : null;
+  const list: ResultsListProps | null =
+    shown === null ? null : { shows: shown.shows, page, perPage: shown.perPage, total: shown.total, onPageChange };
   const trimmed = query.trim();
-  const head: ResultsHeadProps | null = status === "idle" ? null : { query: trimmed, count: countLabel };
 
   return {
     query: trimmed,
-    head,
+    head: status === "idle" ? null : { query: trimmed, count: countLabel },
     genreFilter,
+    list,
+    isBusy: shown !== null && isLoading,
     isIdle: status === "idle",
     isLoading: status === "loading",
     isEmpty: status === "empty",
     isError: status === "error",
-    hasResults,
-    shows: filteredShows,
     onRetry,
     onClear,
   };

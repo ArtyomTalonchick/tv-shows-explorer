@@ -1,7 +1,9 @@
 import type { ResultsScreenProps } from "../ResultsScreen/ResultsScreen";
 import type { SearchHeroProps } from "../SearchHero/SearchHero";
+import { useDebouncedQuery } from "./useDebouncedQuery";
 import { useScreenSwap } from "./useScreenSwap";
 import { useSearchQuery } from "./useSearchQuery";
+import { useShowsParams } from "./useShowsParams";
 import { useShowsRequest } from "./useShowsRequest";
 
 type UsePresenterResult = {
@@ -10,10 +12,13 @@ type UsePresenterResult = {
   results: ResultsScreenProps;
 };
 
-// Joins the field, the request for its query and the screen swap. Typing and clearing stay on the results screen.
+// Joins the field, its query once typing stops, what it asks the server for, the request and the screen swap.
+// Typing and clearing stay on the results screen.
 export const usePresenter = (): UsePresenterResult => {
   const { value, trimmed, handleChange, clear } = useSearchQuery();
-  const { status, shows, shownQuery, isLoading, retry } = useShowsRequest(trimmed);
+  const debounced = useDebouncedQuery(trimmed);
+  const { params, selectGenre, changePage } = useShowsParams(debounced);
+  const { status, result, genre, page, shownQuery, isLoading, retry } = useShowsRequest(trimmed, params);
   const { isStart, isSwapping, open, goHome } = useScreenSwap(clear);
 
   return {
@@ -23,12 +28,16 @@ export const usePresenter = (): UsePresenterResult => {
       query: value,
       shownQuery,
       status,
-      shows,
+      result,
+      genre,
+      page,
       isLoading,
       caretHidden: isSwapping,
       onQueryChange: handleChange,
       onClear: clear,
       onRetry: retry,
+      onGenreSelect: selectGenre,
+      onPageChange: changePage,
       onHome: goHome,
     },
   };

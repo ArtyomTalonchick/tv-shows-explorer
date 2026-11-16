@@ -16,6 +16,8 @@ the mood for.
    count in the heading reads «5 of 10 shows · Drama».
 4. One genre is selected at a time: a click on another genre switches to it.
 5. «All» resets the filter, and so does a click on the selected chip; «All» is filled while no genre is selected.
+   The pressed chip is filled at once; the shows of the genre, the count and the pages come with the server’s answer,
+   and until then the shown results stay, dimmed and not pressable (see `search.md`).
 6. The pagination works on the filtered shows («Shows 4–5 of 5»). A change of the filter opens page 1.
 7. A new search resets the filter to «All».
 
@@ -24,6 +26,7 @@ the mood for.
 | State | What the user sees |
 |---|---|
 | Loading | Five chip skeletons above the card skeletons |
+| A genre asked, no answer yet | The asked chip filled; the shown results dimmed and not pressable |
 | Results, no genre selected | The chips with «All» filled; all the shows |
 | A genre selected | That chip filled; its shows; «N of M shows · Genre» in the heading |
 | No results, error | No chips |
@@ -51,3 +54,7 @@ the mood for.
 - With no genres in the results the chip row is hidden. (#10)
 - The filter works on the client, on the results TVmaze returned; the genre is kept together with the results it
   was chosen in, so a new search shows all its shows. (#10)
+- The filter moved to the server: the client sends the genre with the query, and the server answers the shows of
+  the genre with the genres and counts of all the found shows. The genre is kept together with the query it was
+  chosen for and dropped when the query changes, so typing the old query back does not bring it back. (#25)
+- The chosen chip is filled at once; the content follows the answer. (#25)

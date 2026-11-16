@@ -1,4 +1,4 @@
-import { Container } from "@chakra-ui/react";
+import { Box, Container } from "@chakra-ui/react";
 import type { FC } from "react";
 import { GenreFilter } from "./GenreFilter/GenreFilter";
 import { ResultsEmpty } from "./ResultsEmpty/ResultsEmpty";
@@ -12,9 +12,10 @@ import { usePresenter, type SearchResultsProps } from "./logic/usePresenter";
 export type { SearchResultsProps } from "./logic/usePresenter";
 
 // The results area: the heading and the genre chips, then the component of the current state. An empty field
-// shows only the idle message.
+// shows only the idle message. While the shown results wait for the next answer they cannot be pressed, and they
+// dim unless the answer comes within a moment.
 export const SearchResults: FC<SearchResultsProps> = (props) => {
-  const { query, head, genreFilter, isIdle, isLoading, isEmpty, isError, hasResults, shows, onRetry, onClear } =
+  const { query, head, genreFilter, list, isBusy, isIdle, isLoading, isEmpty, isError, onRetry, onClear } =
     usePresenter(props);
 
   return (
@@ -29,11 +30,19 @@ export const SearchResults: FC<SearchResultsProps> = (props) => {
       display="flex"
       flexDirection="column"
     >
-      {head && <ResultsHead {...head} />}
-      {genreFilter && <GenreFilter {...genreFilter} />}
+      <Box
+        aria-busy={isBusy}
+        inert={isBusy}
+        transition="opacity {durations.normal} {easings.standard}"
+        _loading={{ opacity: "0.5", transitionDelay: "{durations.fast}" }}
+        _motionReduce={{ transitionDuration: "0s" }}
+      >
+        {head && <ResultsHead {...head} />}
+        {genreFilter && <GenreFilter {...genreFilter} />}
+        {list && <ResultsList {...list} />}
+      </Box>
       {isIdle && <ResultsIdle />}
       {isLoading && <ResultsLoading />}
-      {hasResults && <ResultsList shows={shows} />}
       {isEmpty && <ResultsEmpty query={query} onClear={onClear} />}
       {isError && <ResultsError onRetry={onRetry} />}
     </Container>

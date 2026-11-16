@@ -1,5 +1,5 @@
 import type { ChipProps } from "@/lib/components/Chip/Chip";
-import type { GenreCount } from "@/SearchPage/ResultsScreen/SearchResults/types";
+import type { GenreCount } from "@tv-shows-explorer/shared";
 
 export type GenreFilterProps = {
   genres: GenreCount[];

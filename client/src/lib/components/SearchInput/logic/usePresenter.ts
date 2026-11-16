@@ -7,7 +7,6 @@ export type SearchInputProps = Omit<HTMLChakraProps<"input">, "value" | "onChang
   value: string;
   onChange: (value: string) => void;
   onClear?: () => void;
-  isLoading?: boolean;
   size?: "md" | "sm";
   // The accessible name: the field has no visible label.
   label: string;
@@ -38,8 +37,7 @@ type UsePresenterResult = Pick<SearchInputProps, "value" | "onClear" | "label" |
   inputProps: HTMLChakraProps<"input"> & { ref?: Ref<HTMLInputElement> };
   sizeStyles: SizeStyles;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  isLoading: boolean;
-  // The spinner replaces the clear button while a request runs.
+  // The clear button, while the field holds text.
   showClear: boolean;
 };
 
@@ -47,7 +45,6 @@ export const usePresenter = ({
   value,
   onChange,
   onClear,
-  isLoading = false,
   size = "md",
   label,
   viewTransitionName,
@@ -61,7 +58,6 @@ export const usePresenter = ({
     value,
     handleChange: (event: ChangeEvent<HTMLInputElement>) => onChange(event.target.value),
     onClear,
-    isLoading,
-    showClear: !isLoading && value !== "" && onClear !== undefined,
+    showClear: value !== "" && onClear !== undefined,
   };
 };
