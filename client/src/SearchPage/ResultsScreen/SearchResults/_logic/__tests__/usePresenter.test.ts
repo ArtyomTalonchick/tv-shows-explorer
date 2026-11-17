@@ -1,7 +1,10 @@
 import { renderHook } from "@testing-library/react";
 import type { Show, ShowsPage } from "@tv-shows-explorer/shared";
-import type { SearchStatus } from "@/SearchPage/_logic/types";
-import { usePresenter, type SearchResultsProps } from "../usePresenter";
+import type { SearchStatus } from "../types";
+import { usePresenter } from "../usePresenter";
+import { useShowsSearch, type UseShowsSearchResult } from "../useShowsSearch";
+
+vi.mock("../useShowsSearch", () => ({ useShowsSearch: vi.fn() }));
 
 const show = (id: number, genres: string[]): Show => ({
     id,
@@ -28,22 +31,21 @@ const ALL: ShowsPage = {
     perPage: 3,
 };
 
-const render = (status: SearchStatus, result: ShowsPage | null, props: Partial<SearchResultsProps> = {}) =>
-    renderHook(() =>
-        usePresenter({
-            status,
-            query: " dark ",
-            result,
-            genre: result?.genre ?? null,
-            page: result?.page ?? 1,
-            isLoading: false,
-            onRetry: vi.fn(),
-            onClear: vi.fn(),
-            onGenreSelect: vi.fn(),
-            onPageChange: vi.fn(),
-            ...props,
-        }),
-    );
+const render = (status: SearchStatus, result: ShowsPage | null, search: Partial<UseShowsSearchResult> = {}) => {
+    vi.mocked(useShowsSearch).mockReturnValue({
+        status,
+        shownQuery: " dark ",
+        result,
+        genre: result?.genre ?? null,
+        page: result?.page ?? 1,
+        isLoading: false,
+        retry: vi.fn(),
+        selectGenre: vi.fn(),
+        changePage: vi.fn(),
+        ...search,
+    });
+    return renderHook(() => usePresenter());
+};
 
 describe("SearchResults usePresenter", () => {
     it("counts all the shows, offers their genres and passes the page on to the list", () => {
@@ -82,7 +84,10 @@ describe("SearchResults usePresenter", () => {
     it("shows no chips and no list outside the results", () => {
         const loading = render("loading", null, { isLoading: true }).result.current;
         expect(loading).toMatchObject({ genreFilter: null, list: null, isBusy: false, isLoading: true });
-        expect(render("empty", null).result.current.head?.count).toBe("0 shows");
+        const empty = render("empty", null).result.current;
+        expect(empty.head?.count).toBe("0 shows");
+        expect(empty.empty).toEqual({ query: "dark" });
+        expect(render("error", null).result.current.error).toMatchObject({ onRetry: expect.any(Function) });
     });
 
     it("shows only the idle message for an empty field, with no heading", () => {

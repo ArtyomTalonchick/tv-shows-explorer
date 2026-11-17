@@ -2,14 +2,12 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Logo } from "@/SearchPage/_components/Logo/Logo";
 import { PosterWall } from "./PosterWall/PosterWall";
-import { SearchHeroInput, type SearchHeroInputProps } from "./SearchHeroInput/SearchHeroInput";
-
-export type SearchHeroProps = SearchHeroInputProps;
+import { SearchHeroInput } from "./SearchHeroInput/SearchHeroInput";
 
 const layer = { content: '""', position: "absolute", inset: "0" } as const;
 
 // The start screen: the full-viewport hero with the search field only.
-export const SearchHero: FC<SearchHeroProps> = (props) => {
+export const SearchHero: FC = () => {
     return (
         <Box
             as="main"
@@ -40,7 +38,7 @@ export const SearchHero: FC<SearchHeroProps> = (props) => {
                 <Text textStyle="lead" maxW="prose" mb="10" fontSize={{ base: "lg", md: "xl" }}>
                     Search any show, see its rating and genres — in one dark, quiet place.
                 </Text>
-                <SearchHeroInput {...props} />
+                <SearchHeroInput />
             </Box>
         </Box>
     );

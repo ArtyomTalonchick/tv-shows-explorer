@@ -116,3 +116,16 @@ The user finds TV shows by typing a query. TVmaze does the search
   until the transition has finished and then redrawn (`lib/screen/redrawCaret`): iOS drew it flying over the
   animation and showed none in the field until the first key. Hidden fields to hold the focus, and a swap with no
   animation on touch screens, were turned down. (#18)
+- The search state shared by several units lives in Zustand stores in `SearchPage/_stores/`: the field
+  (`useQueryStore`), read by the hero, the search bar and «Clear search», and the screen swap (`useScreenStore`),
+  read by the page, the hero and the search bar. Each unit's Presenter reads what it needs through
+  `useSearchQuery` and `useScreenSwap`, or a store selector; no props are passed down only for a child. The swap
+  itself is two plain functions in their own files, `openResults` and `goHome`, which change the stores through
+  `getState()` and play the view transition; `useScreenSwap` returns them with the screen state. They are plain
+  functions of the UI side, parts of the `useScreenSwap/` entry folder. The × button and «Clear search» give
+  the focus back by the field's id, so no ref is passed between units. (#32)
+- The debounced query, the chosen genre and page, and the answer stay hooks in `SearchResults/_logic/`
+  (`useShowsSearch` joins them), fed by the field from the store: the results area is their only user, and
+  `lib/request/useRequest` stays as it is. Leaving the results screen unmounts them, which drops the genre, the
+  page and the answer. Show data another page needs will be a store of its own, by show id, when that page comes —
+  not the search answer moved to a store. (#32)

@@ -1,14 +1,14 @@
 import { Box, Button } from "@chakra-ui/react";
 import type { FC } from "react";
 import { StateMessage } from "@/lib/components/StateMessage/StateMessage";
+import { usePresenter, type ResultsEmptyProps } from "./_logic/usePresenter";
 
-export type ResultsEmptyProps = {
-    query: string;
-    onClear: () => void;
-};
+export type { ResultsEmptyProps } from "./_logic/usePresenter";
 
 // No results: TVmaze found nothing for the query.
-export const ResultsEmpty: FC<ResultsEmptyProps> = ({ query, onClear }) => {
+export const ResultsEmpty: FC<ResultsEmptyProps> = (props) => {
+    const { query, onClear } = usePresenter(props);
+
     return (
         <Box flex="1" display="grid" mt="4">
             <StateMessage

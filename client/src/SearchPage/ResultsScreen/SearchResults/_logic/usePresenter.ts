@@ -1,26 +1,11 @@
-import type { ShowsPage } from "@tv-shows-explorer/shared";
-import type { SearchStatus } from "@/SearchPage/_logic/types";
 import type { GenreFilterProps } from "../GenreFilter/GenreFilter";
+import type { ResultsEmptyProps } from "../ResultsEmpty/ResultsEmpty";
+import type { ResultsErrorProps } from "../ResultsError/ResultsError";
 import type { ResultsHeadProps } from "../ResultsHead/ResultsHead";
 import type { ResultsListProps } from "../ResultsList/ResultsList";
+import { useShowsSearch } from "./useShowsSearch";
 
-export type SearchResultsProps = {
-    status: SearchStatus;
-    query: string;
-    // The answer on screen.
-    result: ShowsPage | null;
-    // The genre and the page to mark: the asked ones, before their answer comes.
-    genre: string | null;
-    page: number;
-    // A request is on its way; the shown results wait for it.
-    isLoading: boolean;
-    onRetry: () => void;
-    onClear: () => void;
-    onGenreSelect: (genre: string | null) => void;
-    onPageChange: (page: number) => void;
-};
-
-type UsePresenterResult = Pick<SearchResultsProps, "query" | "onRetry" | "onClear"> & {
+type UsePresenterResult = {
     // «Shows for “dark”» with «9 shows», or «4 of 9 shows · Drama» for a genre; hidden with an empty field.
     head: ResultsHeadProps | null;
     // Hidden when no found show has a genre.
@@ -30,23 +15,14 @@ type UsePresenterResult = Pick<SearchResultsProps, "query" | "onRetry" | "onClea
     isBusy: boolean;
     isIdle: boolean;
     isLoading: boolean;
-    isEmpty: boolean;
-    isError: boolean;
+    empty: ResultsEmptyProps | null;
+    error: ResultsErrorProps | null;
 };
 
-export const usePresenter = ({
-    status,
-    query,
-    result,
-    genre,
-    page,
-    isLoading,
-    onRetry,
-    onClear,
-    onGenreSelect,
-    onPageChange,
-}: SearchResultsProps): UsePresenterResult => {
+export const usePresenter = (): UsePresenterResult => {
+    const { status, result, genre, page, shownQuery, isLoading, retry, selectGenre, changePage } = useShowsSearch();
     const shown = status === "results" ? result : null;
+    const query = shownQuery.trim();
 
     const countLabel = ((): string | null => {
         if (status === "empty") {
@@ -64,23 +40,21 @@ export const usePresenter = ({
 
     const genreFilter: GenreFilterProps | null =
         shown !== null && shown.genres.length > 0
-            ? { genres: shown.genres, total: shown.found, selected: genre, onSelect: onGenreSelect }
+            ? { genres: shown.genres, total: shown.found, selected: genre, onSelect: selectGenre }
             : null;
     const list: ResultsListProps | null =
-        shown === null ? null : { shows: shown.shows, page, perPage: shown.perPage, total: shown.total, onPageChange };
-    const trimmed = query.trim();
+        shown === null
+            ? null
+            : { shows: shown.shows, page, perPage: shown.perPage, total: shown.total, onPageChange: changePage };
 
     return {
-        query: trimmed,
-        head: status === "idle" ? null : { query: trimmed, count: countLabel },
+        head: status === "idle" ? null : { query, count: countLabel },
         genreFilter,
         list,
         isBusy: shown !== null && isLoading,
         isIdle: status === "idle",
         isLoading: status === "loading",
-        isEmpty: status === "empty",
-        isError: status === "error",
-        onRetry,
-        onClear,
+        empty: status === "empty" ? { query } : null,
+        error: status === "error" ? { onRetry: retry } : null,
     };
 };

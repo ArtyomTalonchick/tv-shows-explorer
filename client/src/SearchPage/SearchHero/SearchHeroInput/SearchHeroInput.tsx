@@ -1,13 +1,11 @@
 import type { FC } from "react";
 import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
 import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/_logic/constants";
-import { usePresenter, type SearchHeroInputProps } from "./_logic/usePresenter";
-
-export type { SearchHeroInputProps } from "./_logic/usePresenter";
+import { usePresenter } from "./_logic/usePresenter";
 
 // The search field of the hero. It is not focused on start: focusing it opens the results screen.
-export const SearchHeroInput: FC<SearchHeroInputProps> = (props) => {
-    const { query, onQueryChange, onOpen, handleTouchEnd } = usePresenter(props);
+export const SearchHeroInput: FC = () => {
+    const { query, onQueryChange, onOpen, handleTouchEnd } = usePresenter();
 
     return (
         <SearchInput

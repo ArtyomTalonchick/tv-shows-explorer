@@ -1,76 +1,79 @@
 import { act, renderHook } from "@testing-library/react";
 import { withViewTransition } from "@/lib/screen/withViewTransition";
-import { searchShows } from "../tasks/searchShows";
+import { useQueryStore } from "../../_stores/useQueryStore";
+import { useScreenStore } from "../../_stores/useScreenStore";
 import { usePresenter } from "../usePresenter";
+import { useScreenSwap } from "../useScreenSwap/useScreenSwap";
+import { useSearchQuery } from "../useSearchQuery";
 
 vi.mock("@/lib/screen/withViewTransition", () => ({
     withViewTransition: vi.fn((update: () => void) => update()),
 }));
-vi.mock("../tasks/searchShows", () => ({ searchShows: vi.fn() }));
 
 const transitionMock = vi.mocked(withViewTransition);
 
+// The page with what its screens read from the stores: the field and the screen swap.
+const renderPage = () =>
+    renderHook(() => ({
+        page: usePresenter(),
+        query: useSearchQuery(),
+        swap: useScreenSwap(),
+    }));
+
 describe("SearchPage usePresenter", () => {
     beforeEach(() => {
-        vi.useFakeTimers();
+        useQueryStore.setState({ value: "" });
+        useScreenStore.setState({ isStart: true, isSwapping: false });
         transitionMock.mockClear();
-        vi.mocked(searchShows).mockReturnValue(new Promise(() => {}));
-    });
-
-    afterEach(() => {
-        vi.useRealTimers();
     });
 
     it("starts on the hero and opens the results screen, animated, when its field is focused", () => {
-        const { result } = renderHook(() => usePresenter());
-        expect(result.current.isStart).toBe(true);
+        const { result } = renderPage();
+        expect(result.current.page.isStart).toBe(true);
 
         act(() => {
-            result.current.hero.onOpen();
+            void result.current.swap.open();
         });
 
         expect(transitionMock).toHaveBeenCalledTimes(1);
-        expect(result.current.isStart).toBe(false);
-        expect(result.current.results.status).toBe("idle");
+        expect(result.current.page.isStart).toBe(false);
     });
 
     it("stays on the results screen while typing, emptying and clearing, with no animation", () => {
-        const { result } = renderHook(() => usePresenter());
+        const { result } = renderPage();
         act(() => {
-            result.current.hero.onOpen();
+            void result.current.swap.open();
         });
         transitionMock.mockClear();
 
-        act(() => result.current.results.onQueryChange("dark"));
-        expect(result.current.results.status).toBe("loading");
+        act(() => result.current.query.handleChange("dark"));
+        expect(result.current.page.isStart).toBe(false);
 
-        act(() => result.current.results.onQueryChange(""));
-        expect(result.current.isStart).toBe(false);
-        expect(result.current.results.status).toBe("idle");
+        act(() => result.current.query.handleChange(""));
+        expect(result.current.page.isStart).toBe(false);
 
-        act(() => result.current.results.onQueryChange("dark"));
-        act(() => result.current.results.onClear());
-        expect(result.current.isStart).toBe(false);
-        expect(result.current.results.query).toBe("");
+        act(() => result.current.query.handleChange("dark"));
+        act(() => result.current.query.clear());
+        expect(result.current.page.isStart).toBe(false);
+        expect(result.current.query.value).toBe("");
 
         expect(transitionMock).not.toHaveBeenCalled();
     });
 
     it("goes back to the hero from the logo, animated, with the query reset", () => {
-        const { result } = renderHook(() => usePresenter());
+        const { result } = renderPage();
         act(() => {
-            result.current.hero.onOpen();
+            void result.current.swap.open();
         });
-        act(() => result.current.results.onQueryChange("dark"));
+        act(() => result.current.query.handleChange("dark"));
         transitionMock.mockClear();
 
         act(() => {
-            result.current.results.onHome();
+            void result.current.swap.goHome();
         });
 
         expect(transitionMock).toHaveBeenCalledTimes(1);
-        expect(result.current.isStart).toBe(true);
-        expect(result.current.hero.query).toBe("");
-        expect(result.current.results.status).toBe("idle");
+        expect(result.current.page.isStart).toBe(true);
+        expect(result.current.query.value).toBe("");
     });
 });

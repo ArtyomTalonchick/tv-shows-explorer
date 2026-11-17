@@ -1,22 +1,15 @@
 import { Box, chakra, Container } from "@chakra-ui/react";
-import type { FC, Ref } from "react";
-import { SearchInput, type SearchInputProps } from "@/lib/components/SearchInput/SearchInput";
-import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/_logic/constants";
+import type { FC } from "react";
+import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
+import { SEARCH_FIELD_ID, SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/_logic/constants";
 import { Logo } from "@/SearchPage/_components/Logo/Logo";
-
-export type SearchBarProps = {
-    query: string;
-    // Hidden while the screens swap.
-    caretColor: SearchInputProps["caretColor"];
-    inputRef: Ref<HTMLInputElement>;
-    onQueryChange: (query: string) => void;
-    onClear: () => void;
-    onHome: () => void;
-};
+import { usePresenter } from "./_logic/usePresenter";
 
 // The compact header of the results screen. Its field takes over the focus from the hero's field, and the view
 // transition moves the field and the logo here from the hero. The logo leads back to the hero.
-export const SearchBar: FC<SearchBarProps> = ({ query, caretColor, inputRef, onQueryChange, onClear, onHome }) => {
+export const SearchBar: FC = () => {
+    const { query, caretColor, onQueryChange, onClear, onHome } = usePresenter();
+
     return (
         <Box
             as="header"
@@ -50,7 +43,7 @@ export const SearchBar: FC<SearchBarProps> = ({ query, caretColor, inputRef, onQ
                 </chakra.button>
                 <Box flex="1" display="flex" justifyContent="flex-end" minW={{ base: "full", md: "0" }}>
                     <SearchInput
-                        ref={inputRef}
+                        id={SEARCH_FIELD_ID}
                         label={SEARCH_LABEL}
                         placeholder={SEARCH_PLACEHOLDER}
                         size="sm"
