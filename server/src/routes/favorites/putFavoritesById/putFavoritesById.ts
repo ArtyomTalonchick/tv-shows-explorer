@@ -1,11 +1,11 @@
 import type { Handler } from "hono";
-import { BAD_SHOW_ID } from "@/routes/favorites/logic/constants";
-import { parseShowId } from "@/routes/favorites/logic/parseShowId";
-import { listFavorites } from "@/routes/favorites/logic/tasks/listFavorites";
-import type { FavoritesEnv } from "@/routes/favorites/logic/types";
+import { BAD_SHOW_ID } from "@/routes/favorites/_logic/constants";
+import { parseShowId } from "@/routes/favorites/_logic/parseShowId";
+import { listFavorites } from "@/routes/favorites/_logic/tasks/listFavorites";
+import type { FavoritesEnv } from "@/routes/favorites/_logic/types";
 import { HttpError } from "@/lib/errors/HttpError";
-import { parseAddedAt } from "./logic/parseAddedAt";
-import { addFavorite } from "./logic/tasks/addFavorite/addFavorite";
+import { parseAddedAt } from "./_logic/parseAddedAt";
+import { addFavorite } from "./_logic/tasks/addFavorite/addFavorite";
 
 // `PUT /api/favorites/:id` with an optional `AddFavoriteBody`: adds the show and answers the list; a show already
 // there changes nothing. 404 when TVmaze has no such show, 502 when it does not answer.

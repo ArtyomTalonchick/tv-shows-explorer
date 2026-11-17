@@ -1,8 +1,8 @@
 import { chakra } from "@chakra-ui/react";
 import type { FC } from "react";
-import { usePresenter, type PageButtonProps } from "./logic/usePresenter";
+import { usePresenter, type PageButtonProps } from "./_logic/usePresenter";
 
-export type { PageButtonProps } from "./logic/usePresenter";
+export type { PageButtonProps } from "./_logic/usePresenter";
 
 // .pagination__item of design/library: a round button, filled when it is the current page.
 export const PageButton: FC<PageButtonProps> = (props) => {

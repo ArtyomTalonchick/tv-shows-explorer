@@ -1,9 +1,9 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
-import { usePresenter, type StateMessageProps } from "./logic/usePresenter";
+import { usePresenter, type StateMessageProps } from "./_logic/usePresenter";
 
-export type { StateMessageProps } from "./logic/usePresenter";
+export type { StateMessageProps } from "./_logic/usePresenter";
 
 // .state and .state--error of design/library: EmptyState and ErrorState.
 export const StateMessage: FC<StateMessageProps> = (props) => {

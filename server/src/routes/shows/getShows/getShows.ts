@@ -1,7 +1,7 @@
 import type { Handler } from "hono";
-import { getShowsPage } from "./logic/getShowsPage";
-import { parseShowsQuery } from "./logic/parseShowsQuery";
-import { searchTvmaze } from "./logic/tasks/searchTvmaze/searchTvmaze";
+import { getShowsPage } from "./_logic/getShowsPage";
+import { parseShowsQuery } from "./_logic/parseShowsQuery";
+import { searchTvmaze } from "./_logic/tasks/searchTvmaze/searchTvmaze";
 
 // `GET /api/shows?q=<query>&genre=<genre>&page=<page>`: searches TVmaze and answers one page of the found shows of
 // the genre (`ShowsPage`). A request the client drops cancels the TVmaze request too.

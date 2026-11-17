@@ -88,7 +88,7 @@ The user finds TV shows by typing a query. TVmaze does the search
   query) is `useShowsParams`; the request and what the area shows are `useShowsRequest` and `getSearchView`.
   TVmaze’s URL and the mapping to `Show` moved to the server (`server/src/routes/shows/getShows`). (#25)
 - TVmaze's answers are cached in the server's memory for 5 minutes, keyed by the trimmed query; no database. The
-  cache is a store of its own, `server/src/routes/shows/getShows/stores/searchCache` — a `Map` on `globalThis`, so a query such as
+  cache is a store of its own, `server/src/routes/_stores/searchCache` — a `Map` on `globalThis`, so a query such as
   «constructor» is not found on an object's prototype — reached only by the tasks `readCachedSearch`,
   `writeCachedSearch` and `dropExpiredSearches`, which `searchTvmaze` calls. An entry 5 minutes old or older is
   expired; before each write the expired entries are dropped, so the cache holds no more than the queries of the

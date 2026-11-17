@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Logo } from "@/SearchPage/components/Logo/Logo";
+import { Logo } from "@/SearchPage/_components/Logo/Logo";
 import { PosterWall } from "./PosterWall/PosterWall";
 import { SearchHeroInput, type SearchHeroInputProps } from "./SearchHeroInput/SearchHeroInput";
 

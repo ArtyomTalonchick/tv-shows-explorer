@@ -1,9 +1,9 @@
 import { Box } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Chip } from "@/lib/components/Chip/Chip";
-import { usePresenter, type GenreFilterProps } from "./logic/usePresenter";
+import { usePresenter, type GenreFilterProps } from "./_logic/usePresenter";
 
-export type { GenreFilterProps } from "./logic/usePresenter";
+export type { GenreFilterProps } from "./_logic/usePresenter";
 
 // The genre chips above the list: «All», then the genres of the results. They wrap on wide screens and scroll
 // in one row, edge to edge, on mobile.

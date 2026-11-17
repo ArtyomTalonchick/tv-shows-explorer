@@ -1,9 +1,9 @@
 import { chakra } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
-import { usePresenter, type SearchInputProps } from "./logic/usePresenter";
+import { usePresenter, type SearchInputProps } from "./_logic/usePresenter";
 
-export type { SearchInputProps } from "./logic/usePresenter";
+export type { SearchInputProps } from "./_logic/usePresenter";
 
 // .search-input of design/library: a pill with an icon, the field, and the clear button.
 // No submit button: the query is sent while typing.

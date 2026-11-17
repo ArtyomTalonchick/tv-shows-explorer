@@ -7,9 +7,9 @@ import { ResultsHead } from "./ResultsHead/ResultsHead";
 import { ResultsIdle } from "./ResultsIdle/ResultsIdle";
 import { ResultsList } from "./ResultsList/ResultsList";
 import { ResultsLoading } from "./ResultsLoading/ResultsLoading";
-import { usePresenter, type SearchResultsProps } from "./logic/usePresenter";
+import { usePresenter, type SearchResultsProps } from "./_logic/usePresenter";
 
-export type { SearchResultsProps } from "./logic/usePresenter";
+export type { SearchResultsProps } from "./_logic/usePresenter";
 
 // The results area: the heading and the genre chips, then the component of the current state. An empty field
 // shows only the idle message. While the shown results wait for the next answer they cannot be pressed, and they

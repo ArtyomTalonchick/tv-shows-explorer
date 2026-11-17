@@ -25,7 +25,7 @@ except under `auto`).
 - An implementation task first reads the mockup in `design/vX.Y/` (X.Y = the milestone version) and the
   `requirements/` files the issue names, then follows the `simple-architecture` skill.
 - Tests live in a `__tests__/` folder next to the code they test
-  (`client/src/SearchPage/logic/__tests__/useShowsRequest.test.ts`), never beside the source files. Code of the
+  (`client/src/SearchPage/_logic/__tests__/useShowsRequest.test.ts`), never beside the source files. Code of the
   folder that holds `__tests__/` is imported relatively (`../useShowsRequest`); anything else through the `@/`
   alias.
 - `requirements/` is the source of truth. When the issue, the mockup or the code contradicts it, stop and ask

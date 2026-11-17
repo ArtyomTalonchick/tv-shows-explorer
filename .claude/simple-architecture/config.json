@@ -7,9 +7,10 @@
     "folders": {
         "lib": "lib",
         "uiKit": "lib/components",
-        "components": "components",
+        "components": "_components",
+        "stores": "_stores",
         "tasks": "tasks",
-        "logic": "logic"
+        "logic": "_logic"
     },
     "maxFileLines": 120
 }

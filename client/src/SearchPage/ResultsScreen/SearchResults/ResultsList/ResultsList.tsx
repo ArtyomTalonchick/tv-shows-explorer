@@ -2,9 +2,9 @@ import { Box } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Pagination } from "@/lib/components/Pagination/Pagination";
 import { ShowCard } from "@/lib/components/ShowCard/ShowCard";
-import { usePresenter, type ResultsListProps } from "./logic/usePresenter";
+import { usePresenter, type ResultsListProps } from "./_logic/usePresenter";
 
-export type { ResultsListProps } from "./logic/usePresenter";
+export type { ResultsListProps } from "./_logic/usePresenter";
 
 // Results: one page of show cards, three in a row (one column of rows on mobile), and the pages below.
 export const ResultsList: FC<ResultsListProps> = (props) => {

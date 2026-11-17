@@ -1,8 +1,8 @@
 import { Box, chakra, Container } from "@chakra-ui/react";
 import type { FC, Ref } from "react";
 import { SearchInput, type SearchInputProps } from "@/lib/components/SearchInput/SearchInput";
-import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/logic/constants";
-import { Logo } from "@/SearchPage/components/Logo/Logo";
+import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/_logic/constants";
+import { Logo } from "@/SearchPage/_components/Logo/Logo";
 
 export type SearchBarProps = {
     query: string;
