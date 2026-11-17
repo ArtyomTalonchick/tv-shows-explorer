@@ -1,6 +1,43 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { Favorite } from "@tv-shows-explorer/shared";
+import { useFavoritesStore } from "@/_stores/useFavoritesStore";
 import { App } from "../App";
 import { Provider } from "../Provider/Provider";
+
+const DARK: Favorite = {
+    id: 17861,
+    name: "Dark",
+    genres: ["Drama", "Science-Fiction"],
+    premiered: "2017-12-01",
+    ended: "2020-06-27",
+    image: null,
+    url: "https://www.tvmaze.com/shows/17861/dark",
+    addedAt: 1763300000000,
+};
+
+const NOTHING_FOUND = { shows: [], genres: [], found: 0, genre: null, total: 0, page: 1, perPage: 3 };
+
+// The app's server: the search finds nothing; the favorites start as `saved` and follow PUT and DELETE of DARK.
+const stubServer = (saved: Favorite[] = []) => {
+    let favorites = saved;
+    const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+        if (!url.startsWith("/api/favorites")) {
+            return new Response(JSON.stringify(NOTHING_FOUND));
+        }
+        if (init?.method === "DELETE") {
+            favorites = [];
+        }
+        if (init?.method === "PUT") {
+            favorites = [DARK];
+        }
+        return new Response(JSON.stringify(favorites));
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    return fetchMock;
+};
+
+const searchRequests = (fetchMock: ReturnType<typeof stubServer>) =>
+    fetchMock.mock.calls.filter(([url]) => url.startsWith("/api/shows"));
 
 const renderApp = (): void => {
     render(
@@ -13,13 +50,16 @@ const renderApp = (): void => {
 const searchbox = (): HTMLElement => screen.getByRole("searchbox", { name: "Search shows" });
 
 describe("App", () => {
+    beforeEach(() => {
+        useFavoritesStore.setState({ favorites: [] });
+    });
+
     afterEach(() => {
         vi.unstubAllGlobals();
     });
 
-    it("starts with the search field only and sends no request", () => {
-        const fetchMock = vi.fn();
-        vi.stubGlobal("fetch", fetchMock);
+    it("starts with the search field, loads the favourites and sends no search", async () => {
+        const fetchMock = stubServer([DARK]);
 
         renderApp();
 
@@ -27,11 +67,12 @@ describe("App", () => {
         expect(searchbox()).toHaveValue("");
         expect(searchbox()).not.toHaveFocus();
         expect(screen.queryByRole("region", { name: "Search results" })).not.toBeInTheDocument();
-        expect(fetchMock).not.toHaveBeenCalled();
+        await waitFor(() => expect(fetchMock).toHaveBeenCalledWith("/api/favorites", expect.anything()));
+        expect(searchRequests(fetchMock)).toHaveLength(0);
     });
 
     it("opens the results screen on a tap with its field focused, without focusing the hero field", () => {
-        vi.stubGlobal("fetch", vi.fn());
+        stubServer();
         renderApp();
 
         const notCancelled = fireEvent.touchEnd(searchbox());
@@ -42,15 +83,7 @@ describe("App", () => {
     });
 
     it("opens the results screen on focus, stays there on Clear and goes back to the hero from the logo", async () => {
-        vi.stubGlobal(
-            "fetch",
-            vi.fn(
-                async () =>
-                    new Response(
-                        JSON.stringify({ shows: [], genres: [], found: 0, genre: null, total: 0, page: 1, perPage: 3 }),
-                    ),
-            ),
-        );
+        stubServer();
         renderApp();
 
         act(() => searchbox().focus());

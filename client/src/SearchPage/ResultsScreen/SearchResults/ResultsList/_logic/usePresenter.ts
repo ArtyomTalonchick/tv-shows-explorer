@@ -1,8 +1,9 @@
-import { useRef, useState, type RefObject } from "react";
+import { useRef, type RefObject } from "react";
 import type { Show } from "@tv-shows-explorer/shared";
 import type { PaginationProps } from "@/lib/components/Pagination/Pagination";
 import { getPageCount } from "@/lib/pagination/getPageCount";
 import { scrollToTopIfAbove } from "@/lib/screen/scrollToTopIfAbove";
+import { useFavoriteToggle } from "@/_logic/useFavoriteToggle/useFavoriteToggle";
 import type { ShowCardProps } from "../ShowCard/ShowCard";
 import { formatShowMeta } from "./formatShowMeta";
 
@@ -22,24 +23,12 @@ type UsePresenterResult = {
 
 export const usePresenter = ({ shows, page, perPage, total, onPageChange }: ResultsListProps): UsePresenterResult => {
     const gridRef = useRef<HTMLUListElement>(null);
-    // A stand-in for the favourites until they come from the server: the bookmarks keep their state here only.
-    const [savedIds, setSavedIds] = useState<number[]>([]);
+    const { toggleFor } = useFavoriteToggle();
 
     // The pages are switched below the cards: when the cards start above the screen, bring them into view.
     const changePage = (next: number): void => {
         onPageChange(next);
         scrollToTopIfAbove(gridRef.current);
-    };
-
-    const toggleFor = (show: Show): ShowCardProps["favorite"] => {
-        const pressed = savedIds.includes(show.id);
-        return {
-            pressed,
-            label: pressed ? `Remove ${show.name} from favourites` : `Add ${show.name} to favourites`,
-            onClick: () => {
-                setSavedIds(pressed ? savedIds.filter((id) => id !== show.id) : [...savedIds, show.id]);
-            },
-        };
     };
 
     const cards = shows.map((show): CardItem => ({

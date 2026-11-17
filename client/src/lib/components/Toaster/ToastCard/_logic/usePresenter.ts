@@ -1,0 +1,35 @@
+import type { HTMLChakraProps, ToastOptions } from "@chakra-ui/react";
+import type { ReactNode } from "react";
+import type { IconName } from "@/lib/components/Icon/Icon";
+import type { ToastMeta } from "@/lib/toast/showToast";
+
+export type ToastCardProps = {
+    // A toast as `showToast` made it.
+    toast: ToastOptions;
+};
+
+type Tone = ToastMeta["tone"];
+
+const TONE_STYLES = {
+    accent: { color: "accent.fg", css: { "& svg": { fill: "currentColor" } } },
+    muted: { color: "fg.muted" },
+} satisfies Record<Tone, HTMLChakraProps<"span">>;
+
+type UsePresenterResult = {
+    text: ReactNode;
+    icon: IconName;
+    iconStyles: HTMLChakraProps<"span">;
+    // The label of the action button, or nothing when the toast has none.
+    actionLabel: string | null;
+};
+
+export const usePresenter = ({ toast }: ToastCardProps): UsePresenterResult => {
+    const meta = (toast.meta ?? { icon: "bookmark", tone: "muted" }) as ToastMeta;
+
+    return {
+        text: toast.description,
+        icon: meta.icon,
+        iconStyles: TONE_STYLES[meta.tone],
+        actionLabel: toast.action?.label ?? null,
+    };
+};
