@@ -15,6 +15,8 @@ TV Shows Explorer searches TV shows with the public [TVmaze API](https://www.tvm
 - **List and pagination.** Results are shown as cards, three per page; the user switches between pages.
 - **Genre filter.** The unique genres of the current results are shown as chips above the list. A chip keeps
   only the shows of that genre; the filter can be reset to all results.
+- **Favorites.** The user keeps shows in a list on the server, one list per browser, named by an id the browser
+  makes; there are no accounts. (#27)
 - **Installable.** The app has an icon and installs on a phone or a desktop from its web manifest. It does not
   work offline: there is no service worker, so without a network it neither opens nor searches. (#11)
 

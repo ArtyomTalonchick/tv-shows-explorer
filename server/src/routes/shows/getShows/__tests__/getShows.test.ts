@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { getShows } from "../getShows";
-import { searchCache } from "@/routes/shows/getShows/stores/searchCache";
+import { searchCache } from "@/routes/stores/searchCache";
 
 const tvmazeShow = (id: number, genres: string[]) => ({
     score: 1,

@@ -1,24 +1,14 @@
+import { TVMAZE_API } from "@/routes/logic/constants";
+import { toShow } from "@/routes/logic/toShow";
 import { fetchJson } from "@/lib/http/fetchJson";
+import type { TvmazeShow } from "@/routes/logic/types";
 import type { Show } from "@tv-shows-explorer/shared";
 import { dropExpiredSearches } from "./dropExpiredSearches";
 import { readCachedSearch } from "./readCachedSearch";
 import { writeCachedSearch } from "./writeCachedSearch";
 
-const TVMAZE_API = "https://api.tvmaze.com";
-
-// The fields of a TVmaze show the app reads: https://www.tvmaze.com/api#show-search
-type TvmazeSearchResult = {
-    show: {
-        id: number;
-        name: string;
-        genres: string[];
-        rating: { average: number | null } | null;
-        premiered: string | null;
-        ended: string | null;
-        image: { medium: string; original: string } | null;
-        url: string;
-    };
-};
+// One result of a TVmaze search: https://www.tvmaze.com/api#show-search
+type TvmazeSearchResult = { show: TvmazeShow };
 
 // Searches TVmaze, which returns all its results (at most 10) at once. An answer younger than 5 minutes comes from
 // the cache, without TVmaze. Rejects on a network error, a non-2xx answer, or when `signal` aborts; a failed answer
@@ -33,16 +23,7 @@ export const searchTvmaze = async (query: string, signal: AbortSignal): Promise<
         `${TVMAZE_API}/search/shows?q=${encodeURIComponent(query)}`,
         signal,
     );
-    const shows = results.map(({ show }) => ({
-        id: show.id,
-        name: show.name,
-        genres: show.genres,
-        rating: show.rating?.average ?? null,
-        premiered: show.premiered,
-        ended: show.ended,
-        image: show.image?.medium ?? null,
-        url: show.url,
-    }));
+    const shows = results.map(({ show }) => toShow(show));
     dropExpiredSearches();
     writeCachedSearch(query, shows);
     return shows;

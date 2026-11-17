@@ -1,3 +1,4 @@
+import { HttpError } from "@/lib/errors/HttpError";
 import { fetchJson } from "../fetchJson";
 
 const respond = (body: unknown, status = 200) =>
@@ -17,11 +18,17 @@ describe("fetchJson", () => {
         expect(fetchMock).toHaveBeenCalledWith("https://example.com/items", { signal });
     });
 
-    it("rejects on a non-2xx answer", async () => {
+    it("rejects with an HttpError of the status on a non-2xx answer", async () => {
         vi.stubGlobal("fetch", respond({ message: "busy" }, 503));
 
         await expect(fetchJson("https://example.com/items", new AbortController().signal)).rejects.toThrow(
             "Request failed with status 503",
+        );
+        await expect(fetchJson("https://example.com/items", new AbortController().signal)).rejects.toMatchObject({
+            status: 503,
+        });
+        await expect(fetchJson("https://example.com/items", new AbortController().signal)).rejects.toBeInstanceOf(
+            HttpError,
         );
     });
 

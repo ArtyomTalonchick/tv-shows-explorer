@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { favorites } from "./favorites/favorites";
 import { health } from "./health/health";
 import { shows } from "./shows/shows";
 
@@ -8,4 +9,5 @@ import { shows } from "./shows/shows";
 // prettier-ignore
 export const routes = new Hono()
     .route("/health", health)
-    .route("/shows", shows);
+    .route("/shows", shows)
+    .route("/favorites", favorites);
