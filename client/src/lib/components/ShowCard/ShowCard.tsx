@@ -1,110 +1,70 @@
 import { Box, chakra, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Icon } from "@/lib/components/Icon/Icon";
+import { FavoriteToggle } from "@/lib/components/FavoriteToggle/FavoriteToggle";
+import { CardPoster } from "./CardPoster/CardPoster";
 import { usePresenter, type ShowCardProps } from "./_logic/usePresenter";
 
 export type { ShowCardProps } from "./_logic/usePresenter";
 
-// ShowCard of design/library: the poster with the rating, the name and one line of details. From md the poster is
-// above the text; below it, a thumbnail sits beside the text, as in the one-column list of design/v0.1.
+// ShowCard of design/library: the poster with the rating, the name and one line of details, and the bookmark. From
+// md the poster is above the text and the bookmark on the poster's corner; below it, a thumbnail sits beside the
+// text, as in the one-column list of design/v0.1, and the bookmark at the row's right end, away from the rating.
+// The bookmark is beside the link, not in it: a button inside a link is not allowed.
 export const ShowCard: FC<ShowCardProps> = (props) => {
-    const { name, href, imageSrc, imageAlt, hasImage, ratingLabel, meta } = usePresenter(props);
+    const { name, href, poster, meta, favorite } = usePresenter(props);
 
     return (
-        <chakra.a
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-            className="group"
-            display={{ base: "grid", md: "block" }}
-            gridTemplateColumns="{sizes.thumb} minmax(0, 1fr)"
-            columnGap="4"
-            alignItems="center"
-            minW="0"
-            rounded="md"
-            focusVisibleRing="none"
-            _focusVisible={{ outline: "3px solid", outlineColor: "accent.solid", outlineOffset: "3px" }}
-        >
-            <Box
-                position="relative"
-                gridRow="span 2"
-                aspectRatio="2 / 3"
+        <Box position="relative" minW="0">
+            <chakra.a
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="group"
+                display={{ base: "grid", md: "block" }}
+                gridTemplateColumns="{sizes.thumb} minmax(0, 1fr)"
+                columnGap="4"
+                alignItems="center"
+                minW="0"
+                pr={{ base: "12", md: "0" }}
                 rounded="md"
-                overflow="hidden"
-                bg="bg.subtle"
-                boxShadow="poster"
+                focusVisibleRing="none"
+                _focusVisible={{ outline: "3px solid", outlineColor: "accent.solid", outlineOffset: "3px" }}
             >
-                {hasImage ? (
-                    <chakra.img
-                        src={imageSrc}
-                        alt={imageAlt}
-                        loading="lazy"
-                        display="block"
-                        w="full"
-                        h="full"
-                        objectFit="cover"
-                        transition="transform {durations.normal} {easings.standard}"
-                        _groupHover={{ transform: "scale(1.04)" }}
-                        _motionReduce={{ transition: "none" }}
-                    />
-                ) : (
-                    <Box
-                        position="absolute"
-                        inset="0"
-                        display="grid"
-                        placeContent="center"
-                        justifyItems="center"
-                        gap="2"
-                        color="fg.subtle"
-                        fontSize="sm"
-                    >
-                        <Icon name="film" boxSize="10" strokeWidth="1.5" />
-                        No poster
-                    </Box>
-                )}
-                {ratingLabel && (
-                    <chakra.span
-                        position="absolute"
-                        top="3"
-                        left="3"
-                        px="2"
-                        py="1"
-                        rounded="full"
-                        bg="accent.solid"
-                        color="accent.contrast"
-                        fontSize="xs"
-                        fontWeight="extrabold"
-                    >
-                        {ratingLabel}
-                    </chakra.span>
-                )}
+                <CardPoster {...poster} />
+                <Heading
+                    as="h3"
+                    mt={{ base: "0", md: "4" }}
+                    mb="1"
+                    alignSelf="end"
+                    fontSize="lg"
+                    fontWeight="bold"
+                    lineHeight="tight"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    whiteSpace={{ base: "normal", md: "nowrap" }}
+                    transition="color {durations.fast} {easings.standard}"
+                    _groupHover={{ color: "accent.fg" }}
+                >
+                    {name}
+                </Heading>
+                <Text
+                    alignSelf="start"
+                    color="fg.muted"
+                    fontSize="sm"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    whiteSpace={{ base: "normal", md: "nowrap" }}
+                >
+                    {meta}
+                </Text>
+            </chakra.a>
+            <Box
+                position="absolute"
+                top={{ base: "calc(50% - {spacing.10} / 2)", md: "3" }}
+                right={{ base: "0", md: "3" }}
+            >
+                <FavoriteToggle {...favorite} />
             </Box>
-            <Heading
-                as="h3"
-                mt={{ base: "0", md: "4" }}
-                mb="1"
-                alignSelf="end"
-                fontSize="lg"
-                fontWeight="bold"
-                lineHeight="tight"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                whiteSpace={{ base: "normal", md: "nowrap" }}
-                transition="color {durations.fast} {easings.standard}"
-                _groupHover={{ color: "accent.fg" }}
-            >
-                {name}
-            </Heading>
-            <Text
-                alignSelf="start"
-                color="fg.muted"
-                fontSize="sm"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                whiteSpace={{ base: "normal", md: "nowrap" }}
-            >
-                {meta}
-            </Text>
-        </chakra.a>
+        </Box>
     );
 };
