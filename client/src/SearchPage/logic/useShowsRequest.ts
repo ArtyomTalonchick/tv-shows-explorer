@@ -1,5 +1,5 @@
-import { useRequest } from "@/lib/request/useRequest";
 import type { ShowsQuery } from "@tv-shows-explorer/shared";
+import { useRequest } from "@/lib/request/useRequest";
 import type { SearchView } from "./types";
 import { getSearchView } from "./getSearchView";
 import { searchShows } from "./tasks/searchShows";

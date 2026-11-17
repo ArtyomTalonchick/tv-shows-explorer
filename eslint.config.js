@@ -1,5 +1,6 @@
 import js from "@eslint/js";
 import prettier from "eslint-config-prettier";
+import { importX } from "eslint-plugin-import-x";
 import promise from "eslint-plugin-promise";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
@@ -12,9 +13,24 @@ export default defineConfig([
     {
         files: ["**/*.{ts,tsx}"],
         extends: [js.configs.recommended, tseslint.configs.recommended],
-        plugins: { promise },
+        plugins: { promise, "import-x": importX },
         languageOptions: { ecmaVersion: 2022 },
         rules: {
+            // Imports in three groups, with no empty line between them: packages (the workspace's
+            // `@tv-shows-explorer/shared` too), then own code through `@/`, then relative paths. A reader sees at
+            // once what comes from outside the app and what stays inside the unit.
+            "import-x/order": [
+                "error",
+                {
+                    groups: [["builtin", "external"], "internal", ["parent", "sibling", "index"]],
+                    pathGroups: [
+                        { pattern: "@tv-shows-explorer/**", group: "external" },
+                        { pattern: "@/**", group: "internal" },
+                    ],
+                    pathGroupsExcludedImportTypes: ["builtin"],
+                    "newlines-between": "never",
+                },
+            ],
             // async / await with try / catch instead of .then chains.
             "promise/prefer-await-to-then": "error",
             "no-restricted-syntax": [

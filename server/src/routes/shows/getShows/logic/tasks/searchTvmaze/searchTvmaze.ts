@@ -1,8 +1,8 @@
+import type { Show } from "@tv-shows-explorer/shared";
 import { TVMAZE_API } from "@/routes/logic/constants";
 import { toShow } from "@/routes/logic/toShow";
 import { fetchJson } from "@/lib/http/fetchJson";
 import type { TvmazeShow } from "@/routes/logic/types";
-import type { Show } from "@tv-shows-explorer/shared";
 import { dropExpiredSearches } from "./dropExpiredSearches";
 import { readCachedSearch } from "./readCachedSearch";
 import { writeCachedSearch } from "./writeCachedSearch";

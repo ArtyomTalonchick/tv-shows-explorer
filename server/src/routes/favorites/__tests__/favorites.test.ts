@@ -1,7 +1,7 @@
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
-import { favorites } from "../favorites";
 import { favoritesStore } from "@/routes/favorites/stores/favoritesStore";
 import { searchCache } from "@/routes/stores/searchCache";
+import { favorites } from "../favorites";
 
 const show = (id: number): Show => ({
     id,

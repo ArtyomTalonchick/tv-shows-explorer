@@ -1,6 +1,6 @@
+import type { Show, ShowsPage, ShowsQuery } from "@tv-shows-explorer/shared";
 import type { RequestAnswer } from "@/lib/request/useRequest";
 import { getSearchView } from "../getSearchView";
-import type { Show, ShowsPage, ShowsQuery } from "@tv-shows-explorer/shared";
 
 const show = (id: number, name: string): Show => ({
     id,

@@ -98,6 +98,8 @@ followed by hand. A new preference the owner states during a task is added here 
 ## Imports and files
 
 - `@/` is `src/`. Code of the own folder and own children is imported relatively; anything further through `@/`. (#8)
+- Imports go in three groups, with no empty line between them: packages first (`hono`, `react`, and the workspace's
+  `@tv-shows-explorer/shared`), then `@/`, then relative paths. ESLint `import-x/order`. (#27)
 - Tests live in `__tests__/` next to the code they test, never beside source files. A test imports the code of the
   folder that holds `__tests__/` relatively (`../useShowsRequest`), anything else through `@/`. (#8)
 

@@ -1,9 +1,9 @@
+import type { Handler } from "hono";
 import { BAD_SHOW_ID } from "@/routes/favorites/logic/constants";
 import { parseShowId } from "@/routes/favorites/logic/parseShowId";
 import { listFavorites } from "@/routes/favorites/logic/tasks/listFavorites";
 import type { FavoritesEnv } from "@/routes/favorites/logic/types";
 import { HttpError } from "@/lib/errors/HttpError";
-import type { Handler } from "hono";
 import { parseAddedAt } from "./logic/parseAddedAt";
 import { addFavorite } from "./logic/tasks/addFavorite/addFavorite";
 

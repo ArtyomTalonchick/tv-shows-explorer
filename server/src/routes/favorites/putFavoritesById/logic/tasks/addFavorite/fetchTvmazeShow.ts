@@ -1,8 +1,8 @@
+import type { Show } from "@tv-shows-explorer/shared";
 import { TVMAZE_API } from "@/routes/logic/constants";
 import { toShow } from "@/routes/logic/toShow";
 import { fetchJson } from "@/lib/http/fetchJson";
 import type { TvmazeShow } from "@/routes/logic/types";
-import type { Show } from "@tv-shows-explorer/shared";
 
 // Asks TVmaze for one show by its id. Rejects with an `HttpError` of 404 when TVmaze has no such show, and on any
 // other failure as `fetchJson` does.
