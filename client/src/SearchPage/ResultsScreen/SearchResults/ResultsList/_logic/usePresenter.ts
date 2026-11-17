@@ -1,9 +1,9 @@
 import { useRef, useState, type RefObject } from "react";
 import type { Show } from "@tv-shows-explorer/shared";
 import type { PaginationProps } from "@/lib/components/Pagination/Pagination";
-import type { ShowCardProps } from "@/lib/components/ShowCard/ShowCard";
 import { getPageCount } from "@/lib/pagination/getPageCount";
 import { scrollToTopIfAbove } from "@/lib/screen/scrollToTopIfAbove";
+import type { ShowCardProps } from "../ShowCard/ShowCard";
 import { formatShowMeta } from "./formatShowMeta";
 
 // One page of the shows, and the pages of all of them: `total` shows, `perPage` on each.

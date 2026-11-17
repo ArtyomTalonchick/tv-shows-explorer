@@ -1,6 +1,6 @@
 import { Box, chakra, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
-import { FavoriteToggle } from "@/lib/components/FavoriteToggle/FavoriteToggle";
+import { FavoriteToggle } from "./FavoriteToggle/FavoriteToggle";
 import { CardPoster } from "./CardPoster/CardPoster";
 import { usePresenter, type ShowCardProps } from "./_logic/usePresenter";
 

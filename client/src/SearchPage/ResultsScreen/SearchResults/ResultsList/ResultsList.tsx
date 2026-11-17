@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Pagination } from "@/lib/components/Pagination/Pagination";
-import { ShowCard } from "@/lib/components/ShowCard/ShowCard";
+import { ShowCard } from "./ShowCard/ShowCard";
 import { usePresenter, type ResultsListProps } from "./_logic/usePresenter";
 
 export type { ResultsListProps } from "./_logic/usePresenter";

@@ -1,4 +1,4 @@
-import type { FavoriteToggleProps } from "@/lib/components/FavoriteToggle/FavoriteToggle";
+import type { FavoriteToggleProps } from "../FavoriteToggle/FavoriteToggle";
 import type { CardPosterProps } from "../CardPoster/CardPoster";
 
 export type ShowCardProps = {
