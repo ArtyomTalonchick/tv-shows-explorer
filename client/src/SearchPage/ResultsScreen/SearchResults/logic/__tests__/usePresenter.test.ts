@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import type { Show, ShowsPage } from "@tv-shows-explorer/shared";
-import type { SearchStatus } from "@/SearchPage/types";
+import type { SearchStatus } from "@/SearchPage/logic/types";
 import { usePresenter, type SearchResultsProps } from "../usePresenter";
 
 const show = (id: number, genres: string[]): Show => ({

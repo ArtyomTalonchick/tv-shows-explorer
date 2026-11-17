@@ -1,12 +1,12 @@
 import { act, renderHook } from "@testing-library/react";
-import { redrawCaret } from "@/lib/helpers/redrawCaret";
-import { withViewTransition } from "@/lib/helpers/withViewTransition";
+import { redrawCaret } from "@/lib/screen/redrawCaret";
+import { withViewTransition } from "@/lib/screen/withViewTransition";
 import { useScreenSwap } from "../useScreenSwap";
 
-vi.mock("@/lib/helpers/withViewTransition", () => ({
+vi.mock("@/lib/screen/withViewTransition", () => ({
     withViewTransition: vi.fn(async (update: () => void) => update()),
 }));
-vi.mock("@/lib/helpers/redrawCaret", () => ({ redrawCaret: vi.fn() }));
+vi.mock("@/lib/screen/redrawCaret", () => ({ redrawCaret: vi.fn() }));
 
 describe("useScreenSwap", () => {
     beforeEach(() => {

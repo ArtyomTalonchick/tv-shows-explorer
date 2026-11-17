@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { flushSync } from "react-dom";
-import { redrawCaret } from "@/lib/helpers/redrawCaret";
-import { withViewTransition } from "@/lib/helpers/withViewTransition";
+import { redrawCaret } from "@/lib/screen/redrawCaret";
+import { withViewTransition } from "@/lib/screen/withViewTransition";
 
 export type UseScreenSwapResult = {
     // The hero is shown on start and after the logo, whatever the field holds.

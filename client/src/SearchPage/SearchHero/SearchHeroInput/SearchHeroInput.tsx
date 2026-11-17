@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
-import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/constants";
+import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/logic/constants";
 import { usePresenter, type SearchHeroInputProps } from "./logic/usePresenter";
 
 export type { SearchHeroInputProps } from "./logic/usePresenter";

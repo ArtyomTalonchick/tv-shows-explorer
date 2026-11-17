@@ -8,8 +8,6 @@
         "lib": "lib",
         "uiKit": "lib/components",
         "components": "components",
-        "hooks": "hooks",
-        "helpers": "helpers",
         "tasks": "tasks",
         "logic": "logic"
     },

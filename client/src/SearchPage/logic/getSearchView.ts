@@ -1,6 +1,6 @@
-import type { RequestAnswer } from "@/lib/hooks/useRequest";
+import type { RequestAnswer } from "@/lib/request/useRequest";
 import type { ShowsPage, ShowsQuery } from "@tv-shows-explorer/shared";
-import type { SearchStatus, SearchView } from "../types";
+import type { SearchStatus, SearchView } from "./types";
 
 type ShowsAnswer = RequestAnswer<ShowsQuery, ShowsPage>;
 

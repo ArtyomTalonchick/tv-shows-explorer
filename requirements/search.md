@@ -69,10 +69,10 @@ The user finds TV shows by typing a query. TVmaze does the search
 - Retry repeats the current query. (#8)
 - Requests are handled by the app's own code (`useEffect` + `AbortController`), without a query library. (#8)
 - TVmaze is asked through an API layer with no React in it: `SearchPage/searchShows` (the TVmaze URL and the
-  mapping to `Show`) over `lib/helpers/fetchJson` (`fetch`, the non-2xx check, `json()`). The caller passes the
+  mapping to `Show`) over `lib/http/fetchJson` (`fetch`, the non-2xx check, `json()`). The caller passes the
   `AbortSignal`; debounce, cancellation and Retry stay in `useShowsRequest`. (#16) Since #25 `searchShows` asks the
   app’s server, and the debounce is in `useDebouncedQuery`. (#25)
-- Cancelling a request, dropping a late answer and Retry are done by the shared hook `lib/hooks/useRequest`, made
+- Cancelling a request, dropping a late answer and Retry are done by the shared hook `lib/request/useRequest`, made
   now although search is its only user, so the next request does not repeat them. `useShowsRequest` adds the
   debounce and drops the answer when the field is emptied; `getSearchView`, a plain function, decides what the
   results area shows. (#16)
@@ -88,7 +88,7 @@ The user finds TV shows by typing a query. TVmaze does the search
   query) is `useShowsParams`; the request and what the area shows are `useShowsRequest` and `getSearchView`.
   TVmaze’s URL and the mapping to `Show` moved to the server (`server/src/routes/shows/getShows`). (#25)
 - TVmaze's answers are cached in the server's memory for 5 minutes, keyed by the trimmed query; no database. The
-  cache is a store of its own, `server/src/stores/searchCache` — a `Map` on `globalThis`, so a query such as
+  cache is a store of its own, `server/src/routes/shows/getShows/stores/searchCache` — a `Map` on `globalThis`, so a query such as
   «constructor» is not found on an object's prototype — reached only by the tasks `readCachedSearch`,
   `writeCachedSearch` and `dropExpiredSearches`, which `searchTvmaze` calls. An entry 5 minutes old or older is
   expired; before each write the expired entries are dropped, so the cache holds no more than the queries of the
@@ -113,6 +113,6 @@ The user finds TV shows by typing a query. TVmaze does the search
   focus. iOS opens the keyboard only for a focus set inside the tap, and scrolls a centred field above the
   keyboard: the scroll played under the transition, and a focus set after the transition left the keyboard
   closed. The field of the results screen then takes the focus while the keyboard is open. Its caret is hidden
-  until the transition has finished and then redrawn (`lib/helpers/redrawCaret`): iOS drew it flying over the
+  until the transition has finished and then redrawn (`lib/screen/redrawCaret`): iOS drew it flying over the
   animation and showed none in the field until the first key. Hidden fields to hold the focus, and a swap with no
   animation on touch screens, were turned down. (#18)

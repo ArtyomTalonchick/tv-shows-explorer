@@ -1,4 +1,4 @@
-import { getPageCount } from "@/lib/helpers/getPageCount";
+import { getPageCount } from "@/lib/pagination/getPageCount";
 
 export type PaginationProps = {
     // The current page, from 1.

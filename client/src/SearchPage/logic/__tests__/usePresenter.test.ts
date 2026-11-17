@@ -1,9 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
-import { withViewTransition } from "@/lib/helpers/withViewTransition";
+import { withViewTransition } from "@/lib/screen/withViewTransition";
 import { searchShows } from "../tasks/searchShows";
 import { usePresenter } from "../usePresenter";
 
-vi.mock("@/lib/helpers/withViewTransition", () => ({
+vi.mock("@/lib/screen/withViewTransition", () => ({
     withViewTransition: vi.fn((update: () => void) => update()),
 }));
 vi.mock("../tasks/searchShows", () => ({ searchShows: vi.fn() }));

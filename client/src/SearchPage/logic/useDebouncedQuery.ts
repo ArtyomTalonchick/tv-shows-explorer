@@ -1,4 +1,4 @@
-import { useDebouncedValue } from "@/lib/hooks/useDebouncedValue";
+import { useDebouncedValue } from "@/lib/debounce/useDebouncedValue";
 
 export const SEARCH_DEBOUNCE_MS = 400;
 

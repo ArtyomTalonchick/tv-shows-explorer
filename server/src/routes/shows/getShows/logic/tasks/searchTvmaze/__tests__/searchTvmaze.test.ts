@@ -1,4 +1,4 @@
-import { searchCache } from "@/stores/searchCache";
+import { searchCache } from "@/routes/shows/getShows/stores/searchCache";
 import { searchTvmaze } from "../searchTvmaze";
 
 const respond = (body: unknown, status = 200) =>

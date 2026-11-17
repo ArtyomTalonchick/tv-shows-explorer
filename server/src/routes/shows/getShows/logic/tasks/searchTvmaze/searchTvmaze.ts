@@ -1,4 +1,4 @@
-import { fetchJson } from "@/lib/tasks/fetchJson";
+import { fetchJson } from "@/lib/http/fetchJson";
 import type { Show } from "@tv-shows-explorer/shared";
 import { dropExpiredSearches } from "./dropExpiredSearches";
 import { readCachedSearch } from "./readCachedSearch";

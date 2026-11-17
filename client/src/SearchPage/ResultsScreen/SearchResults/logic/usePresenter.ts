@@ -1,5 +1,5 @@
 import type { ShowsPage } from "@tv-shows-explorer/shared";
-import type { SearchStatus } from "@/SearchPage/types";
+import type { SearchStatus } from "@/SearchPage/logic/types";
 import type { GenreFilterProps } from "../GenreFilter/GenreFilter";
 import type { ResultsHeadProps } from "../ResultsHead/ResultsHead";
 import type { ResultsListProps } from "../ResultsList/ResultsList";

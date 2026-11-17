@@ -1,8 +1,8 @@
 import { useRef, type RefObject } from "react";
 import type { PaginationProps } from "@/lib/components/Pagination/Pagination";
 import type { ShowCardProps } from "@/lib/components/ShowCard/ShowCard";
-import { getPageCount } from "@/lib/helpers/getPageCount";
-import { scrollToTopIfAbove } from "@/lib/helpers/scrollToTopIfAbove";
+import { getPageCount } from "@/lib/pagination/getPageCount";
+import { scrollToTopIfAbove } from "@/lib/screen/scrollToTopIfAbove";
 import type { Show } from "@tv-shows-explorer/shared";
 import { formatShowMeta } from "./formatShowMeta";
 
