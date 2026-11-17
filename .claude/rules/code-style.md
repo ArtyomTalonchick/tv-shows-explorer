@@ -12,6 +12,9 @@ followed by hand. A new preference the owner states during a task is added here 
 - `async` / `await` with `try` / `catch`, never `.then` chains. ESLint `promise/prefer-await-to-then`. (#8)
 - A component always has a body: `=> { return (…); }`, so adding a Presenter later changes one line. ESLint
   `no-restricted-syntax`. (#8)
+- Indent with 4 spaces: Prettier `tabWidth: 4`, and `.editorconfig` for every editor. (#27)
+- A Hono route table puts each call on its own line, under `// prettier-ignore`, so adding a route changes one
+  line. (#27)
 
 ## Code
 
@@ -102,6 +105,8 @@ followed by hand. A new preference the owner states during a task is added here 
   `@tv-shows-explorer/shared`), then `@/`, then relative paths. ESLint `import-x/order`. (#27)
 - Tests live in `__tests__/` next to the code they test, never beside source files. A test imports the code of the
   folder that holds `__tests__/` relatively (`../useShowsRequest`), anything else through `@/`. (#8)
+- A route handler is a folder named by its method and path (`getFavorites`, `putFavoritesById`); the path itself is
+  written only in the table of its level (`favorites.ts`). (#27)
 
 ## Tools
 
