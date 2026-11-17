@@ -40,7 +40,10 @@ For an implementation task:
 
 ## Commit
 <!-- commit, before committing: anything beyond config.commit -->
-These go into the task's commit, not a separate one:
+A task is split into commits that each show or change something the user can see, or are a refactor of code already
+in use; a commit adds no code that nothing uses yet. Every commit passes the checks on its own. (#28)
+
+These go into the task's commit — its last one, when it has several — not a separate one:
 - The feature file in `requirements/` that the task changes or creates is updated to match the change.
 - A change the user can see gets a line under `## Unreleased` in `CHANGELOG.md`.
 
