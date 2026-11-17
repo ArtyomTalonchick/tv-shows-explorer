@@ -1,5 +1,6 @@
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
 import { useState } from "react";
+import type { FavoriteToggleProps } from "@/_components/FavoriteToggle/FavoriteToggle";
 import { addFavorite } from "@/_logic/_tasks/addFavorite";
 import { removeFavorite } from "@/_logic/_tasks/removeFavorite";
 import { useFavoritesStore } from "@/_stores/useFavoritesStore";
@@ -7,19 +8,10 @@ import { showFavoriteToast } from "./showFavoriteToast";
 
 type FavoriteShow = Pick<Show, "id" | "name">;
 
-// What a bookmark shows and does for one show.
-export type FavoriteToggleState = {
-    pressed: boolean;
-    // While its change is on the way; a press does nothing then.
-    busy: boolean;
-    label: string;
-    onClick: () => void;
-};
-
 export type UseFavoriteToggleResult = {
     // The bookmark of a show: pressed while it is a favourite, busy while its change is on the way. A press adds or
     // removes the show and says so in a toast.
-    toggleFor: (show: FavoriteShow) => FavoriteToggleState;
+    toggleFor: (show: FavoriteShow) => Omit<FavoriteToggleProps, "variant">;
 };
 
 // The bookmark changes when the server answers, not before: the server answers the whole list, so the bookmarks, the
@@ -59,7 +51,7 @@ export const useFavoriteToggle = (): UseFavoriteToggleResult => {
         }
     };
 
-    const toggleFor = (show: FavoriteShow): FavoriteToggleState => {
+    const toggleFor = (show: FavoriteShow): Omit<FavoriteToggleProps, "variant"> => {
         const saved = favorites.find((favorite) => favorite.id === show.id) ?? null;
         const send = (): Promise<void> => (saved === null ? add(show) : remove(saved));
 

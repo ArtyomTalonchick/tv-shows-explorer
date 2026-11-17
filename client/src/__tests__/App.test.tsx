@@ -1,5 +1,6 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import type { Favorite } from "@tv-shows-explorer/shared";
+import { useFavoritesDrawerStore } from "@/_stores/useFavoritesDrawerStore";
 import { useFavoritesStore } from "@/_stores/useFavoritesStore";
 import { App } from "../App";
 import { Provider } from "../Provider/Provider";
@@ -52,13 +53,14 @@ const searchbox = (): HTMLElement => screen.getByRole("searchbox", { name: "Sear
 describe("App", () => {
     beforeEach(() => {
         useFavoritesStore.setState({ favorites: [] });
+        useFavoritesDrawerStore.setState({ isOpen: false });
     });
 
     afterEach(() => {
         vi.unstubAllGlobals();
     });
 
-    it("starts with the search field, loads the favourites and sends no search", async () => {
+    it("starts with the search field and the favourites button, and sends no search", async () => {
         const fetchMock = stubServer([DARK]);
 
         renderApp();
@@ -67,8 +69,27 @@ describe("App", () => {
         expect(searchbox()).toHaveValue("");
         expect(searchbox()).not.toHaveFocus();
         expect(screen.queryByRole("region", { name: "Search results" })).not.toBeInTheDocument();
-        await waitFor(() => expect(fetchMock).toHaveBeenCalledWith("/api/favorites", expect.anything()));
+        expect(await screen.findByRole("button", { name: "Favourites 1" })).toBeInTheDocument();
         expect(searchRequests(fetchMock)).toHaveLength(0);
+    });
+
+    it("lists the favourites in a drawer, removes one from its bookmark and puts it back on Undo", async () => {
+        stubServer([DARK]);
+        renderApp();
+
+        fireEvent.click(await screen.findByRole("button", { name: "Favourites 1" }));
+        const drawer = await screen.findByRole("dialog", { name: "Favourites 1" });
+        expect(within(drawer).getByText("2017–2020 · Drama, Science-Fiction")).toBeInTheDocument();
+
+        fireEvent.click(within(drawer).getByRole("button", { name: "Remove Dark from favourites", pressed: true }));
+
+        expect(await within(drawer).findByText("No favourites yet")).toBeInTheDocument();
+        expect(await screen.findByText(/Removed/)).toHaveTextContent("Removed Dark from favourites");
+
+        fireEvent.click(screen.getByRole("button", { name: "Undo" }));
+
+        expect(await within(drawer).findByText("Dark")).toBeInTheDocument();
+        expect(screen.getByRole("dialog", { name: "Favourites 1" })).toBe(drawer);
     });
 
     it("opens the results screen on a tap with its field focused, without focusing the hero field", () => {

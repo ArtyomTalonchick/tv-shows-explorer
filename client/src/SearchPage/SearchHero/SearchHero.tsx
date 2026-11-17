@@ -1,12 +1,13 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
+import { FavoritesOpener } from "@/SearchPage/_components/FavoritesOpener/FavoritesOpener";
 import { Logo } from "@/SearchPage/_components/Logo/Logo";
 import { PosterWall } from "./PosterWall/PosterWall";
 import { SearchHeroInput } from "./SearchHeroInput/SearchHeroInput";
 
 const layer = { content: '""', position: "absolute", inset: "0" } as const;
 
-// The start screen: the full-viewport hero with the search field only.
+// The start screen: the full-viewport hero with the search field, the logo and the favourites button above it.
 export const SearchHero: FC = () => {
     return (
         <Box
@@ -26,9 +27,18 @@ export const SearchHero: FC = () => {
             }}
             _after={{ ...layer, bgImage: "radial-gradient(70% 70% at 50% 50%, transparent, {colors.bg} 85%)" }}
         >
-            <Box position="absolute" top={{ base: "6", md: "8" }} left={{ base: "4", md: "12" }} zIndex="3">
+            <Flex
+                position="absolute"
+                top={{ base: "6", md: "8" }}
+                insetInline="0"
+                px={{ base: "4", md: "12" }}
+                zIndex="3"
+                alignItems="center"
+                justifyContent="space-between"
+            >
                 <Logo />
-            </Box>
+                <FavoritesOpener />
+            </Flex>
             <PosterWall />
             <Box position="relative" zIndex="2" maxW="hero" display="grid" justifyItems="center">
                 <Text textStyle="eyebrow">TVmaze · 80 000+ shows</Text>

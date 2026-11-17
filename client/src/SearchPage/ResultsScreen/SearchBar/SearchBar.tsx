@@ -2,11 +2,13 @@ import { Box, chakra, Container } from "@chakra-ui/react";
 import type { FC } from "react";
 import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
 import { SEARCH_FIELD_ID, SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/SearchPage/_logic/constants";
+import { FavoritesOpener } from "@/SearchPage/_components/FavoritesOpener/FavoritesOpener";
 import { Logo } from "@/SearchPage/_components/Logo/Logo";
 import { usePresenter } from "./_logic/usePresenter";
 
 // The compact header of the results screen. Its field takes over the focus from the hero's field, and the view
-// transition moves the field and the logo here from the hero. The logo leads back to the hero.
+// transition moves the field and the logo here from the hero. The logo leads back to the hero; the favourites
+// button is at the end. On a phone the logo and the button share the first row, and the field takes the second.
 export const SearchBar: FC = () => {
     const { query, caretColor, onQueryChange, onClear, onHome } = usePresenter();
 
@@ -41,7 +43,13 @@ export const SearchBar: FC = () => {
                 >
                     <Logo />
                 </chakra.button>
-                <Box flex="1" display="flex" justifyContent="flex-end" minW={{ base: "full", md: "0" }}>
+                <Box
+                    flex="1"
+                    display="flex"
+                    justifyContent="flex-end"
+                    minW={{ base: "full", md: "0" }}
+                    order={{ base: "3", md: "0" }}
+                >
                     <SearchInput
                         id={SEARCH_FIELD_ID}
                         label={SEARCH_LABEL}
@@ -54,6 +62,9 @@ export const SearchBar: FC = () => {
                         autoFocus
                         viewTransitionName="search-field"
                     />
+                </Box>
+                <Box ml={{ base: "auto", md: "0" }}>
+                    <FavoritesOpener />
                 </Box>
             </Container>
         </Box>

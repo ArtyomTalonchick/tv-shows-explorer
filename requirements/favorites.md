@@ -23,6 +23,21 @@ All the favorites logic is on the server; the client shows the list and sends th
 7. The search results (`GET /api/shows`) do not say which shows are favorites: the client checks the ids against the
    list it holds.
 
+What the user sees (`design/v0.2/`): (#28)
+
+8. The client loads the list when the app starts. Both screens show the **Favourites** button with the number of
+   favorites, 0 too: in the hero's top-right corner, opposite the logo, and at the end of the search bar (on a phone,
+   on the first row with the logo).
+9. Every show card has a bookmark — a bookmark, not a star: the star marks the rating. It is filled in the accent
+   while the show is a favorite; on a phone it sits at the right end of the row. A press adds or removes the show.
+10. The bookmark, the counter and the list change when the server answers, all at once; until then the bookmark
+    cannot be pressed again. Then a toast says what happened for 4 s: «Added **Dark** to favourites», or «Removed
+    **Dark** from favourites» with **Undo**, which puts the show back in its old place (6).
+11. The button opens the list in a drawer from the right, full width on a phone: «Your list · Favourites N», a row
+    per show, the newest first, with its poster, name, years and genres; the row leads to the show on TVmaze. The
+    bookmark of a row removes the show: the row leaves and the toast offers Undo. The backdrop, × and Escape close
+    the drawer; a press on a toast does not.
+
 ## States
 
 | State | What the server answers |
@@ -33,6 +48,15 @@ All the favorites logic is on the server; the client shows the list and sends th
 | A wrong id (not a whole number from 1) or body | 400, nothing changes |
 | TVmaze has no show with the id | 404, nothing changes |
 | TVmaze does not answer | 502, nothing changes |
+
+| State | What the user sees (#28) |
+|---|---|
+| No favorites | The counter shows 0 in a grey badge; the drawer says «No favourites yet» and how to add a show |
+| Favorites | The counter in the accent; filled bookmarks on their cards; a row per show in the drawer |
+| A change on its way | Its bookmark does not answer a press until the server does |
+| Added, removed | A toast with the show's name; a removal offers Undo |
+| A change failed | «Couldn’t add **Dark** to favourites» (or remove) in a toast; the bookmark stays as it was |
+| The list did not load | «Couldn’t load your favourites» in a toast with Retry; the counter shows 0 meanwhile |
 
 ## Edge cases
 
@@ -62,3 +86,12 @@ All the favorites logic is on the server; the client shows the list and sends th
   and no accounts yet. A header, not a cookie: the client and the server live on different hosts, where browsers
   block third-party cookies. (#27)
 - Code and files say «favorite», the American spelling, as it is shorter to write. (#27)
+- The bookmark changes when the server answers, not at once: the server answers the whole list, so the bookmarks,
+  the counter and the drawer always show one list, and a failed request has nothing to roll back. A change of the
+  in-memory list takes a moment, and by the first press the server is awake: the app has loaded the list on
+  start. (#28)
+- A failed load of the list says so in a toast with Retry, and the bookmarks still work meanwhile: each change is
+  answered with the whole list. (#28)
+- A bookmark, not the star the issue named: the star marks the rating (`design/v0.2/`). (#28)
+- A toast stays pressable over the open drawer, so Undo of a removal from the drawer works there; keyboard focus
+  stays in the drawer, so Undo is not reached by Tab while it is open. (#28)

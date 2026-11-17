@@ -4,8 +4,8 @@ import type { PaginationProps } from "@/lib/components/Pagination/Pagination";
 import { getPageCount } from "@/lib/pagination/getPageCount";
 import { scrollToTopIfAbove } from "@/lib/screen/scrollToTopIfAbove";
 import { useFavoriteToggle } from "@/_logic/useFavoriteToggle/useFavoriteToggle";
+import { formatShowMeta } from "@/_logic/formatShowMeta";
 import type { ShowCardProps } from "../ShowCard/ShowCard";
-import { formatShowMeta } from "./formatShowMeta";
 
 // One page of the shows, and the pages of all of them: `total` shows, `perPage` on each.
 export type ResultsListProps = PaginationProps & {
