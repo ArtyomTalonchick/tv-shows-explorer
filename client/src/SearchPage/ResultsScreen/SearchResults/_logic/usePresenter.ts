@@ -3,7 +3,7 @@ import type { ResultsEmptyProps } from "../ResultsEmpty/ResultsEmpty";
 import type { ResultsErrorProps } from "../ResultsError/ResultsError";
 import type { ResultsHeadProps } from "../ResultsHead/ResultsHead";
 import type { ResultsListProps } from "../ResultsList/ResultsList";
-import { useShowsSearch } from "./useShowsSearch";
+import { useShowsSearch } from "./useShowsSearch/useShowsSearch";
 
 type UsePresenterResult = {
     // «Shows for “dark”» with «9 shows», or «4 of 9 shows · Drama» for a genre; hidden with an empty field.

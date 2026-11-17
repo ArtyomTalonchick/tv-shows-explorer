@@ -1,10 +1,10 @@
 import { renderHook } from "@testing-library/react";
 import type { Show, ShowsPage } from "@tv-shows-explorer/shared";
-import type { SearchStatus } from "../types";
+import type { SearchStatus } from "../useShowsSearch/types";
 import { usePresenter } from "../usePresenter";
-import { useShowsSearch, type UseShowsSearchResult } from "../useShowsSearch";
+import { useShowsSearch, type UseShowsSearchResult } from "../useShowsSearch/useShowsSearch";
 
-vi.mock("../useShowsSearch", () => ({ useShowsSearch: vi.fn() }));
+vi.mock("../useShowsSearch/useShowsSearch", () => ({ useShowsSearch: vi.fn() }));
 
 const show = (id: number, genres: string[]): Show => ({
     id,

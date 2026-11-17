@@ -1,5 +1,5 @@
 import type { MiddlewareHandler } from "hono";
-import type { FavoritesEnv } from "./types";
+import type { FavoritesEnv } from "@/routes/favorites/_logic/types";
 import { parseClientId } from "./parseClientId";
 
 // Lets a favorites request through only with a UUID in its `X-Client-Id` header, and passes the id on to the

@@ -1,9 +1,9 @@
 import { act, renderHook } from "@testing-library/react";
 import { useQueryStore } from "@/SearchPage/_stores/useQueryStore";
-import { searchShows } from "../tasks/searchShows";
+import { searchShows } from "@/SearchPage/ResultsScreen/SearchResults/_logic/_tasks/searchShows";
 import { useShowsSearch } from "../useShowsSearch";
 
-vi.mock("../tasks/searchShows", () => ({ searchShows: vi.fn() }));
+vi.mock("@/SearchPage/ResultsScreen/SearchResults/_logic/_tasks/searchShows", () => ({ searchShows: vi.fn() }));
 
 describe("useShowsSearch", () => {
     beforeEach(() => {

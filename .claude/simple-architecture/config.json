@@ -9,7 +9,7 @@
         "uiKit": "lib/components",
         "components": "_components",
         "stores": "_stores",
-        "tasks": "tasks",
+        "tasks": "_tasks",
         "logic": "_logic"
     },
     "maxFileLines": 120

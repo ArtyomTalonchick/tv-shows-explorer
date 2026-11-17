@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { deleteFavoritesById } from "./deleteFavoritesById/deleteFavoritesById";
 import { getFavorites } from "./getFavorites/getFavorites";
-import { requireClientId } from "./_logic/requireClientId";
+import { requireClientId } from "./_logic/requireClientId/requireClientId";
 import { putFavoritesById } from "./putFavoritesById/putFavoritesById";
 import type { FavoritesEnv } from "./_logic/types";
 

@@ -1,11 +1,11 @@
 import { act, renderHook } from "@testing-library/react";
 import type { Show, ShowsPage } from "@tv-shows-explorer/shared";
-import { searchShows } from "../tasks/searchShows";
+import { searchShows } from "@/SearchPage/ResultsScreen/SearchResults/_logic/_tasks/searchShows";
 import { SEARCH_DEBOUNCE_MS, useDebouncedQuery } from "../useDebouncedQuery";
 import { useShowsParams } from "../useShowsParams";
 import { useShowsRequest } from "../useShowsRequest";
 
-vi.mock("../tasks/searchShows", () => ({ searchShows: vi.fn() }));
+vi.mock("@/SearchPage/ResultsScreen/SearchResults/_logic/_tasks/searchShows", () => ({ searchShows: vi.fn() }));
 
 const searchMock = vi.mocked(searchShows);
 

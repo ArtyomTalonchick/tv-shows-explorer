@@ -5,9 +5,9 @@ export type CachedSearch = { shows: Show[]; savedAt: number };
 
 const globalStore = globalThis as typeof globalThis & { searchCache?: Map<string, CachedSearch> };
 
-// The TVmaze answers by query, reached only by the tasks `readCachedSearch`, `writeCachedSearch`,
-// `dropExpiredSearches` and `findCachedShow` (a favorite is taken from them). It lives on `globalThis`, so the
-// server keeps one cache however its modules are loaded; it is lost when the server restarts or sleeps. A `Map`, not
-// a plain object: a query such as «constructor» is not found on its prototype.
+// The TVmaze answers by query, reached only by the tasks `searchTvmaze` and `addFavorite` (a favorite is taken from
+// them), through their parts `readCachedSearch`, `writeCachedSearch`, `dropExpiredSearches` and `findCachedShow`.
+// It lives on `globalThis`, so the server keeps one cache however its modules are loaded; it is lost when the server
+// restarts or sleeps. A `Map`, not a plain object: a query such as «constructor» is not found on its prototype.
 globalStore.searchCache ??= new Map<string, CachedSearch>();
 export const searchCache = globalStore.searchCache;

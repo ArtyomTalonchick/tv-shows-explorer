@@ -1,5 +1,5 @@
 import type { Handler } from "hono";
-import { listFavorites } from "@/routes/favorites/_logic/tasks/listFavorites";
+import { listFavorites } from "@/routes/favorites/_logic/_tasks/listFavorites";
 import type { FavoritesEnv } from "@/routes/favorites/_logic/types";
 
 // `GET /api/favorites`: the browser's list.
