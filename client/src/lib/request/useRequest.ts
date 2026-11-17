@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 // The answer to one request: the data, or `failed` and no data. `params` and `attempt` name the request it answers.
 export type RequestAnswer<P, T> = {
@@ -13,6 +13,7 @@ export type UseRequestResult<P, T> = {
     latest: RequestAnswer<P, T> | null;
     // The answer to these params and this attempt, once it has arrived.
     current: RequestAnswer<P, T> | null;
+    // Stable across renders, like `reset`: an effect may depend on it.
     retry: () => void;
     // Forgets the last answer.
     reset: () => void;
@@ -53,10 +54,13 @@ export const useRequest = <P, T>(
         return () => controller.abort();
     }, [request, params, attempt]);
 
+    const retry = useCallback(() => setAttempt((n) => n + 1), []);
+    const reset = useCallback(() => setLatest(null), []);
+
     return {
         latest,
         current: latest !== null && latest.params === params && latest.attempt === attempt ? latest : null,
-        retry: () => setAttempt((n) => n + 1),
-        reset: () => setLatest(null),
+        retry,
+        reset,
     };
 };

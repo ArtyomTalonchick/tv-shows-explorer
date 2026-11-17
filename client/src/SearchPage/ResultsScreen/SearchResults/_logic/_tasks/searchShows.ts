@@ -9,5 +9,5 @@ export const searchShows = async ({ query, genre, page }: ShowsQuery, signal: Ab
         search.set("genre", genre);
     }
 
-    return await fetchJson<ShowsPage>(`/api/shows?${search}`, signal);
+    return await fetchJson<ShowsPage>(`/api/shows?${search}`, { signal });
 };
