@@ -1,5 +1,5 @@
 import type { Show } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore";
+import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
 import { searchCache } from "@/routes/_stores/searchCache";
 import { addFavorite } from "../addFavorite";
 
@@ -30,12 +30,12 @@ const respond = (body: unknown, status = 200) =>
 
 const CLIENT = "c1";
 const signal = new AbortController().signal;
-const stored = (clientId = CLIENT) => [...(favoritesStore.get(clientId)?.values() ?? [])];
+const stored = async (clientId = CLIENT) => await favoritesStore.list(clientId);
 
 describe("addFavorite", () => {
-    afterEach(() => {
+    afterEach(async () => {
         vi.unstubAllGlobals();
-        favoritesStore.clear();
+        await favoritesStore.clear();
         searchCache.clear();
     });
 
@@ -47,7 +47,7 @@ describe("addFavorite", () => {
         await addFavorite(CLIENT, 2, 100, signal);
 
         expect(fetchMock).not.toHaveBeenCalled();
-        expect(stored()).toEqual([
+        expect(await stored()).toEqual([
             {
                 id: 2,
                 name: "Show 2",
@@ -68,14 +68,14 @@ describe("addFavorite", () => {
         await addFavorite(CLIENT, 7, 100, signal);
 
         expect(fetchMock).toHaveBeenCalledWith("https://api.tvmaze.com/shows/7", { signal });
-        expect(stored()).toMatchObject([{ id: 7, name: "Show 7", image: "7.jpg", addedAt: 100 }]);
+        expect(await stored()).toMatchObject([{ id: 7, name: "Show 7", image: "7.jpg", addedAt: 100 }]);
     });
 
     it("rejects with the status when TVmaze has no such show, and adds nothing", async () => {
         vi.stubGlobal("fetch", respond({ name: "Not Found" }, 404));
 
         await expect(addFavorite(CLIENT, 7, 100, signal)).rejects.toMatchObject({ status: 404 });
-        expect(favoritesStore.size).toBe(0);
+        expect(await stored()).toEqual([]);
     });
 
     it("changes nothing and asks nothing when the show is already there", async () => {
@@ -87,7 +87,7 @@ describe("addFavorite", () => {
         await addFavorite(CLIENT, 7, 200, signal);
 
         expect(fetchMock).not.toHaveBeenCalled();
-        expect(stored()).toMatchObject([{ id: 7, addedAt: 100 }]);
+        expect(await stored()).toMatchObject([{ id: 7, addedAt: 100 }]);
     });
 
     it("adds to the list of the given browser only", async () => {
@@ -96,7 +96,7 @@ describe("addFavorite", () => {
         await addFavorite("c1", 1, 100, signal);
         await addFavorite("c2", 2, 100, signal);
 
-        expect(stored("c1")).toMatchObject([{ id: 1 }]);
-        expect(stored("c2")).toMatchObject([{ id: 2 }]);
+        expect(await stored("c1")).toMatchObject([{ id: 1 }]);
+        expect(await stored("c2")).toMatchObject([{ id: 2 }]);
     });
 });

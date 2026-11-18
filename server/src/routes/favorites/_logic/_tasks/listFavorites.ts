@@ -1,13 +1,8 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore";
+import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
 
-// The favorites of one browser, the newest first; every favorites route answers them. Async like the other
-// favorites tasks, so a database can replace the store without changing their callers.
+// The favorites of one browser, the newest first; every favorites route answers them.
 export const listFavorites = async (clientId: string): Promise<Favorite[]> => {
-    const favorites = favoritesStore.get(clientId);
-    if (favorites === undefined) {
-        return [];
-    }
-
-    return [...favorites.values()].sort((a, b) => b.addedAt - a.addedAt);
+    const favorites = await favoritesStore.list(clientId);
+    return favorites.sort((a, b) => b.addedAt - a.addedAt);
 };

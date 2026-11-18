@@ -1,5 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore";
+import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
 import { listFavorites } from "../listFavorites";
 
 const favorite = (id: number, addedAt: number): Favorite => ({
@@ -14,26 +14,21 @@ const favorite = (id: number, addedAt: number): Favorite => ({
 });
 
 describe("listFavorites", () => {
-    afterEach(() => {
-        favoritesStore.clear();
+    afterEach(async () => {
+        await favoritesStore.clear();
     });
 
     it("lists the newest first, whatever the order they were stored in", async () => {
-        favoritesStore.set(
-            "c1",
-            new Map([
-                [1, favorite(1, 100)],
-                [3, favorite(3, 300)],
-                [2, favorite(2, 200)],
-            ]),
-        );
+        await favoritesStore.put("c1", favorite(1, 100));
+        await favoritesStore.put("c1", favorite(3, 300));
+        await favoritesStore.put("c1", favorite(2, 200));
 
         expect((await listFavorites("c1")).map(({ id }) => id)).toEqual([3, 2, 1]);
     });
 
     it("lists the given browser's favorites only, and none for a browser without a list", async () => {
-        favoritesStore.set("c1", new Map([[1, favorite(1, 100)]]));
-        favoritesStore.set("c2", new Map([[2, favorite(2, 100)]]));
+        await favoritesStore.put("c1", favorite(1, 100));
+        await favoritesStore.put("c2", favorite(2, 100));
 
         expect(await listFavorites("c2")).toEqual([favorite(2, 100)]);
         expect(await listFavorites("c3")).toEqual([]);

@@ -1,5 +1,5 @@
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore";
+import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
 import { searchCache } from "@/routes/_stores/searchCache";
 import { favorites } from "../favorites";
 
@@ -30,10 +30,10 @@ describe("/", () => {
         searchCache.set("show", { shows: [show(1), show(2), show(3)], savedAt: 0 });
     });
 
-    afterEach(() => {
+    afterEach(async () => {
         vi.unstubAllGlobals();
         vi.useRealTimers();
-        favoritesStore.clear();
+        await favoritesStore.clear();
         searchCache.clear();
     });
 
@@ -92,7 +92,7 @@ describe("/", () => {
         expect((await request("PUT", "/dark")).status).toBe(400);
         expect((await request("PUT", "/1", '{ "addedAt": "now" }')).status).toBe(400);
         expect((await request("DELETE", "/-1")).status).toBe(400);
-        expect(favoritesStore.size).toBe(0);
+        expect(await favoritesStore.list(CLIENT)).toEqual([]);
     });
 
     it("keeps a separate list for each browser, and reads the id in any case", async () => {
@@ -108,7 +108,7 @@ describe("/", () => {
         async (id) => {
             expect((await request("GET", "/", undefined, id)).status).toBe(400);
             expect((await request("PUT", "/1", undefined, id)).status).toBe(400);
-            expect(favoritesStore.size).toBe(0);
+            expect(await favoritesStore.list(CLIENT)).toEqual([]);
         },
     );
 
@@ -118,6 +118,6 @@ describe("/", () => {
 
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 503 })));
         expect((await request("PUT", "/99")).status).toBe(502);
-        expect(favoritesStore.size).toBe(0);
+        expect(await favoritesStore.list(CLIENT)).toEqual([]);
     });
 });

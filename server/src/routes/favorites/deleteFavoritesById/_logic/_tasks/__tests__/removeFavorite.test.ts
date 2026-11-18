@@ -1,5 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore";
+import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
 import { removeFavorite } from "../removeFavorite";
 
 const favorite = (id: number): Favorite => ({
@@ -13,40 +13,36 @@ const favorite = (id: number): Favorite => ({
     addedAt: id * 100,
 });
 
-const save = (clientId: string, ids: number[]): void => {
-    favoritesStore.set(clientId, new Map(ids.map((id) => [id, favorite(id)])));
+const save = async (clientId: string, ids: number[]): Promise<void> => {
+    await Promise.all(ids.map((id) => favoritesStore.put(clientId, favorite(id))));
+};
+
+const storedIds = async (clientId: string): Promise<number[]> => {
+    return (await favoritesStore.list(clientId)).map(({ id }) => id);
 };
 
 describe("removeFavorite", () => {
-    afterEach(() => {
-        favoritesStore.clear();
+    afterEach(async () => {
+        await favoritesStore.clear();
     });
 
     it("removes the show from the list of the given browser only", async () => {
-        save("c1", [1, 2]);
-        save("c2", [1]);
+        await save("c1", [1, 2]);
+        await save("c2", [1]);
 
         await removeFavorite("c1", 1);
 
-        expect([...(favoritesStore.get("c1")?.keys() ?? [])]).toEqual([2]);
-        expect([...(favoritesStore.get("c2")?.keys() ?? [])]).toEqual([1]);
+        expect(await storedIds("c1")).toEqual([2]);
+        expect(await storedIds("c2")).toEqual([1]);
     });
 
     it("changes nothing when the show is not there, or the browser has no list", async () => {
-        save("c1", [1]);
+        await save("c1", [1]);
 
         await removeFavorite("c1", 5);
         await removeFavorite("c3", 1);
 
-        expect([...(favoritesStore.get("c1")?.keys() ?? [])]).toEqual([1]);
-        expect(favoritesStore.has("c3")).toBe(false);
-    });
-
-    it("drops a browser left with no favorites from the store", async () => {
-        save("c1", [1]);
-
-        await removeFavorite("c1", 1);
-
-        expect(favoritesStore.has("c1")).toBe(false);
+        expect(await storedIds("c1")).toEqual([1]);
+        expect(await storedIds("c3")).toEqual([]);
     });
 });

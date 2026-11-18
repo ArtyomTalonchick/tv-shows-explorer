@@ -1,4 +1,4 @@
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore";
+import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
 import { fetchTvmazeShow } from "./fetchTvmazeShow";
 import { findCachedShow } from "./findCachedShow";
 
@@ -11,13 +11,12 @@ export const addFavorite = async (
     addedAt: number,
     signal: AbortSignal,
 ): Promise<void> => {
-    if (favoritesStore.get(clientId)?.has(id)) {
+    if (await favoritesStore.has(clientId, id)) {
         return;
     }
 
     const show = findCachedShow(id) ?? (await fetchTvmazeShow(id, signal));
-    const favorites = favoritesStore.get(clientId) ?? new Map();
-    favorites.set(id, {
+    await favoritesStore.put(clientId, {
         id: show.id,
         name: show.name,
         genres: show.genres,
@@ -27,5 +26,4 @@ export const addFavorite = async (
         url: show.url,
         addedAt,
     });
-    favoritesStore.set(clientId, favorites);
 };
