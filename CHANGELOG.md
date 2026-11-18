@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+## 0.2.0 — 2026-11-18
+
 - The site works through its own server, hosted on Firebase; it no longer calls TVmaze directly.
 - Favourites: a bookmark on every show card adds the show to your favourites or removes it, and a toast says so —
   with Undo after a removal. The Favourites button on both screens shows how many there are and opens their list.
