@@ -1,0 +1,11 @@
+{
+    "functions": [
+        {
+            "source": "server/dist",
+            "codebase": "default",
+            "runtime": "nodejs22",
+            "ignore": ["node_modules"],
+            "predeploy": ["npm run build:function -w server", "npm install --prefix server/dist --no-audit --no-fund"]
+        }
+    ]
+}

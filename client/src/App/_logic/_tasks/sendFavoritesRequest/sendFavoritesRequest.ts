@@ -1,5 +1,6 @@
 import type { AddFavoriteBody, Favorite } from "@tv-shows-explorer/shared";
 import { fetchJson } from "@/lib/http/fetchJson";
+import { API_URL } from "@/App/_logic/constants";
 import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 import { getClientId } from "./getClientId";
 
@@ -14,7 +15,7 @@ type FavoritesRequest = {
 // Sends a request of `/api/favorites` as this browser and keeps the list the server answers, which is the whole list
 // after any change. Rejects on a network error or a non-2xx answer, and the store stays as it was.
 export const sendFavoritesRequest = async ({ method, id, body, signal }: FavoritesRequest): Promise<void> => {
-    const url = id === undefined ? "/api/favorites" : `/api/favorites/${id}`;
+    const url = id === undefined ? `${API_URL}/favorites` : `${API_URL}/favorites/${id}`;
     const headers: Record<string, string> = { "X-Client-Id": getClientId() };
     if (body !== undefined) {
         headers["Content-Type"] = "application/json";

@@ -1,6 +1,6 @@
 name: Deploy
 
-# Runs after CI finishes, so only a commit with green checks reaches the site.
+# Runs after CI finishes, so only a commit with green checks reaches the site and the server.
 on:
     workflow_run:
         workflows: [CI]
@@ -13,7 +13,7 @@ permissions:
     id-token: write
 
 concurrency:
-    group: pages
+    group: deploy
     cancel-in-progress: false
 
 jobs:
@@ -44,3 +44,23 @@ jobs:
         steps:
             - id: deployment
               uses: actions/deploy-pages@v4
+
+    # The server: the Cloud Function of `firebase.json`, built and deployed by the Firebase CLI. Independent of the
+    # Pages jobs, so a failure of one does not hold back the other. It signs in with the key of a service account
+    # of the Firebase project, the repository secret `FIREBASE_SERVICE_ACCOUNT`.
+    functions:
+        if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.workflow_run.head_sha }}
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+            - run: npm ci
+            - uses: google-github-actions/auth@v2
+              with:
+                  credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+            - run: npx --yes firebase-tools@15.36.0 deploy --only functions --project tv-shows-explorer --non-interactive --force

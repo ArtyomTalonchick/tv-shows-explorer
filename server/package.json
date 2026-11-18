@@ -4,6 +4,7 @@
     "type": "module",
     "scripts": {
         "dev": "tsx watch src/index.ts",
+        "build:function": "node scripts/buildFunction.mjs",
         "typecheck": "tsc",
         "test": "vitest run"
     },
@@ -11,10 +12,12 @@
         "@hono/node-server": "^2.1.8",
         "@tv-shows-explorer/shared": "*",
         "firebase-admin": "^14.5.1",
+        "firebase-functions": "^7.4.0",
         "hono": "^4.13.19"
     },
     "devDependencies": {
         "@types/node": "^26.6.6",
+        "esbuild": "^0.28.2",
         "tsx": "^4.20.6",
         "vitest": "^5.1.0"
     }
