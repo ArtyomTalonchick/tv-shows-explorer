@@ -9,7 +9,7 @@ The user finds TV shows by typing a query. TVmaze does the search
 
 1. The app opens on the start screen: the hero with the search field only. The field is not focused. No request
    is sent.
-2. As soon as the hero field gets the focus (a tap, a click, Tab), the hero gives way to the results screen: a
+2. As soon as the hero field is tapped or gets the focus (a click, Tab), the hero gives way to the results screen: a
    compact header with the field, which has the focus, and the results area below it. With an empty field the
    area asks for a query (see Idle in States); once the field holds a query, it is titled «Shows for “<query>”».
    The change is animated: the field and the logo move to the header, the hero fades out and the results area
@@ -114,8 +114,18 @@ The user finds TV shows by typing a query. TVmaze does the search
   keyboard: the scroll played under the transition, and a focus set after the transition left the keyboard
   closed. The field of the results screen then takes the focus while the keyboard is open. Its caret is hidden
   until the transition has finished and then redrawn (`lib/screen/redrawCaret`): iOS drew it flying over the
-  animation and showed none in the field until the first key. Hidden fields to hold the focus, and a swap with no
-  animation on touch screens, were turned down. (#18)
+  animation and showed none in the field until the first key. A swap with no animation on touch screens was turned
+  down. (#18)
+- A tap on the hero field focuses an invisible field, `SearchPage/FocusKeeper`, and the screens swap only once the
+  keyboard is open (`lib/screen/waitForKeyboard`: the visual viewport resizes, at most 600 ms). iOS Safari and the
+  installed app open the keyboard about 80 ms after the tap, and only if the field focused in the tap still has the
+  focus then: the swap started at once, the results field took the focus from the transition, and the keyboard
+  never opened, so the first tap needed a second one. Chrome on iOS opens it for any focus, which hid the bug
+  there. With the keyboard open, the results field takes the focus from the keeper by `autoFocus`, and focus moved
+  from one field to another keeps the keyboard open. The keeper is not the hero field, which goes away with the
+  swap; it stays mounted on both screens, cannot be reached by Tab and is hidden from screen readers. A click or
+  Tab swaps the screens at once, without the keeper. The swap starts with the keyboard, about 80 ms after the tap.
+  This replaces «a tap focuses the hero field» and «hidden fields to hold the focus were turned down» of #18. (#21)
 - The search state shared by several units lives in Zustand stores in `SearchPage/_stores/`: the field
   (`useQueryStore`), read by the hero, the search bar and «Clear search», and the screen swap (`useScreenStore`),
   read by the page, the hero and the search bar. Each unit's Presenter reads what it needs through

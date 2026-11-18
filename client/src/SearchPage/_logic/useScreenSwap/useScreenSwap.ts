@@ -7,7 +7,7 @@ export type UseScreenSwapResult = {
     isStart: boolean;
     // The screens are swapping: the caret of the results field is hidden.
     isSwapping: boolean;
-    open: () => Promise<void>;
+    open: typeof openResults;
     goHome: () => Promise<void>;
 };
 

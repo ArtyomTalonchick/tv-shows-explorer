@@ -32,7 +32,7 @@ describe("SearchPage usePresenter", () => {
         expect(result.current.page.isStart).toBe(true);
 
         act(() => {
-            void result.current.swap.open();
+            void result.current.swap.open({ fromTap: false });
         });
 
         expect(transitionMock).toHaveBeenCalledTimes(1);
@@ -42,7 +42,7 @@ describe("SearchPage usePresenter", () => {
     it("stays on the results screen while typing, emptying and clearing, with no animation", () => {
         const { result } = renderPage();
         act(() => {
-            void result.current.swap.open();
+            void result.current.swap.open({ fromTap: false });
         });
         transitionMock.mockClear();
 
@@ -63,7 +63,7 @@ describe("SearchPage usePresenter", () => {
     it("goes back to the hero from the logo, animated, with the query reset", () => {
         const { result } = renderPage();
         act(() => {
-            void result.current.swap.open();
+            void result.current.swap.open({ fromTap: false });
         });
         act(() => result.current.query.handleChange("dark"));
         transitionMock.mockClear();

@@ -5,9 +5,10 @@ import { useSearchQuery } from "@/SearchPage/_logic/useSearchQuery";
 type UsePresenterResult = {
     query: string;
     onQueryChange: (query: string) => void;
-    // Focusing the field opens the results screen.
+    // Focusing the field — a click, Tab — opens the results screen.
     onOpen: () => void;
-    // A tap focuses the field itself, without the scroll iOS makes to bring a centred field above the keyboard.
+    // A tap opens the results screen itself, once the keyboard is open, and leaves the field unfocused: the browser's
+    // own focus would scroll a centred field above the keyboard.
     handleTouchEnd: (event: TouchEvent<HTMLInputElement>) => void;
 };
 
@@ -15,11 +16,14 @@ export const usePresenter = (): UsePresenterResult => {
     const { value, handleChange } = useSearchQuery();
     const { open } = useScreenSwap();
 
-    const handleTouchEnd = (event: TouchEvent<HTMLInputElement>): void => {
-        event.preventDefault();
-        // The focus is set inside the tap, so iOS opens the keyboard; onFocus then plays the transition.
-        event.currentTarget.focus({ preventScroll: true });
+    const handleOpen = (): void => {
+        void open({ fromTap: false });
     };
 
-    return { query: value, onQueryChange: handleChange, onOpen: open, handleTouchEnd };
+    const handleTouchEnd = (event: TouchEvent<HTMLInputElement>): void => {
+        event.preventDefault();
+        void open({ fromTap: true });
+    };
+
+    return { query: value, onQueryChange: handleChange, onOpen: handleOpen, handleTouchEnd };
 };

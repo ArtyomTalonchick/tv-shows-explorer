@@ -92,14 +92,14 @@ describe("App", () => {
         expect(screen.getByRole("dialog", { name: "Favourites 1" })).toBe(drawer);
     });
 
-    it("opens the results screen on a tap with its field focused, without focusing the hero field", () => {
+    it("opens the results screen on a tap with its field focused, without focusing the hero field", async () => {
         stubServer();
         renderApp();
 
         const notCancelled = fireEvent.touchEnd(searchbox());
 
         expect(notCancelled).toBe(false);
-        expect(screen.getByRole("heading", { name: "Search for a show" })).toBeInTheDocument();
+        expect(await screen.findByRole("heading", { name: "Search for a show" })).toBeInTheDocument();
         expect(searchbox()).toHaveFocus();
     });
 
