@@ -51,8 +51,6 @@ followed by hand. A new preference the owner states during a task is added here 
   export const searchCache = globalStore.searchCache;
   ```
 
-- Stateful logic is split by concern: the state of a control (value, handler, clear) and a request (debounce,
-  cancellation, retry) are separate hooks, joined in the Presenter. (#8)
 - A component that wraps a Chakra element takes that element's props, and declares only what it adds or changes:
   `Omit<HTMLChakraProps<"input">, "value" | "onChange" | "size"> & { value: string; onChange: (value: string) => void; … }`.
   The Presenter passes the rest on (`...inputProps`); the View spreads it after the component's own styles, so a
@@ -87,8 +85,6 @@ followed by hand. A new preference the owner states during a task is added here 
   Retry — lives once in `lib/request/useRequest`, not in each request hook; a request hook adds only what is its
   own (debounce, reset). The transport (`fetch`, the non-2xx check, `json()`) is `lib/http/fetchJson`: generic I/O,
   which by the architecture rules only a task calls. (#16, #30, #35)
-- A hook is split until each part has one job, but along real seams: steps of one request stay together, and a
-  value computed from state is a plain helper (`getSearchView`), not another hook with state of its own. (#16)
 
 ## Styles
 
