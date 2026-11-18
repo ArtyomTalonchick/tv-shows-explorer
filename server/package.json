@@ -10,6 +10,7 @@
     "dependencies": {
         "@hono/node-server": "^2.1.8",
         "@tv-shows-explorer/shared": "*",
+        "firebase-admin": "^14.5.1",
         "hono": "^4.13.19"
     },
     "devDependencies": {

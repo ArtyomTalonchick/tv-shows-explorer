@@ -65,8 +65,8 @@ What the user sees (`design/v0.2/`): (#28)
 - Removing a show that is not there is not an error and changes nothing.
 - The list belongs to the browser, not to a person: another browser or device has its own, and clearing the
   browser's data starts an empty one.
-- The favorites are kept in the server's memory, so they are lost when the server restarts or sleeps (the host puts
-  it to sleep after 15 minutes without requests). A database is a separate task (#34).
+- The favorites survive a restart, a sleep and a deploy of the server: on Firebase they are kept in Firestore. Run
+  anywhere else — local development, tests — the server keeps them in memory and loses them on a restart. (#34)
 
 ## Decisions
 
@@ -93,5 +93,13 @@ What the user sees (`design/v0.2/`): (#28)
 - A failed load of the list says so in a toast with Retry, and the bookmarks still work meanwhile: each change is
   answered with the whole list. (#28)
 - A bookmark, not the star the issue named: the star marks the rating (`design/v0.2/`). (#28)
+- The favorites are kept in Firestore, not in the server's memory, a file or a local SQLite: the host may restart
+  the server and wipe its disk at any time. Firestore because the server runs on Firebase (#29): no other account,
+  and no key in the code or the settings, as the Admin SDK finds its credentials inside Cloud Functions. Render's
+  free Postgres expires, and MongoDB Atlas would have been a second account and a secret. (#34)
+- A document per show, `clients/{clientId}/favorites/{showId}`: adding, removing and checking a show touch one
+  document, and the list is one read of the browser's collection. The order is kept by `addedAt`, as before. (#34)
+- The server uses Firestore when Firebase has set `FIREBASE_CONFIG`, and memory otherwise, so local development
+  and the tests need no setup. (#34)
 - A toast stays pressable over the open drawer, so Undo of a removal from the drawer works there; keyboard focus
   stays in the drawer, so Undo is not reached by Tab while it is open. (#28)
