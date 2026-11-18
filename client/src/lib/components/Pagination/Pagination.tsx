@@ -4,9 +4,9 @@ import { Icon } from "@/lib/components/Icon/Icon";
 import { PageButton } from "./PageButton/PageButton";
 import { usePresenter, type PaginationProps } from "./_logic/usePresenter";
 
-export type { PaginationProps } from "./_logic/usePresenter";
+export type { PageRange, PaginationProps } from "./_logic/usePresenter";
 
-// Pagination of design/library: ‹ 1 2 3 › and «Shows 1–3 of 9».
+// Pagination of design/library: ‹ 1 2 3 › and the range of the current page below, in its user's words.
 export const Pagination: FC<PaginationProps> = (props) => {
     const { pages, isFirst, isLast, info, goTo, goBack, goNext } = usePresenter(props);
 

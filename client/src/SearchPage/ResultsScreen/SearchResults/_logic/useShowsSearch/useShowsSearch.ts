@@ -1,9 +1,9 @@
 import { useSearchQuery } from "@/SearchPage/_logic/useSearchQuery";
 import type { UseShowsParamsResult } from "./useShowsParams";
-import type { UseShowsRequestResult } from "./useShowsRequest";
+import type { UseShowsRequestResult } from "./useShowsRequest/useShowsRequest";
 import { useDebouncedQuery } from "./useDebouncedQuery";
 import { useShowsParams } from "./useShowsParams";
-import { useShowsRequest } from "./useShowsRequest";
+import { useShowsRequest } from "./useShowsRequest/useShowsRequest";
 
 export type UseShowsSearchResult = UseShowsRequestResult & Omit<UseShowsParamsResult, "params">;
 

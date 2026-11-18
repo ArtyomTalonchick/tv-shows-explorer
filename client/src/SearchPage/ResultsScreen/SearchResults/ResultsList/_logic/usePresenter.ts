@@ -6,9 +6,11 @@ import { scrollToTopIfAbove } from "@/lib/screen/scrollToTopIfAbove";
 import { useFavoriteToggle } from "@/_logic/useFavoriteToggle/useFavoriteToggle";
 import { formatShowMeta } from "@/_logic/formatShowMeta";
 import type { ShowCardProps } from "../ShowCard/ShowCard";
+import { formatShownRange } from "./formatShownRange";
 
-// One page of the shows, and the pages of all of them: `total` shows, `perPage` on each.
-export type ResultsListProps = PaginationProps & {
+// One page of the shows, and the pages of all of them: `total` shows, `perPage` on each. The range under the pages
+// is worded here.
+export type ResultsListProps = Omit<PaginationProps, "formatRange"> & {
     shows: Show[];
 };
 
@@ -44,7 +46,9 @@ export const usePresenter = ({ shows, page, perPage, total, onPageChange }: Resu
     }));
 
     const pagination: PaginationProps | null =
-        getPageCount(total, perPage) > 1 ? { page, perPage, total, onPageChange: changePage } : null;
+        getPageCount(total, perPage) > 1
+            ? { page, perPage, total, onPageChange: changePage, formatRange: formatShownRange }
+            : null;
 
     return { gridRef, cards, pagination };
 };

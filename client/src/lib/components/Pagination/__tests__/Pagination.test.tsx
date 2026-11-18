@@ -1,19 +1,22 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { system } from "@/lib/theme/system";
-import { Pagination } from "../Pagination";
+import { Pagination, type PageRange } from "../Pagination";
+
+// The range as plain numbers, so a test reads what Pagination passes to its user's words.
+const formatRange = ({ first, last, total }: PageRange): string => `${first}-${last}/${total}`;
 
 const renderPage = (page: number, onPageChange = vi.fn()) => {
     render(
         <ChakraProvider value={system}>
-            <Pagination page={page} perPage={3} total={8} onPageChange={onPageChange} />
+            <Pagination page={page} perPage={3} total={8} onPageChange={onPageChange} formatRange={formatRange} />
         </ChakraProvider>,
     );
     return onPageChange;
 };
 
 describe("Pagination", () => {
-    it("shows a button per page, marks the current one and the range of shows", () => {
+    it("shows a button per page, marks the current one and the range of its items", () => {
         renderPage(2);
 
         expect(screen.getAllByRole("button", { name: /^\d$/ }).map((button) => button.textContent)).toEqual([
@@ -22,7 +25,7 @@ describe("Pagination", () => {
             "3",
         ]);
         expect(screen.getByRole("button", { name: "2" })).toHaveAttribute("aria-current", "page");
-        expect(screen.getByText("Shows 4–6 of 8")).toBeInTheDocument();
+        expect(screen.getByText("4-6/8")).toBeInTheDocument();
     });
 
     it("turns off Previous on the first page and Next on the last", () => {
@@ -35,17 +38,17 @@ describe("Pagination", () => {
         renderPage(3);
 
         expect(screen.getByRole("button", { name: "Next page" })).toBeDisabled();
-        expect(screen.getByText("Shows 7–8 of 8")).toBeInTheDocument();
+        expect(screen.getByText("7-8/8")).toBeInTheDocument();
     });
 
-    it("names the one item of a page that holds only it", () => {
+    it("passes a page of one item as a range of one", () => {
         render(
             <ChakraProvider value={system}>
-                <Pagination page={4} perPage={3} total={10} onPageChange={vi.fn()} />
+                <Pagination page={4} perPage={3} total={10} onPageChange={vi.fn()} formatRange={formatRange} />
             </ChakraProvider>,
         );
 
-        expect(screen.getByText("Shows 10 of 10")).toBeInTheDocument();
+        expect(screen.getByText("10-10/10")).toBeInTheDocument();
     });
 
     it("asks for the previous, the next and a chosen page", () => {

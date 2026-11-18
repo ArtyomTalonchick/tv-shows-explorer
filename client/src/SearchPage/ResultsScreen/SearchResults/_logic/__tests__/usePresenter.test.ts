@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import type { Show, ShowsPage } from "@tv-shows-explorer/shared";
-import type { SearchStatus } from "../useShowsSearch/types";
+import type { SearchStatus } from "../useShowsSearch/useShowsRequest/types";
 import { usePresenter } from "../usePresenter";
 import { useShowsSearch, type UseShowsSearchResult } from "../useShowsSearch/useShowsSearch";
 
