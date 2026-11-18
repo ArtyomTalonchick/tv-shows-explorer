@@ -6,8 +6,8 @@ import "@fontsource/archivo/800.css";
 import "@fontsource/archivo/900.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./App";
-import { Provider } from "./Provider/Provider";
+import { App } from "./App/App";
+import { Provider } from "./App/Provider/Provider";
 
 const root = document.getElementById("root");
 if (!root) {

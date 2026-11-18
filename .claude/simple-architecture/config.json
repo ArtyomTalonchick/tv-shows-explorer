@@ -1,6 +1,6 @@
 {
     "apps": {
-        "client": { "root": "client/src", "stack": ["react", "zustand"] },
+        "client": { "root": "client/src/App", "lib": "client/src/lib", "stack": ["react", "zustand"] },
         "server": { "root": "server/src", "stack": [] }
     },
     "shared": "shared/src",

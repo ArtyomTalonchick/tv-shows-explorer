@@ -1,0 +1,80 @@
+import type { Favorite } from "@tv-shows-explorer/shared";
+import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
+import { getClientId } from "../getClientId";
+import { sendFavoritesRequest } from "../sendFavoritesRequest";
+
+const DARK: Favorite = {
+    id: 17861,
+    name: "Dark",
+    genres: ["Drama"],
+    premiered: "2017-12-01",
+    ended: "2020-06-27",
+    image: null,
+    url: "https://www.tvmaze.com/shows/17861/dark",
+    addedAt: 1763300000000,
+};
+
+const respond = (body: unknown, status = 200) =>
+    vi.fn().mockResolvedValue(new Response(JSON.stringify(body), { status }));
+
+describe("getClientId", () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
+    it("makes a UUID once and keeps it", () => {
+        const first = getClientId();
+
+        expect(first).toMatch(/^[0-9a-f-]{36}$/);
+        expect(getClientId()).toBe(first);
+    });
+});
+
+describe("sendFavoritesRequest", () => {
+    beforeEach(() => {
+        localStorage.clear();
+        useFavoritesStore.setState({ favorites: [] });
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
+    });
+
+    it("asks for the list as this browser and keeps the answer", async () => {
+        const fetchMock = respond([DARK]);
+        vi.stubGlobal("fetch", fetchMock);
+        const { signal } = new AbortController();
+
+        await sendFavoritesRequest({ method: "GET", signal });
+
+        expect(fetchMock).toHaveBeenCalledWith("/api/favorites", {
+            method: "GET",
+            headers: { "X-Client-Id": getClientId() },
+            body: undefined,
+            signal,
+        });
+        expect(useFavoritesStore.getState().favorites).toEqual([DARK]);
+    });
+
+    it("sends the show's id and a JSON body", async () => {
+        const fetchMock = respond([DARK]);
+        vi.stubGlobal("fetch", fetchMock);
+
+        await sendFavoritesRequest({ method: "PUT", id: 17861, body: { addedAt: DARK.addedAt } });
+
+        expect(fetchMock).toHaveBeenCalledWith("/api/favorites/17861", {
+            method: "PUT",
+            headers: { "X-Client-Id": getClientId(), "Content-Type": "application/json" },
+            body: '{"addedAt":1763300000000}',
+            signal: undefined,
+        });
+    });
+
+    it("leaves the list as it was when the server fails", async () => {
+        useFavoritesStore.setState({ favorites: [DARK] });
+        vi.stubGlobal("fetch", respond({ error: "TVmaze did not answer" }, 502));
+
+        await expect(sendFavoritesRequest({ method: "DELETE", id: 17861 })).rejects.toThrow();
+        expect(useFavoritesStore.getState().favorites).toEqual([DARK]);
+    });
+});
