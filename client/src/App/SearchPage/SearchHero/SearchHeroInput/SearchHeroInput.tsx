@@ -1,6 +1,6 @@
 import type { FC } from "react";
 import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
-import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/App/SearchPage/_logic/constants";
+import { SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/App/SearchPage/constants";
 import { usePresenter } from "./_logic/usePresenter";
 
 // The search field of the hero. It is not focused on start: focusing it opens the results screen.

@@ -1,5 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
+import { favoritesStore } from "@/stores/favoritesStore/favoritesStore";
 
 // The favorites of one browser, the newest first; every favorites route answers them.
 export const listFavorites = async (clientId: string): Promise<Favorite[]> => {

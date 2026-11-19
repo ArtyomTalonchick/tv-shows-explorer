@@ -1,4 +1,4 @@
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
+import { favoritesStore } from "@/stores/favoritesStore/favoritesStore";
 import { fetchTvmazeShow } from "./fetchTvmazeShow";
 import { findCachedShow } from "./findCachedShow";
 

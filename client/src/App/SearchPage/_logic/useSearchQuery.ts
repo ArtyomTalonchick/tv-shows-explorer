@@ -1,5 +1,5 @@
 import { useQueryStore } from "../_stores/useQueryStore";
-import { SEARCH_FIELD_ID } from "./constants";
+import { SEARCH_FIELD_ID } from "../constants";
 
 export type UseSearchQueryResult = {
     value: string;

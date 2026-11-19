@@ -1,9 +1,9 @@
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
 import { useState } from "react";
 import type { FavoriteToggleProps } from "@/App/_components/FavoriteToggle/FavoriteToggle";
-import { addFavorite } from "@/App/_logic/_tasks/addFavorite";
-import { removeFavorite } from "@/App/_logic/_tasks/removeFavorite";
-import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
+import { addFavorite } from "@/tasks/favorites/addFavorite";
+import { removeFavorite } from "@/tasks/favorites/removeFavorite";
+import { useFavoritesStore } from "@/stores/useFavoritesStore";
 import { showFavoriteToast } from "./showFavoriteToast";
 
 type FavoriteShow = Pick<Show, "id" | "name">;

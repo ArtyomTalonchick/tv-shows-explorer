@@ -1,6 +1,6 @@
 import type { Handler } from "hono";
-import { listFavorites } from "@/routes/favorites/_logic/_tasks/listFavorites";
-import type { FavoritesEnv } from "@/routes/favorites/_logic/types";
+import { listFavorites } from "@/tasks/favorites/listFavorites";
+import type { FavoritesEnv } from "@/routes/favorites/types";
 
 // `GET /api/favorites`: the browser's list.
 export const getFavorites: Handler<FavoritesEnv> = async (context) => {

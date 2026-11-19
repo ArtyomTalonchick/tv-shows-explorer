@@ -1,7 +1,7 @@
 import { Box, chakra, Container } from "@chakra-ui/react";
 import type { FC } from "react";
 import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
-import { SEARCH_FIELD_ID, SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/App/SearchPage/_logic/constants";
+import { SEARCH_FIELD_ID, SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/App/SearchPage/constants";
 import { FavoritesOpener } from "@/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
 import { Logo } from "@/App/SearchPage/_components/Logo/Logo";
 import { usePresenter } from "./_logic/usePresenter";

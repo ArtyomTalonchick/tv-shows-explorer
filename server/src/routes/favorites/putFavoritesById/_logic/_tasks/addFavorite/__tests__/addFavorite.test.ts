@@ -1,5 +1,5 @@
 import type { Show } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
+import { favoritesStore } from "@/stores/favoritesStore/favoritesStore";
 import { searchCache } from "@/routes/_stores/searchCache";
 import { addFavorite } from "../addFavorite";
 

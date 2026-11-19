@@ -1,6 +1,6 @@
 import type { DrawerProps } from "@/lib/components/Drawer/Drawer";
 import { useFavoritesDrawerStore } from "@/App/_stores/useFavoritesDrawerStore";
-import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
+import { useFavoritesStore } from "@/stores/useFavoritesStore";
 import type { FavoritesListProps } from "../FavoritesList/FavoritesList";
 
 type UsePresenterResult = {

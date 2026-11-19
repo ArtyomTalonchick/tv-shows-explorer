@@ -1,18 +1,12 @@
 import type { Handler } from "hono";
-import { BAD_SHOW_ID } from "@/routes/favorites/_logic/constants";
-import { parseShowId } from "@/routes/favorites/_logic/parseShowId";
-import { listFavorites } from "@/routes/favorites/_logic/_tasks/listFavorites";
-import type { FavoritesEnv } from "@/routes/favorites/_logic/types";
+import type { FavoriteEnv } from "@/routes/favorites/types";
+import { listFavorites } from "@/tasks/favorites/listFavorites";
 import { removeFavorite } from "./_logic/_tasks/removeFavorite";
 
 // `DELETE /api/favorites/:id`: removes the show and answers the list; a show that is not there changes nothing.
-export const deleteFavoritesById: Handler<FavoritesEnv, "/:id"> = async (context) => {
-    const { clientId } = context.var;
-    const id = parseShowId(context.req.param("id"));
-    if (id === null) {
-        return context.json(BAD_SHOW_ID, 400);
-    }
+export const deleteFavoritesById: Handler<FavoriteEnv, "/:id"> = async (context) => {
+    const { clientId, showId } = context.var;
 
-    await removeFavorite(clientId, id);
+    await removeFavorite(clientId, showId);
     return context.json(await listFavorites(clientId));
 };

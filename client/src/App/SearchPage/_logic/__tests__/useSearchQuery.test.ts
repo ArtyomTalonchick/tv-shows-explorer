@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
+import { SEARCH_FIELD_ID } from "@/App/SearchPage/constants";
 import { useQueryStore } from "../../_stores/useQueryStore";
-import { SEARCH_FIELD_ID } from "../constants";
 import { useSearchQuery } from "../useSearchQuery";
 
 describe("useSearchQuery", () => {

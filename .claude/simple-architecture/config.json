@@ -1,7 +1,18 @@
 {
     "apps": {
-        "client": { "root": "client/src/App", "lib": "client/src/lib", "stack": ["react", "zustand"] },
-        "server": { "root": "server/src", "stack": [] }
+        "client": {
+            "root": "client/src/App",
+            "lib": "client/src/lib",
+            "tasks": "client/src/tasks",
+            "stores": "client/src/stores",
+            "stack": ["react", "zustand"]
+        },
+        "server": {
+            "root": "server/src",
+            "tasks": "server/src/tasks",
+            "stores": "server/src/stores",
+            "stack": []
+        }
     },
     "shared": "shared/src",
     "folders": {

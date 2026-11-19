@@ -2,7 +2,7 @@ import { act, renderHook } from "@testing-library/react";
 import { redrawCaret } from "@/lib/screen/redrawCaret";
 import { waitForKeyboard } from "@/lib/screen/waitForKeyboard";
 import { withViewTransition } from "@/lib/screen/withViewTransition";
-import { FOCUS_KEEPER_ID } from "@/App/SearchPage/_logic/constants";
+import { FOCUS_KEEPER_ID } from "@/App/SearchPage/constants";
 import { useQueryStore } from "@/App/SearchPage/_stores/useQueryStore";
 import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";
 import { useScreenSwap } from "../useScreenSwap";

@@ -1,7 +1,7 @@
 import type { AddFavoriteBody, Favorite } from "@tv-shows-explorer/shared";
 import { fetchJson } from "@/lib/http/fetchJson";
-import { API_URL } from "@/App/_logic/constants";
-import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
+import { API_URL } from "@/tasks/constants";
+import { useFavoritesStore } from "@/stores/useFavoritesStore";
 import { getClientId } from "./getClientId";
 
 type FavoritesRequest = {

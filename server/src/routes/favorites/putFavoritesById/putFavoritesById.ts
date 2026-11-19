@@ -1,27 +1,21 @@
 import type { Handler } from "hono";
-import { BAD_SHOW_ID } from "@/routes/favorites/_logic/constants";
-import { parseShowId } from "@/routes/favorites/_logic/parseShowId";
-import { listFavorites } from "@/routes/favorites/_logic/_tasks/listFavorites";
-import type { FavoritesEnv } from "@/routes/favorites/_logic/types";
 import { HttpError } from "@/lib/errors/HttpError";
+import type { FavoriteEnv } from "@/routes/favorites/types";
+import { listFavorites } from "@/tasks/favorites/listFavorites";
 import { parseAddedAt } from "./_logic/parseAddedAt";
 import { addFavorite } from "./_logic/_tasks/addFavorite/addFavorite";
 
 // `PUT /api/favorites/:id` with an optional `AddFavoriteBody`: adds the show and answers the list; a show already
 // there changes nothing. 404 when TVmaze has no such show, 502 when it does not answer.
-export const putFavoritesById: Handler<FavoritesEnv, "/:id"> = async (context) => {
-    const { clientId } = context.var;
-    const id = parseShowId(context.req.param("id"));
-    if (id === null) {
-        return context.json(BAD_SHOW_ID, 400);
-    }
+export const putFavoritesById: Handler<FavoriteEnv, "/:id"> = async (context) => {
+    const { clientId, showId } = context.var;
     const addedAt = parseAddedAt(await context.req.text(), Date.now());
     if (addedAt === null) {
         return context.json({ error: "Expected a JSON body with an optional addedAt from 1" }, 400);
     }
 
     try {
-        await addFavorite(clientId, id, addedAt, context.req.raw.signal);
+        await addFavorite(clientId, showId, addedAt, context.req.raw.signal);
     } catch (error) {
         if (error instanceof HttpError && error.status === 404) {
             return context.json({ error: "TVmaze has no such show" }, 404);

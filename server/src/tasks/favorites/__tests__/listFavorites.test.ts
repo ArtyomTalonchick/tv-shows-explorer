@@ -1,5 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
+import { favoritesStore } from "@/stores/favoritesStore/favoritesStore";
 import { listFavorites } from "../listFavorites";
 
 const favorite = (id: number, addedAt: number): Favorite => ({

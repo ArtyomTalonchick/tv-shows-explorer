@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useRequest } from "@/lib/request/useRequest";
 import { showToast } from "@/lib/toast/showToast";
-import { loadFavorites } from "./_tasks/loadFavorites";
+import { loadFavorites } from "@/tasks/favorites/loadFavorites";
 
 const ON_START = "start";
 
