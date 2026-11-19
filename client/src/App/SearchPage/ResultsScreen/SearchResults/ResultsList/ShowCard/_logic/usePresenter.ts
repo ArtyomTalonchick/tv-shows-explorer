@@ -1,4 +1,5 @@
 import type { FavoriteToggleProps } from "@/App/_components/FavoriteToggle/FavoriteToggle";
+import type { ShowMetaProps } from "@/App/_components/ShowMeta/ShowMeta";
 import type { CardPosterProps } from "../CardPoster/CardPoster";
 
 export type ShowCardProps = {
@@ -8,7 +9,7 @@ export type ShowCardProps = {
     image: string | null;
     rating: number | null;
     // The line under the name, e.g. «2017–2020 · Drama, Science-Fiction».
-    meta: string;
+    meta: ShowMetaProps;
     // The bookmark on the card.
     favorite: Omit<FavoriteToggleProps, "variant">;
 };

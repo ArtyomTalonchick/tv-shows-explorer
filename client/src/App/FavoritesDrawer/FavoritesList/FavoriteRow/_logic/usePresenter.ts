@@ -1,4 +1,5 @@
 import type { FavoriteToggleProps } from "@/App/_components/FavoriteToggle/FavoriteToggle";
+import type { ShowMetaProps } from "@/App/_components/ShowMeta/ShowMeta";
 
 export type FavoriteRowProps = {
     name: string;
@@ -6,7 +7,7 @@ export type FavoriteRowProps = {
     href: string;
     image: string | null;
     // The line under the name, e.g. «2017–2020 · Drama, Science-Fiction».
-    meta: string;
+    meta: ShowMetaProps;
     // The bookmark at the end of the row: a press removes the show.
     toggle: Omit<FavoriteToggleProps, "variant">;
 };

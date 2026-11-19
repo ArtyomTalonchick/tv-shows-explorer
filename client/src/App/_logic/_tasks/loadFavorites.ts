@@ -1,4 +1,4 @@
-import { sendFavoritesRequest } from "./sendFavoritesRequest/sendFavoritesRequest";
+import { sendFavoritesRequest } from "@/tasks/favorites/sendFavoritesRequest/sendFavoritesRequest";
 
 // Loads the browser's favorites into the store. Its first argument only names the moment: `useRequest` passes the
 // params it runs with.

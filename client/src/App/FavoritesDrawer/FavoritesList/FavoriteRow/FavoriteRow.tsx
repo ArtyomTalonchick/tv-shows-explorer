@@ -1,6 +1,7 @@
 import { Box, chakra } from "@chakra-ui/react";
 import type { FC } from "react";
 import { FavoriteToggle } from "@/App/_components/FavoriteToggle/FavoriteToggle";
+import { ShowMeta } from "@/App/_components/ShowMeta/ShowMeta";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { usePresenter, type FavoriteRowProps } from "./_logic/usePresenter";
 
@@ -67,9 +68,7 @@ export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
                     >
                         {name}
                     </chakra.span>
-                    <chakra.span display="block" mt="1" color="fg.muted" fontSize="sm" truncate>
-                        {meta}
-                    </chakra.span>
+                    <ShowMeta {...meta} mt="1" truncate />
                 </Box>
             </chakra.a>
             <FavoriteToggle {...toggle} variant="plain" />

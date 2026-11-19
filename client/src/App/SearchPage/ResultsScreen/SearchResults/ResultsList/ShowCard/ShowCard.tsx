@@ -1,6 +1,7 @@
-import { Box, chakra, Heading, Text } from "@chakra-ui/react";
+import { Box, chakra, Heading } from "@chakra-ui/react";
 import type { FC } from "react";
 import { FavoriteToggle } from "@/App/_components/FavoriteToggle/FavoriteToggle";
+import { ShowMeta } from "@/App/_components/ShowMeta/ShowMeta";
 import { CardPoster } from "./CardPoster/CardPoster";
 import { usePresenter, type ShowCardProps } from "./_logic/usePresenter";
 
@@ -47,16 +48,13 @@ export const ShowCard: FC<ShowCardProps> = (props) => {
                 >
                     {name}
                 </Heading>
-                <Text
+                <ShowMeta
+                    {...meta}
                     alignSelf="start"
-                    color="fg.muted"
-                    fontSize="sm"
                     overflow="hidden"
                     textOverflow="ellipsis"
                     whiteSpace={{ base: "normal", md: "nowrap" }}
-                >
-                    {meta}
-                </Text>
+                />
             </chakra.a>
             <Box
                 position="absolute"

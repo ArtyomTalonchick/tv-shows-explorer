@@ -3,8 +3,6 @@ import type { Show } from "@tv-shows-explorer/shared";
 import type { PaginationProps } from "@/lib/components/Pagination/Pagination";
 import { getPageCount } from "@/lib/pagination/getPageCount";
 import { scrollToTopIfAbove } from "@/lib/screen/scrollToTopIfAbove";
-import { useFavoriteToggle } from "@/App/_logic/useFavoriteToggle/useFavoriteToggle";
-import { formatShowMeta } from "@/App/_logic/formatShowMeta";
 import type { ShowCardProps } from "../ShowCard/ShowCard";
 import { formatShownRange } from "./formatShownRange";
 
@@ -25,7 +23,6 @@ type UsePresenterResult = {
 
 export const usePresenter = ({ shows, page, perPage, total, onPageChange }: ResultsListProps): UsePresenterResult => {
     const gridRef = useRef<HTMLUListElement>(null);
-    const { toggleFor } = useFavoriteToggle();
 
     // The pages are switched below the cards: when the cards start above the screen, bring them into view.
     const changePage = (next: number): void => {
@@ -40,8 +37,8 @@ export const usePresenter = ({ shows, page, perPage, total, onPageChange }: Resu
             href: show.url,
             image: show.image,
             rating: show.rating,
-            meta: formatShowMeta(show),
-            favorite: toggleFor(show),
+            meta: { show },
+            favorite: { show },
         },
     }));
 

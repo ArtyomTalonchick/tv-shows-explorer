@@ -34,15 +34,15 @@ describe("useFavoriteToggle", () => {
 
     it("adds a show when the server answers, and says so", async () => {
         vi.stubGlobal("fetch", respond([DARK]));
-        const { result } = renderHook(() => useFavoriteToggle());
+        const { result } = renderHook(() => useFavoriteToggle(DARK));
 
-        expect(result.current.toggleFor(DARK)).toMatchObject({ pressed: false, label: "Add Dark to favourites" });
+        expect(result.current).toMatchObject({ pressed: false, label: "Add Dark to favourites" });
 
-        act(() => result.current.toggleFor(DARK).onClick());
+        act(() => result.current.toggle());
 
-        expect(result.current.toggleFor(DARK)).toMatchObject({ pressed: false, busy: true });
-        await waitFor(() => expect(result.current.toggleFor(DARK)).toMatchObject({ pressed: true, busy: false }));
-        expect(result.current.toggleFor(DARK).label).toBe("Remove Dark from favourites");
+        expect(result.current).toMatchObject({ pressed: false, busy: true });
+        await waitFor(() => expect(result.current).toMatchObject({ pressed: true, busy: false }));
+        expect(result.current.label).toBe("Remove Dark from favourites");
         expect(lastToast()).toMatchObject({ meta: { icon: "bookmark", tone: "accent" }, action: undefined });
     });
 
@@ -50,11 +50,11 @@ describe("useFavoriteToggle", () => {
         useFavoritesStore.setState({ favorites: [DARK] });
         const fetchMock = respond([]);
         vi.stubGlobal("fetch", fetchMock);
-        const { result } = renderHook(() => useFavoriteToggle());
+        const { result } = renderHook(() => useFavoriteToggle(DARK));
 
-        act(() => result.current.toggleFor(DARK).onClick());
+        act(() => result.current.toggle());
 
-        await waitFor(() => expect(result.current.toggleFor(DARK).pressed).toBe(false));
+        await waitFor(() => expect(result.current.pressed).toBe(false));
         expect(fetchMock).toHaveBeenLastCalledWith(
             "/api/favorites/17861",
             expect.objectContaining({ method: "DELETE" }),
@@ -64,7 +64,7 @@ describe("useFavoriteToggle", () => {
         fetchMock.mockResolvedValue(new Response(JSON.stringify([DARK])));
         act(() => lastToast()?.action?.onClick());
 
-        await waitFor(() => expect(result.current.toggleFor(DARK).pressed).toBe(true));
+        await waitFor(() => expect(result.current.pressed).toBe(true));
         expect(fetchMock).toHaveBeenLastCalledWith(
             "/api/favorites/17861",
             expect.objectContaining({ method: "PUT", body: '{"addedAt":1763300000000}' }),
@@ -74,12 +74,12 @@ describe("useFavoriteToggle", () => {
     it("leaves the bookmark as it was when the request fails, and says so", async () => {
         useFavoritesStore.setState({ favorites: [DARK] });
         vi.stubGlobal("fetch", respond({ error: "busy" }, 502));
-        const { result } = renderHook(() => useFavoriteToggle());
+        const { result } = renderHook(() => useFavoriteToggle(DARK));
 
-        act(() => result.current.toggleFor(DARK).onClick());
+        act(() => result.current.toggle());
 
-        await waitFor(() => expect(result.current.toggleFor(DARK).busy).toBe(false));
-        expect(result.current.toggleFor(DARK).pressed).toBe(true);
+        await waitFor(() => expect(result.current.busy).toBe(false));
+        expect(result.current.pressed).toBe(true);
         expect(useFavoritesStore.getState().favorites).toEqual([DARK]);
         expect(lastToast()).toMatchObject({ type: "error", meta: { icon: "alert" } });
     });
