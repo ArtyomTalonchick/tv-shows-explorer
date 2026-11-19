@@ -2,8 +2,8 @@ import { flushSync } from "react-dom";
 import { redrawCaret } from "@/lib/screen/redrawCaret";
 import { waitForKeyboard } from "@/lib/screen/waitForKeyboard";
 import { withViewTransition } from "@/lib/screen/withViewTransition";
-import { useScreenStore } from "../../_stores/useScreenStore";
-import { FOCUS_KEEPER_ID } from "../../constants";
+import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";
+import { FOCUS_KEEPER_ID } from "@/App/SearchPage/constants";
 
 type OpenResultsOptions = {
     // Opened by a tap on a touch screen, which has to open the keyboard first.

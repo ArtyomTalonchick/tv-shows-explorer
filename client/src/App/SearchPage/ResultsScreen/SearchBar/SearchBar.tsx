@@ -1,7 +1,7 @@
 import { Box, chakra, Container } from "@chakra-ui/react";
 import type { FC } from "react";
-import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
-import { SEARCH_FIELD_ID, SEARCH_LABEL, SEARCH_PLACEHOLDER } from "@/App/SearchPage/constants";
+import { SEARCH_FIELD_ID } from "@/App/SearchPage/ResultsScreen/constants";
+import { SearchField } from "@/App/SearchPage/_components/SearchField/SearchField";
 import { FavoritesOpener } from "@/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
 import { Logo } from "@/App/SearchPage/_components/Logo/Logo";
 import { usePresenter } from "./_logic/usePresenter";
@@ -10,7 +10,7 @@ import { usePresenter } from "./_logic/usePresenter";
 // transition moves the field and the logo here from the hero. The logo leads back to the hero; the favourites
 // button is at the end. On a phone the logo and the button share the first row, and the field takes the second.
 export const SearchBar: FC = () => {
-    const { query, caretColor, onQueryChange, onClear, onHome } = usePresenter();
+    const { caretColor, onHome } = usePresenter();
 
     return (
         <Box
@@ -50,14 +50,10 @@ export const SearchBar: FC = () => {
                     minW={{ base: "full", md: "0" }}
                     order={{ base: "3", md: "0" }}
                 >
-                    <SearchInput
+                    <SearchField
                         id={SEARCH_FIELD_ID}
-                        label={SEARCH_LABEL}
-                        placeholder={SEARCH_PLACEHOLDER}
                         size="sm"
-                        value={query}
-                        onChange={onQueryChange}
-                        onClear={onClear}
+                        clearable
                         caretColor={caretColor}
                         autoFocus
                         viewTransitionName="search-field"

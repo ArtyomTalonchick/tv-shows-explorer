@@ -1,10 +1,9 @@
 import { renderHook } from "@testing-library/react";
 import type { Show, ShowsPage } from "@tv-shows-explorer/shared";
-import type { SearchStatus } from "../useShowsSearch/useShowsRequest/types";
+import { getSearchView, type SearchStatus, type SearchView } from "../getSearchView";
 import { usePresenter } from "../usePresenter";
-import { useShowsSearch, type UseShowsSearchResult } from "../useShowsSearch/useShowsSearch";
 
-vi.mock("../useShowsSearch/useShowsSearch", () => ({ useShowsSearch: vi.fn() }));
+vi.mock("../getSearchView", () => ({ getSearchView: vi.fn() }));
 
 const show = (id: number, genres: string[]): Show => ({
     id,
@@ -31,17 +30,14 @@ const ALL: ShowsPage = {
     perPage: 3,
 };
 
-const render = (status: SearchStatus, result: ShowsPage | null, search: Partial<UseShowsSearchResult> = {}) => {
-    vi.mocked(useShowsSearch).mockReturnValue({
+const render = (status: SearchStatus, result: ShowsPage | null, search: Partial<SearchView> = {}) => {
+    vi.mocked(getSearchView).mockReturnValue({
         status,
-        shownQuery: " dark ",
+        shownQuery: "dark",
         result,
         genre: result?.genre ?? null,
         page: result?.page ?? 1,
         isLoading: false,
-        retry: vi.fn(),
-        selectGenre: vi.fn(),
-        changePage: vi.fn(),
         ...search,
     });
     return renderHook(() => usePresenter());

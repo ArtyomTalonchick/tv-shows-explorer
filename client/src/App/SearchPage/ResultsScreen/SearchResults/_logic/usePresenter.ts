@@ -1,9 +1,14 @@
+import { useShallow } from "zustand/react/shallow";
+import { useSearchStore } from "@/stores/useSearchStore";
+import { loadShows } from "@/tasks/search/loadShows";
 import type { GenreFilterProps } from "../GenreFilter/GenreFilter";
 import type { ResultsEmptyProps } from "../ResultsEmpty/ResultsEmpty";
 import type { ResultsErrorProps } from "../ResultsError/ResultsError";
 import type { ResultsHeadProps } from "../ResultsHead/ResultsHead";
 import type { ResultsListProps } from "../ResultsList/ResultsList";
-import { useShowsSearch } from "./useShowsSearch/useShowsSearch";
+import { changePage } from "./_tasks/changePage";
+import { selectGenre } from "./_tasks/selectGenre";
+import { getSearchView } from "./getSearchView";
 
 type UsePresenterResult = {
     // «Shows for “dark”» with «9 shows», or «4 of 9 shows · Drama» for a genre; hidden with an empty field.
@@ -20,9 +25,28 @@ type UsePresenterResult = {
 };
 
 export const usePresenter = (): UsePresenterResult => {
-    const { status, result, genre, page, shownQuery, isLoading, retry, selectGenre, changePage } = useShowsSearch();
+    const asked = useSearchStore(
+        useShallow((state) => ({
+            value: state.value,
+            query: state.query,
+            genre: state.genre,
+            page: state.page,
+            waiting: state.request !== null,
+            answer: state.answer,
+        })),
+    );
+    const { status, result, genre, page, shownQuery: query, isLoading } = getSearchView(asked);
     const shown = status === "results" ? result : null;
-    const query = shownQuery.trim();
+
+    const handleSelect = (next: string | null): void => {
+        void selectGenre(next);
+    };
+    const handlePageChange = (next: number): void => {
+        void changePage(next);
+    };
+    const handleRetry = (): void => {
+        void loadShows();
+    };
 
     const countLabel = ((): string | null => {
         if (status === "empty") {
@@ -40,12 +64,12 @@ export const usePresenter = (): UsePresenterResult => {
 
     const genreFilter: GenreFilterProps | null =
         shown !== null && shown.genres.length > 0
-            ? { genres: shown.genres, total: shown.found, selected: genre, onSelect: selectGenre }
+            ? { genres: shown.genres, total: shown.found, selected: genre, onSelect: handleSelect }
             : null;
     const list: ResultsListProps | null =
         shown === null
             ? null
-            : { shows: shown.shows, page, perPage: shown.perPage, total: shown.total, onPageChange: changePage };
+            : { shows: shown.shows, page, perPage: shown.perPage, total: shown.total, onPageChange: handlePageChange };
 
     return {
         head: status === "idle" ? null : { query, count: countLabel },
@@ -55,6 +79,6 @@ export const usePresenter = (): UsePresenterResult => {
         isIdle: status === "idle",
         isLoading: status === "loading",
         empty: status === "empty" ? { query } : null,
-        error: status === "error" ? { onRetry: retry } : null,
+        error: status === "error" ? { onRetry: handleRetry } : null,
     };
 };

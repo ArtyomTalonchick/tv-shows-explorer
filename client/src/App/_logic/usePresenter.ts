@@ -1,6 +1,31 @@
-import { useFavoritesLoad } from "./useFavoritesLoad";
+import { useEffect } from "react";
+import { showToast } from "@/lib/toast/showToast";
+import { loadFavorites } from "./_tasks/loadFavorites";
 
-// The app loads the favorites on start: the counters of both screens, the bookmarks and the list show them.
+// The app loads the favorites once, on start: the counters of both screens, the bookmarks and the list show them. A
+// failure says so in a toast with Retry; until then the counter shows 0, and a press on a bookmark still works: the
+// server answers it with the whole list.
 export const usePresenter = (): void => {
-    useFavoritesLoad();
+    useEffect(() => {
+        const controller = new AbortController();
+
+        const load = async (): Promise<void> => {
+            try {
+                await loadFavorites(controller.signal);
+            } catch {
+                if (!controller.signal.aborted) {
+                    showToast({
+                        text: "Couldn’t load your favourites",
+                        icon: "alert",
+                        tone: "accent",
+                        urgent: true,
+                        action: { label: "Retry", onClick: () => void load() },
+                    });
+                }
+            }
+        };
+        void load();
+
+        return () => controller.abort();
+    }, []);
 };

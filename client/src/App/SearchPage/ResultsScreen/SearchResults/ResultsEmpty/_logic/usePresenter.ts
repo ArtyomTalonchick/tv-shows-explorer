@@ -1,4 +1,5 @@
-import { useSearchQuery } from "@/App/SearchPage/_logic/useSearchQuery";
+import { SEARCH_FIELD_ID } from "@/App/SearchPage/ResultsScreen/constants";
+import { clearSearch } from "@/tasks/search/clearSearch";
 
 export type ResultsEmptyProps = {
     query: string;
@@ -10,7 +11,10 @@ type UsePresenterResult = ResultsEmptyProps & {
 };
 
 export const usePresenter = ({ query }: ResultsEmptyProps): UsePresenterResult => {
-    const { clear } = useSearchQuery();
+    const clear = (): void => {
+        clearSearch();
+        document.getElementById(SEARCH_FIELD_ID)?.focus();
+    };
 
     return { query, onClear: clear };
 };

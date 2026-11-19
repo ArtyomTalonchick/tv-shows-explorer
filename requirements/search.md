@@ -139,3 +139,16 @@ The user finds TV shows by typing a query. TVmaze does the search
   `lib/request/useRequest` stays as it is. Leaving the results screen unmounts them, which drops the genre, the
   page and the answer. Show data another page needs will be a store of its own, by show id, when that page comes —
   not the search answer moved to a store. (#32)
+- The search moves to the 0.2.6 architecture rules: events call tasks, and no effect watches data to call one. The
+  field, the asked query, genre and page, the request on its way and the answer are one Zustand store,
+  `client/src/stores/useSearchStore`. The task `loadShows` (`client/src/tasks/search/`) asks for what the store
+  holds, cancels the request on its way and drops an answer that is no longer current, so the latest call wins; it
+  keeps found shows on screen while it loads. The field is one component, `SearchPage/_components/SearchField`: its
+  change calls `changeQuery`, which stops the search at once for an emptied field, and a `debounce` made once in its
+  Presenter, which calls `searchQuery` after 400 ms. The genre chips, the pages and Retry call `selectGenre`,
+  `changePage` and `loadShows` from their handlers. The × button and «Clear search» call the task `clearSearch`
+  and give the focus back themselves: the × through the field's ref, «Clear search» by the field's id. `goHome`
+  empties the store inside the view transition, which drops the genre, the page and the answer. `getSearchView`
+  still decides what the results area shows, now from the store. `useSearchQuery`, `useScreenSwap`,
+  `useQueryStore`, `useShowsSearch`, `lib/request/useRequest` and `lib/debounce/useDebouncedValue` are gone. This
+  replaces the hooks of #16, #25 and #32 above. (#42)
