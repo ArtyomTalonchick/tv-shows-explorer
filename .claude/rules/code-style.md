@@ -81,10 +81,9 @@ followed by hand. A new preference the owner states during a task is added here 
 
 - A result that can succeed or fail is a flat object with a flag and a nullable field, not a union checked with
   `in`: `{ data: T | null; failed: boolean }`, read as `if (shown.failed)` and `shown?.data ?? []`. (#16)
-- What every request repeats — the `AbortController`, the cancel in the effect cleanup, dropping a late answer,
-  Retry — lives once in `lib/request/useRequest`, not in each request hook; a request hook adds only what is its
-  own (debounce, reset). The transport (`fetch`, the non-2xx check, `json()`) is `lib/http/fetchJson`: generic I/O,
-  which by the architecture rules only a task calls. (#16, #30, #35)
+- Cancelling a request, dropping a late answer and Retry live in the task that makes the request
+  (`tasks/search/loadShows`): Retry calls the task again. The transport (`fetch`, the non-2xx check, `json()`) is
+  `lib/http/fetchJson`: generic I/O, which by the architecture rules only a task calls. (#16, #30, #35, #42)
 
 ## Styles
 
