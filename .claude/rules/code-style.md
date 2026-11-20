@@ -87,6 +87,10 @@ followed by hand. A new preference the owner states during a task is added here 
 - Cancelling a request, dropping a late answer and Retry live in the task that makes the request
   (`tasks/search/loadShows`): Retry calls the task again. The transport (`fetch`, the non-2xx check, `json()`) is
   `lib/http/fetchJson`: generic I/O, which by the architecture rules only a task calls. (#16, #30, #35, #42)
+- A Zustand store keeps an action only when a Presenter calls it through the store hook (`setIsOpen`), or when it
+  holds logic of the data itself (`addFavorite` keeps the list ordered by `addedAt`; `forgetSearch` knows what «no
+  search» is). Everything else a task or a plain function writes with `useXStore.setState(…)`: no setter that only
+  repeats `set({ x })`. (#45)
 
 ## Styles
 
