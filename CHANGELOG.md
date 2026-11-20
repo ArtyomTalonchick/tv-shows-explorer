@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+## 0.2.1 — 2026-11-20
+
 - Adding or removing a favourite shows at once — the bookmark, the counter and the list — without waiting for the
   server; if the server fails, the change is undone and a toast says so. A bookmark can be pressed again right away.
 - Another genre or page that fails to load keeps the shown results, with their genre and page, and says so in a
