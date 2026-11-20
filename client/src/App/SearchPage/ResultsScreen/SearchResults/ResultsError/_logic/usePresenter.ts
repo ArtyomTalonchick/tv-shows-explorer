@@ -6,9 +6,7 @@ type UsePresenterResult = {
 };
 
 export const usePresenter = (): UsePresenterResult => {
-    const handleRetry = (): void => {
-        void loadShows();
-    };
+    const handleRetry = () => void loadShows();
 
     return { onRetry: handleRetry };
 };

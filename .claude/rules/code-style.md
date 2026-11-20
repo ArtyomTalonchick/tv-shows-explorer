@@ -27,6 +27,9 @@ followed by hand. A new preference the owner states during a task is added here 
     local `UsePresenterResult`, reusing the props type where it passes props on
     (`Omit<ChipProps, "selected"> & { … }`). A comment on a returned field goes on the type's field.
   - A function inside a hook says it too: `const select = (next: string | null): void => { … }`.
+  - Except a one-line function that only calls another one and waits for nothing: `const handleRetry = () => void
+    loadShows();`, with no return type; `void` says that no one waits for the call. A function with more than one
+    call keeps its body and its return type. ESLint `allowConciseArrowFunctionExpressionsStartingWithVoid`. (#48)
 
 - `const` over `let`. A value chosen by several branches is an IIFE with early returns, not a `let` reassigned in
   `if` / `else`: (#8)

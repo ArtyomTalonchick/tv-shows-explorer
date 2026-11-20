@@ -57,10 +57,14 @@ export default defineConfig([
                 },
             ],
             // A function says what it returns. Callbacks typed by their place (`onClick={() => ...}`, `.map(...)`)
-            // are left alone.
+            // are left alone, and so is a one-line function that only calls another one: `() => void call()`.
             "@typescript-eslint/explicit-function-return-type": [
                 "error",
-                { allowExpressions: true, allowTypedFunctionExpressions: true },
+                {
+                    allowExpressions: true,
+                    allowTypedFunctionExpressions: true,
+                    allowConciseArrowFunctionExpressionsStartingWithVoid: true,
+                },
             ],
         },
     },

@@ -10,9 +10,7 @@ type UsePresenterResult = {
 };
 
 export const usePresenter = (): UsePresenterResult => {
-    const handleOpen = (): void => {
-        void openResults({ fromTap: false });
-    };
+    const handleOpen = () => void openResults({ fromTap: false });
 
     const handleTouchEnd = (event: TouchEvent<HTMLInputElement>): void => {
         event.preventDefault();
