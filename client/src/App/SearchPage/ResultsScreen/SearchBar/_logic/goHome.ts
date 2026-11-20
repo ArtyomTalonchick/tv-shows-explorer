@@ -6,6 +6,6 @@ import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";
 export const goHome = async (clear: () => void): Promise<void> => {
     await withViewTransition(() => {
         clear();
-        useScreenStore.getState().setIsStart(true);
+        useScreenStore.setState({ isStart: true });
     });
 };

@@ -11,7 +11,7 @@ describe("SearchPage usePresenter", () => {
         const { result } = renderHook(() => usePresenter());
         expect(result.current.isStart).toBe(true);
 
-        act(() => useScreenStore.getState().setIsStart(false));
+        act(() => useScreenStore.setState({ isStart: false }));
 
         expect(result.current.isStart).toBe(false);
     });

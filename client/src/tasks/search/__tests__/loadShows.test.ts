@@ -1,5 +1,6 @@
 import type { ShowsPage } from "@tv-shows-explorer/shared";
 import { useSearchStore } from "@/stores/useSearchStore";
+import { clearSearch } from "../clearSearch";
 import { loadShows } from "../loadShows";
 import { searchShows } from "../searchShows";
 
@@ -30,7 +31,7 @@ const deferred = () => {
 
 describe("loadShows", () => {
     beforeEach(() => {
-        useSearchStore.getState().clear();
+        clearSearch();
         useSearchStore.setState({ value: "dark", query: "dark", genre: "Drama", page: 2 });
         vi.mocked(searchShows).mockReset();
     });
@@ -92,7 +93,7 @@ describe("loadShows", () => {
         vi.mocked(searchShows).mockReturnValue(pending.promise);
 
         const load = loadShows();
-        useSearchStore.getState().clear();
+        useSearchStore.getState().forgetSearch();
         pending.resolve(pageOf(4));
         await load;
 

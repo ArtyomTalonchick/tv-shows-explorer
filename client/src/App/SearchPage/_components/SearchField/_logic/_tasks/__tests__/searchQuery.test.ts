@@ -1,4 +1,5 @@
 import { useSearchStore } from "@/stores/useSearchStore";
+import { clearSearch } from "@/tasks/search/clearSearch";
 import { loadShows } from "@/tasks/search/loadShows";
 import { searchQuery } from "../searchQuery";
 
@@ -6,7 +7,7 @@ vi.mock("@/tasks/search/loadShows", () => ({ loadShows: vi.fn(async () => {}) })
 
 describe("searchQuery", () => {
     beforeEach(() => {
-        useSearchStore.getState().clear();
+        clearSearch();
         vi.mocked(loadShows).mockClear();
     });
 

@@ -5,7 +5,6 @@ type FavoritesState = {
     // The browser's favorites, the newest first: the list the server last answered, with the changes it answered
     // since; empty until the first answer.
     favorites: Favorite[];
-    setFavorites: (favorites: Favorite[]) => void;
     // Puts the favorite in its place by `addedAt`, replacing the one with its id.
     addFavorite: (favorite: Favorite) => void;
     // A show that is not there changes nothing.
@@ -14,7 +13,6 @@ type FavoritesState = {
 
 export const useFavoritesStore = create<FavoritesState>()((set) => ({
     favorites: [],
-    setFavorites: (favorites) => set({ favorites }),
     addFavorite: (favorite) =>
         set(({ favorites }) => {
             const others = favorites.filter(({ id }) => id !== favorite.id);

@@ -20,11 +20,8 @@ type SearchState = {
     request: AbortController | null;
     // The last answer. Found shows stay here while the next request loads; an empty or failed answer does not.
     answer: SearchAnswer | null;
-    setValue: (value: string) => void;
     // Forgets the search; the field keeps what it holds.
-    reset: () => void;
-    // Empties the field and forgets the search.
-    clear: () => void;
+    forgetSearch: () => void;
 };
 
 const NO_SEARCH = { query: "", genre: null, page: 1, request: null, answer: null } satisfies Partial<SearchState>;
@@ -32,7 +29,5 @@ const NO_SEARCH = { query: "", genre: null, page: 1, request: null, answer: null
 export const useSearchStore = create<SearchState>()((set) => ({
     value: "",
     ...NO_SEARCH,
-    setValue: (value) => set({ value }),
-    reset: () => set(NO_SEARCH),
-    clear: () => set({ value: "", ...NO_SEARCH }),
+    forgetSearch: () => set(NO_SEARCH),
 }));

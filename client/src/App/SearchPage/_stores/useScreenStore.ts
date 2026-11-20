@@ -6,13 +6,9 @@ type ScreenState = {
     // The screens are swapping: the caret of the results field is hidden, as iOS would draw it flying over the
     // animation.
     isSwapping: boolean;
-    setIsStart: (isStart: boolean) => void;
-    setIsSwapping: (isSwapping: boolean) => void;
 };
 
-export const useScreenStore = create<ScreenState>()((set) => ({
+export const useScreenStore = create<ScreenState>()(() => ({
     isStart: true,
     isSwapping: false,
-    setIsStart: (isStart) => set({ isStart }),
-    setIsSwapping: (isSwapping) => set({ isSwapping }),
 }));

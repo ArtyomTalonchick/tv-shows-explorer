@@ -6,5 +6,5 @@ import { sendFavoritesRequest } from "@/tasks/favorites/sendFavoritesRequest/sen
 // store then stays as it was.
 export const loadFavorites = async (signal?: AbortSignal): Promise<void> => {
     const favorites = await sendFavoritesRequest<Favorite[]>({ method: "GET", signal });
-    useFavoritesStore.getState().setFavorites(favorites);
+    useFavoritesStore.setState({ favorites });
 };

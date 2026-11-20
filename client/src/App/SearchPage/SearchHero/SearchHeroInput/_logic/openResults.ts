@@ -16,8 +16,6 @@ const KEYBOARD_TIMEOUT = 600;
 // Swaps the start hero for the results screen, animated. The caret of the results field is hidden while the screens
 // swap, as iOS would draw it flying over the animation.
 export const openResults = async ({ fromTap }: OpenResultsOptions): Promise<void> => {
-    const { setIsStart, setIsSwapping } = useScreenStore.getState();
-
     if (fromTap) {
         // iOS opens the keyboard a moment after the tap, and only if the field focused in the tap still has the
         // focus then. The keeper takes it inside the tap and keeps it until the keyboard is open; the results field
@@ -27,11 +25,10 @@ export const openResults = async ({ fromTap }: OpenResultsOptions): Promise<void
     }
 
     await withViewTransition(() => {
-        setIsSwapping(true);
-        setIsStart(false);
+        useScreenStore.setState({ isSwapping: true, isStart: false });
     });
     // The caret gets its colour back before it is redrawn, not on the next render.
-    flushSync(() => setIsSwapping(false));
+    flushSync(() => useScreenStore.setState({ isSwapping: false }));
     // The field of the results screen took the focus during the animation.
     redrawCaret();
 };

@@ -1,11 +1,12 @@
 import { useSearchStore } from "@/stores/useSearchStore";
+import { clearSearch } from "@/tasks/search/clearSearch";
 import { changeQuery } from "../changeQuery";
 
 const ANSWER = { query: "dark", data: null, failed: true };
 
 describe("changeQuery", () => {
     beforeEach(() => {
-        useSearchStore.getState().clear();
+        clearSearch();
     });
 
     it("keeps what the field holds, and leaves the search as it is", () => {
