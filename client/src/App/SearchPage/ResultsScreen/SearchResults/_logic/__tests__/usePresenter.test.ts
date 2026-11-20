@@ -1,9 +1,15 @@
-import { renderHook } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import type { Show, ShowsPage } from "@tv-shows-explorer/shared";
 import { getSearchView, type SearchStatus, type SearchView } from "../getSearchView";
+import { changePage } from "../_tasks/changePage";
+import { selectGenre } from "../_tasks/selectGenre";
+import { showNotLoadedToast } from "../showNotLoadedToast";
 import { usePresenter } from "../usePresenter";
 
 vi.mock("../getSearchView", () => ({ getSearchView: vi.fn() }));
+vi.mock("../_tasks/selectGenre", () => ({ selectGenre: vi.fn() }));
+vi.mock("../_tasks/changePage", () => ({ changePage: vi.fn() }));
+vi.mock("../showNotLoadedToast", () => ({ showNotLoadedToast: vi.fn() }));
 
 const show = (id: number, genres: string[]): Show => ({
     id,
@@ -95,5 +101,16 @@ describe("SearchResults usePresenter", () => {
         expect(result.current.isIdle).toBe(true);
         expect(result.current.head).toBeNull();
         expect(result.current.genreFilter).toBeNull();
+    });
+
+    it("says so in a toast when another genre or page fails to load", async () => {
+        vi.mocked(selectGenre).mockRejectedValue(new Error("502"));
+        vi.mocked(changePage).mockRejectedValue(new Error("502"));
+        const { result } = render("results", ALL);
+
+        result.current.genreFilter?.onSelect("Comedy");
+        await waitFor(() => expect(showNotLoadedToast).toHaveBeenCalledWith());
+        result.current.list?.onPageChange(2);
+        await waitFor(() => expect(showNotLoadedToast).toHaveBeenLastCalledWith(2));
     });
 });

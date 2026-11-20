@@ -9,6 +9,7 @@ import type { ResultsListProps } from "../ResultsList/ResultsList";
 import { changePage } from "./_tasks/changePage";
 import { selectGenre } from "./_tasks/selectGenre";
 import { getSearchView } from "./getSearchView";
+import { showNotLoadedToast } from "./showNotLoadedToast";
 
 export type SearchResultsProps = Pick<ResultsEmptyProps, "onClear">;
 
@@ -40,11 +41,19 @@ export const usePresenter = ({ onClear }: SearchResultsProps): UsePresenterResul
     const { status, result, genre, page, shownQuery: query, isLoading } = getSearchView(asked);
     const shown = status === "results" ? result : null;
 
-    const handleSelect = (next: string | null): void => {
-        void selectGenre(next);
+    const handleSelect = async (next: string | null): Promise<void> => {
+        try {
+            await selectGenre(next);
+        } catch {
+            showNotLoadedToast();
+        }
     };
-    const handlePageChange = (next: number): void => {
-        void changePage(next);
+    const handlePageChange = async (next: number): Promise<void> => {
+        try {
+            await changePage(next);
+        } catch {
+            showNotLoadedToast(next);
+        }
     };
     const handleRetry = (): void => {
         void loadShows();

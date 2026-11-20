@@ -33,13 +33,16 @@ What the user sees (`design/v0.2/`): (#28)
    on the first row with the logo).
 9. Every show card has a bookmark — a bookmark, not a star: the star marks the rating. It is filled in the accent
    while the show is a favorite; on a phone it sits at the right end of the row. A press adds or removes the show.
-10. The bookmark, the counter and the list change when the server answers, all at once; until then the bookmark
-    cannot be pressed again. Then a toast says what happened for 4 s: «Added **Dark** to favourites», or «Removed
-    **Dark** from favourites» with **Undo**, which puts the show back in its old place (6).
+10. The bookmark, the counter and the list change at once, on the press, and the request goes in the background; the
+    bookmark can be pressed again at any time. A toast says what was done for 4 s, at once too: «Added **Dark** to
+    favourites», or «Removed **Dark** from favourites» with **Undo**, which puts the show back in its old place (6).
+    If the server answers an error, the bookmark, the counter and the list go back to how they were, and a toast
+    says so: «Couldn’t add **Dark** to favourites» (or remove). (#41)
 11. The button opens the list in a drawer from the right, full width on a phone: «Your list · Favourites N», a row
     per show, the newest first, with its poster, name, years and genres; the row leads to the show on TVmaze. The
     bookmark of a row removes the show: the row leaves and the toast offers Undo. The backdrop, × and Escape close
     the drawer; a press on a toast does not.
+12. Two quick presses on one bookmark are both kept: a failure of the first one does not undo the second. (#41)
 
 ## States
 
@@ -56,9 +59,9 @@ What the user sees (`design/v0.2/`): (#28)
 |---|---|
 | No favorites | The counter shows 0 in a grey badge; the drawer says «No favourites yet» and how to add a show |
 | Favorites | The counter in the accent; filled bookmarks on their cards; a row per show in the drawer |
-| A change on its way | Its bookmark does not answer a press until the server does |
+| A change on its way | The bookmark, the counter and the list already show it; the bookmark answers every press (#41) |
 | Added, removed | A toast with the show's name; a removal offers Undo |
-| A change failed | «Couldn’t add **Dark** to favourites» (or remove) in a toast; the bookmark stays as it was |
+| A change failed | The bookmark, the counter and the list go back; «Couldn’t add **Dark** to favourites» (or remove) in a toast (#41) |
 | The list did not load | «Couldn’t load your favourites» in a toast with Retry; the counter shows 0 meanwhile |
 
 ## Edge cases
@@ -92,7 +95,7 @@ What the user sees (`design/v0.2/`): (#28)
 - The bookmark changes when the server answers, not at once: the store changes by the answer, so the bookmarks,
   the counter and the drawer always show one list, and a failed request has nothing to roll back. A change of the
   in-memory list takes a moment, and by the first press the server is awake: the app has loaded the list on
-  start. (#28)
+  start. (#28) Replaced by an optimistic update in #41.
 - A failed load of the list says so in a toast with Retry, and the bookmarks still work meanwhile. Until Retry the
   counter and the drawer show only the changes of this session: a change answers only what it changed. (#28, #40)
 - A bookmark, not the star the issue named: the star marks the rating (`design/v0.2/`). (#28)
@@ -109,3 +112,16 @@ What the user sees (`design/v0.2/`): (#28)
 - A change answers only what it changed: `PUT` the one `Favorite`, `DELETE` `204 No Content` (the standard answer
   for a success with no body, not a bare `200`). The server does not read the list again after a change, and the
   answer does not grow with the list; the client keeps its list in order itself. (#40)
+- The change is optimistic: the store changes on the press, and the bookmarks, the counter and the drawer still show
+  one list, as they all read the store. One task, `toggleFavorite`, reads the store and adds or removes; `addFavorite`
+  and `removeFavorite` change the store before the request and undo their own change if it fails — not a snapshot
+  of the list, which would undo another show's change made meanwhile. An added show is shown from the card's data,
+  with the browser's time as `addedAt`. The toast of a change shows at once; a failure adds its own toast. `busy` is
+  gone: a press is never ignored. (#41)
+- The server's answer to `PUT` is not put into the store: the show is already there from the press, and an answer
+  that comes after a removal must not bring the show back. Until the list is loaded again, an added show keeps the
+  browser's `addedAt`, a few milliseconds off the server's. (#41)
+- Accepted, not handled: two presses on one bookmark within a fraction of a second send their requests side by
+  side, and the server may apply them in another order; and if both fail, the list may show what the server does
+  not have. Both are rare, and the next load of the list puts it right; a queue of requests per show was tried and
+  judged not worth its weight. (#41)

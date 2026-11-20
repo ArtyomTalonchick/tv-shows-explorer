@@ -1,68 +1,51 @@
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
-import { useState } from "react";
 import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 import { addFavorite } from "../_tasks/addFavorite";
-import { removeFavorite } from "../_tasks/removeFavorite";
+import { toggleFavorite } from "../_tasks/toggleFavorite";
 import { showFavoriteToast } from "./showFavoriteToast";
-
-type FavoriteShow = Pick<Show, "id" | "name">;
 
 export type UseFavoriteToggleResult = {
     // The show is a favourite.
     pressed: boolean;
-    // Its change is on the way.
-    busy: boolean;
     // What a press does, for screen readers: «Add Dark to favourites».
     label: string;
     // Adds or removes the show, and says so in a toast.
     toggle: () => void;
 };
 
-// The bookmark of one show. It changes when the server answers, not before: the store changes by the answer, so the
-// bookmarks, the counter and the list always show the same list, and a failed request leaves them as they were.
-export const useFavoriteToggle = (show: FavoriteShow): UseFavoriteToggleResult => {
+// The bookmark of one show. It changes at once, and so do the counter and the list: the task changes the store
+// before its request, and puts it back if the request fails. The toast says what was done at once, and what failed
+// once the server answers.
+export const useFavoriteToggle = (show: Omit<Show, "rating">): UseFavoriteToggleResult => {
     const saved = useFavoritesStore((state) => state.favorites.find((favorite) => favorite.id === show.id) ?? null);
-    const [busy, setBusy] = useState(false);
 
-    const whileBusy = async (send: () => Promise<void>): Promise<void> => {
-        setBusy(true);
+    // Puts a removed show back in its old place.
+    const undo = async (removed: Favorite): Promise<void> => {
+        showFavoriteToast({ change: "added", name: removed.name });
         try {
-            await send();
-        } finally {
-            setBusy(false);
-        }
-    };
-
-    // `addedAt` is given by Undo: the show goes back to its old place.
-    const add = async (added: FavoriteShow, addedAt?: number): Promise<void> => {
-        try {
-            await addFavorite(added.id, addedAt);
-            showFavoriteToast({ change: "added", name: added.name });
+            await addFavorite(removed, removed.addedAt);
         } catch {
-            showFavoriteToast({ change: "notAdded", name: added.name });
+            showFavoriteToast({ change: "notAdded", name: removed.name });
         }
     };
 
-    const remove = async (removed: Favorite): Promise<void> => {
+    // `saved` only chooses the toast; the task decides by the store whether to add or to remove.
+    const toggle = async (removed: Favorite | null): Promise<void> => {
+        if (removed === null) {
+            showFavoriteToast({ change: "added", name: show.name });
+        } else {
+            showFavoriteToast({ change: "removed", name: show.name, onUndo: () => void undo(removed) });
+        }
         try {
-            await removeFavorite(removed.id);
-            const undo = (): void => {
-                void whileBusy(() => add(removed, removed.addedAt));
-            };
-            showFavoriteToast({ change: "removed", name: removed.name, onUndo: undo });
+            await toggleFavorite(show);
         } catch {
-            showFavoriteToast({ change: "notRemoved", name: removed.name });
+            showFavoriteToast({ change: removed === null ? "notAdded" : "notRemoved", name: show.name });
         }
-    };
-
-    const toggle = (): void => {
-        void whileBusy(() => (saved === null ? add(show) : remove(saved)));
     };
 
     return {
         pressed: saved !== null,
-        busy,
         label: saved === null ? `Add ${show.name} to favourites` : `Remove ${show.name} from favourites`,
-        toggle,
+        toggle: () => void toggle(saved),
     };
 };

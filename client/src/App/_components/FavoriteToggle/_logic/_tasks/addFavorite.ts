@@ -1,12 +1,20 @@
-import type { Favorite } from "@tv-shows-explorer/shared";
+import type { Favorite, Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 import { sendFavoritesRequest } from "@/tasks/favorites/sendFavoritesRequest/sendFavoritesRequest";
+import { toFavorite } from "./toFavorite";
 
-// Adds the show to the browser's favorites, and the favorite the server answers to the store. `addedAt` puts a removed
-// show back in its old place (Undo); without it the show goes to the top. A show already there changes nothing.
-// Rejects as `sendFavoritesRequest` does; the store then stays as it was.
-export const addFavorite = async (id: number, addedAt?: number): Promise<void> => {
+// Adds the show to the browser's favorites: the store shows it at once, and a failed request takes it out again and
+// rejects as `sendFavoritesRequest` does. The server's answer is not put into the store: the show is already there,
+// and a removal made meanwhile must not be undone by it. `addedAt` puts a removed show back in its old place (Undo);
+// without it the show goes to the top.
+export const addFavorite = async (show: Omit<Show, "rating">, addedAt?: number): Promise<void> => {
     const body = addedAt === undefined ? undefined : { addedAt };
-    const favorite = await sendFavoritesRequest<Favorite>({ method: "PUT", id, body });
-    useFavoritesStore.getState().addFavorite(favorite);
+    useFavoritesStore.getState().addFavorite(toFavorite(show, addedAt ?? Date.now()));
+
+    try {
+        await sendFavoritesRequest<Favorite>({ method: "PUT", id: show.id, body });
+    } catch (error) {
+        useFavoritesStore.getState().removeFavorite(show.id);
+        throw error;
+    }
 };

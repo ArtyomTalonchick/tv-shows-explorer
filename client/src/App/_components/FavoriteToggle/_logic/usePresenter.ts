@@ -4,7 +4,7 @@ import { useFavoriteToggle } from "./useFavoriteToggle/useFavoriteToggle";
 
 export type FavoriteToggleProps = {
     // The show the bookmark adds to the favourites or removes from them.
-    show: Pick<Show, "id" | "name">;
+    show: Omit<Show, "rating">;
     // `poster` floats over a poster in a glass circle; `plain` sits in a row of the favourites list.
     variant?: "poster" | "plain";
 };
@@ -30,21 +30,12 @@ const VARIANT_STYLES = {
 type UsePresenterResult = {
     pressed: boolean;
     label: string;
-    // The change is on its way: a press does nothing until it is done.
-    busy: boolean;
     variantStyles: HTMLChakraProps<"button">;
     handleClick: () => void;
 };
 
 export const usePresenter = ({ show, variant = "poster" }: FavoriteToggleProps): UsePresenterResult => {
-    const { pressed, busy, label, toggle } = useFavoriteToggle(show);
+    const { pressed, label, toggle } = useFavoriteToggle(show);
 
-    // Not `disabled` while busy: a disabled button drops the focus of a keyboard user.
-    const handleClick = (): void => {
-        if (!busy) {
-            toggle();
-        }
-    };
-
-    return { pressed, label, busy, variantStyles: VARIANT_STYLES[variant], handleClick };
+    return { pressed, label, variantStyles: VARIANT_STYLES[variant], handleClick: toggle };
 };

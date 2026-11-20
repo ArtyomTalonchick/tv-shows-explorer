@@ -98,4 +98,38 @@ describe("loadShows", () => {
 
         expect(useSearchStore.getState().answer).toBeNull();
     });
+    it("on keepShown, keeps the found shows on a failure, brings back their genre and page, and rejects", async () => {
+        const shown = { query: "dark", data: { ...pageOf(4), genre: "Comedy", page: 1 }, failed: false };
+        useSearchStore.setState({ answer: shown });
+        vi.mocked(searchShows).mockRejectedValue(new Error("502"));
+
+        await expect(loadShows({ keepShown: true })).rejects.toThrow("502");
+
+        expect(useSearchStore.getState()).toMatchObject({ request: null, genre: "Comedy", page: 1, answer: shown });
+    });
+
+    it("on keepShown, shows a failure with Retry when no found shows are on screen", async () => {
+        vi.mocked(searchShows).mockRejectedValue(new Error("502"));
+
+        await loadShows({ keepShown: true });
+
+        expect(useSearchStore.getState().answer).toEqual({ query: "dark", data: null, failed: true });
+    });
+
+    it("on keepShown, neither rolls back nor rejects for a request a later call cancelled", async () => {
+        const first = deferred();
+        const second = deferred();
+        vi.mocked(searchShows).mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+        useSearchStore.setState({ answer: { query: "dark", data: pageOf(4), failed: false } });
+
+        const firstLoad = loadShows({ keepShown: true });
+        useSearchStore.setState({ page: 3 });
+        const secondLoad = loadShows({ keepShown: true });
+        first.reject(new Error("aborted"));
+
+        await expect(firstLoad).resolves.toBeUndefined();
+        expect(useSearchStore.getState().page).toBe(3);
+        second.resolve({ ...pageOf(4), page: 3 });
+        await secondLoad;
+    });
 });

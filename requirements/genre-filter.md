@@ -17,7 +17,9 @@ the mood for.
 4. One genre is selected at a time: a click on another genre switches to it.
 5. «All» resets the filter, and so does a click on the selected chip; «All» is filled while no genre is selected.
    The pressed chip is filled at once; the shows of the genre, the count and the pages come with the server’s answer,
-   and until then the shown results stay, dimmed and not pressable (see `search.md`).
+   and until then the shown results stay, dimmed and not pressable (see `search.md`). If they fail to load, the
+   shown results stay and their chip and page are marked again, and a toast says «Couldn’t change the genre»; the
+   error state is not shown. (#41)
 6. The pagination works on the filtered shows («Shows 4–5 of 5»). A change of the filter opens page 1.
 7. A new search resets the filter to «All».
 
@@ -27,6 +29,7 @@ the mood for.
 |---|---|
 | Loading | Five chip skeletons above the card skeletons |
 | A genre asked, no answer yet | The asked chip filled; the shown results dimmed and not pressable |
+| A genre failed to load | The shown results and their chip again; «Couldn’t change the genre» in a toast (#41) |
 | Results, no genre selected | The chips with «All» filled; all the shows |
 | A genre selected | That chip filled; its shows; «N of M shows · Genre» in the heading |
 | No results, error | No chips |
@@ -58,3 +61,6 @@ the mood for.
   the genre with the genres and counts of all the found shows. The genre is kept together with the query it was
   chosen for and dropped when the query changes, so typing the old query back does not bring it back. (#25)
 - The chosen chip is filled at once; the content follows the answer. (#25)
+- A genre that fails to load brings back the genre and the page of the results on screen, not the error state: the
+  shown results are still right for their genre. The toast does not name the genre: a press on the selected chip
+  asks for «All», and only the task knows which one was asked. (#41)

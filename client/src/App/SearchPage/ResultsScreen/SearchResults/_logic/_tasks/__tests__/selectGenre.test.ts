@@ -14,7 +14,7 @@ describe("selectGenre", () => {
         await selectGenre("Drama");
 
         expect(useSearchStore.getState()).toMatchObject({ genre: "Drama", page: 1 });
-        expect(loadShows).toHaveBeenCalledTimes(1);
+        expect(loadShows).toHaveBeenCalledExactlyOnceWith({ keepShown: true });
     });
 
     it("resets the filter on the selected genre again, as «All» does", async () => {

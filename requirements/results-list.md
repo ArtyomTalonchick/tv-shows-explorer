@@ -15,7 +15,8 @@ The shows TVmaze finds are shown as cards, three per page, so the user can look 
 5. When the user switches the page and the start of the cards is above the screen (the pagination is at the
    bottom of a long page on mobile), the page scrolls to the top, so the new cards are seen from the first one.
    The scroll is smooth, or instant with reduced motion.
-6. A page is asked from the server; the shown cards stay, dimmed, until its answer (see `search.md`).
+6. A page is asked from the server; the shown cards stay, dimmed, until its answer (see `search.md`). A page that
+   fails to load keeps the shown cards and marks their page again, and a toast says so. (#41)
 7. A new search result opens page 1, and so does a change of the genre filter: the list shows the shows of the
    selected genre (see `genre-filter.md`).
 

@@ -1,9 +1,16 @@
+import type { Favorite } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 import { sendFavoritesRequest } from "@/tasks/favorites/sendFavoritesRequest/sendFavoritesRequest";
 
-// Removes the show from the browser's favorites, and from the store once the server has answered; a show that is not
-// there changes nothing. Rejects as `sendFavoritesRequest` does; the store then stays as it was.
-export const removeFavorite = async (id: number): Promise<void> => {
-    await sendFavoritesRequest<void>({ method: "DELETE", id });
-    useFavoritesStore.getState().removeFavorite(id);
+// Removes the show from the browser's favorites: the store drops it at once, and a failed request puts it back in its
+// place and rejects as `sendFavoritesRequest` does.
+export const removeFavorite = async (favorite: Favorite): Promise<void> => {
+    useFavoritesStore.getState().removeFavorite(favorite.id);
+
+    try {
+        await sendFavoritesRequest<void>({ method: "DELETE", id: favorite.id });
+    } catch (error) {
+        useFavoritesStore.getState().addFavorite(favorite);
+        throw error;
+    }
 };

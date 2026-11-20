@@ -30,7 +30,9 @@ The user finds TV shows by typing a query. TVmaze does the search
    by pages (see `results-list.md`), with the genre chips above them (see `genre-filter.md`).
 7. The × button in the field and the «Clear search» button empty the field and give it the focus back; the results
    screen stays. Deleting the text by hand stays on it too.
-8. When the request fails, the error state offers Retry; Retry sends the current query again.
+8. When the request fails, the error state offers Retry; Retry sends the current query again. Another genre or page
+   of the shown results that fails to load does not show it: the shown results stay with their genre and page, and a
+   toast says «Couldn’t change the genre» or «Couldn’t load page **3**». (#41)
 9. The logo in the header is a button back to the start screen: it resets the query, the results, the genre and the
    page, cancels the request on its way, and plays the change of 2 backwards. Only the logo brings back the start screen; `Esc` and the browser's
    Back do not.
@@ -158,3 +160,7 @@ The user finds TV shows by typing a query. TVmaze does the search
   gone. `goHome` takes the clear as a callback and runs it inside the view transition; the `SearchBar` Presenter
   passes `clearSearch`, so the logo now cancels the request on its way too. This replaces the focus and `goHome`
   part of #42 above. (#43)
+- A genre or a page that fails to load is rolled back, not shown as an error: `selectGenre` and `changePage` call
+  `loadShows({ keepShown: true })`, which on a failure of the current request keeps the shown answer, puts back its
+  genre and page, and rejects; the `SearchResults` Presenter shows the toast. A request a later one cancelled rolls
+  nothing back. A new query and Retry still show the error state. (#41)

@@ -44,17 +44,20 @@ describe("FavoriteToggle", () => {
         expect(fetchMock).toHaveBeenCalledWith("/api/favorites/17861", expect.objectContaining({ method: "DELETE" }));
     });
 
-    it("does nothing on a press while busy, and keeps the focus", () => {
-        const fetchMock = vi.fn(() => new Promise<Response>(() => {}));
-        vi.stubGlobal("fetch", fetchMock);
+    it("changes at once and answers every press, while the request is on its way", () => {
+        vi.stubGlobal(
+            "fetch",
+            vi.fn(() => new Promise<Response>(() => {})),
+        );
         renderToggle();
 
         const toggle = screen.getByRole("button", { name: "Add Dark to favourites", pressed: false });
         fireEvent.click(toggle);
+        expect(toggle).toHaveAttribute("aria-pressed", "true");
         fireEvent.click(toggle);
 
-        expect(fetchMock).toHaveBeenCalledTimes(1);
-        expect(toggle).toHaveAttribute("aria-busy", "true");
+        expect(toggle).toHaveAttribute("aria-pressed", "false");
+        expect(toggle).not.toHaveAttribute("aria-busy");
         expect(toggle).toBeEnabled();
     });
 });

@@ -8,14 +8,13 @@ export type { FavoriteToggleProps } from "./_logic/usePresenter";
 // .fav-toggle of design/library: a round bookmark button, filled in the accent while the show is a favourite. A
 // bookmark, not a star: the star marks the rating.
 export const FavoriteToggle: FC<FavoriteToggleProps> = (props) => {
-    const { pressed, label, busy, variantStyles, handleClick } = usePresenter(props);
+    const { pressed, label, variantStyles, handleClick } = usePresenter(props);
 
     return (
         <chakra.button
             type="button"
             aria-pressed={pressed}
             aria-label={label}
-            aria-busy={busy}
             onClick={handleClick}
             display="grid"
             placeItems="center"

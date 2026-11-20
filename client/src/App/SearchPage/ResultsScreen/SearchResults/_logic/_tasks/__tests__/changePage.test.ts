@@ -11,6 +11,6 @@ describe("changePage", () => {
         await changePage(2);
 
         expect(useSearchStore.getState()).toMatchObject({ genre: "Drama", page: 2 });
-        expect(loadShows).toHaveBeenCalledTimes(1);
+        expect(loadShows).toHaveBeenCalledExactlyOnceWith({ keepShown: true });
     });
 });
