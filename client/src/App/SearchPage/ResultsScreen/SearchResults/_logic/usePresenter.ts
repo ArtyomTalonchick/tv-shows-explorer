@@ -1,4 +1,3 @@
-import { useShallow } from "zustand/react/shallow";
 import { useSearchStore } from "@/stores/useSearchStore";
 import { getSearchStatus } from "./getSearchStatus";
 
@@ -18,14 +17,10 @@ type UsePresenterResult = {
 
 // The results area only chooses which state to show; each state reads the search store itself.
 export const usePresenter = (): UsePresenterResult => {
-    const { value, query, isLoading, answer } = useSearchStore(
-        useShallow((state) => ({
-            value: state.value,
-            query: state.query,
-            isLoading: state.isLoading,
-            answer: state.answer,
-        })),
-    );
+    const value = useSearchStore((state) => state.value);
+    const query = useSearchStore((state) => state.query);
+    const isLoading = useSearchStore((state) => state.isLoading);
+    const answer = useSearchStore((state) => state.answer);
     const status = getSearchStatus(value, answer);
     const hasList = status === "results";
     // Typing has not stopped yet, or the request is on its way.

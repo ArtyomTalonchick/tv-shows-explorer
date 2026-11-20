@@ -1,4 +1,3 @@
-import { useShallow } from "zustand/react/shallow";
 import type { ChipProps } from "@/lib/components/Chip/Chip";
 import { showToast } from "@/lib/toast/showToast";
 import { useSearchStore } from "@/stores/useSearchStore";
@@ -11,9 +10,9 @@ export type GenreFilterChipProps = {
 };
 
 export const usePresenter = ({ genre, count }: GenreFilterChipProps): ChipProps => {
-    const { query, asked, answer } = useSearchStore(
-        useShallow((state) => ({ query: state.query, asked: state.genre, answer: state.answer })),
-    );
+    const query = useSearchStore((state) => state.query);
+    const asked = useSearchStore((state) => state.genre);
+    const answer = useSearchStore((state) => state.answer);
     // Another genre of the shown query is marked as soon as it is asked; while a new query waits and loads, the shown
     // results keep their own.
     const selected = answer?.query === query ? asked : (answer?.data?.genre ?? null);

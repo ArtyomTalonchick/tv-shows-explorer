@@ -1,4 +1,3 @@
-import { useShallow } from "zustand/react/shallow";
 import { RESULTS_GRID_ID } from "@/App/SearchPage/ResultsScreen/SearchResults/ResultsList/constants";
 import type { PaginationProps } from "@/lib/components/Pagination/Pagination";
 import { getPageCount } from "@/lib/pagination/getPageCount";
@@ -14,9 +13,9 @@ type UsePresenterResult = {
 };
 
 export const usePresenter = (): UsePresenterResult => {
-    const { query, page, answer } = useSearchStore(
-        useShallow((state) => ({ query: state.query, page: state.page, answer: state.answer })),
-    );
+    const query = useSearchStore((state) => state.query);
+    const page = useSearchStore((state) => state.page);
+    const answer = useSearchStore((state) => state.answer);
     const data = answer?.data ?? null;
     const total = data?.total ?? 0;
     const perPage = data?.perPage ?? 1;
