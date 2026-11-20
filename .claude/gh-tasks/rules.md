@@ -77,6 +77,15 @@ In `CHANGELOG.md`, put `## X.Y.Z — YYYY-MM-DD` (the release date) right under 
 collected there become this release's section and `## Unreleased` is empty again. The file goes into the
 release commit.
 
+Before the release commit, read `README.md` against the code and bring it up to date; it goes into the release
+commit too. Check each part:
+- **Features** — every feature of `requirements/` and of this release's `CHANGELOG.md` section is there, and none
+  that is gone.
+- **AI Rules** — the plugin version is the one the project is built by now: the installed version of the
+  simple-architecture plugin, not the project's own version. The link points to that tag.
+- **Live**, **Stack**, **Repository layout**, **Scripts** — the addresses, the hosting, the packages, the folders
+  and the commands are the real ones.
+
 ## Release notes
 <!-- release, while writing the GitHub Release notes: format, sections, links -->
 

@@ -1,7 +1,8 @@
 # TV Shows Explorer
 
-A small app to search TV shows with the public [TVmaze API](https://www.tvmaze.com/api): type a query, browse
-the results three per page, and filter them by genre.
+A small app to search TV shows from the public [TVmaze API](https://www.tvmaze.com/api): type a query, browse
+the results three per page, filter them by genre, and keep the shows you like in your favourites. The app has its
+own server: the client never calls TVmaze itself.
 
 **Live:** https://artyomtalonchick.github.io/tv-shows-explorer/ — its server answers at
 https://us-central1-tv-shows-explorer.cloudfunctions.net/server/api (a Cloud Function on Firebase; the favorites are
@@ -12,11 +13,20 @@ are turned into AI rules (see [AI Rules](#ai-rules)).
 
 ## Features
 
-- **Search.** The app starts with an empty list and a search field. The query goes to TVmaze, which does the
-  filtering.
-- **List and pagination.** Results are shown as cards, three per page, with page switching.
-- **Genre filter.** The genres of the current results are shown as chips above the list. A chip keeps only the
-  shows of that genre; the filter can be reset.
+- **Search.** The app starts with an empty list and a search field. The query goes to the app's server, which asks
+  TVmaze.
+- **List and pagination.** Results are shown as cards, three per page, with page switching. The server cuts the
+  pages.
+- **Genre filter.** The genres of the found shows are shown as chips above the list. A chip keeps only the shows of
+  that genre; the filter can be reset. The server does the filtering.
+- **Cache.** The server keeps the answer of TVmaze for 5 minutes: the same search — with any genre or page — is
+  answered without asking TVmaze again.
+- **Favourites.** A bookmark on every show card adds the show to the favourites or removes it. A toast says what
+  was done, with Undo after a removal. The Favourites button on both screens shows how many there are and opens
+  their list. The change shows at once and is undone if the server fails.
+- **A list per browser, no accounts.** All the favourites logic is on the server. The list is kept in a database
+  (Firestore), so it survives a restart of the server.
+- **Installable.** The app has its own icon and can be installed on a phone or a desktop.
 
 What each feature does is described in [`requirements/`](requirements/README.md).
 
@@ -24,12 +34,16 @@ What each feature does is described in [`requirements/`](requirements/README.md)
 
 The architecture rules live in their own repository, a Claude Code plugin:
 [`claude-simple-architecture`](https://github.com/ArtyomTalonchick/claude-simple-architecture).
-Its versions follow the project's: this version uses
-[`v0.2.1`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.2.1).
+This version is built by the rules of
+[`v0.2.7`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.2.7). The client and the server
+both follow them: the same levels, tasks and stores on each side.
 
 In this repository:
 
 - [`CLAUDE.md`](CLAUDE.md) — the project instructions for the agent;
+- [`.claude/simple-architecture/config.json`](.claude/simple-architecture/config.json) — where the plugin finds the
+  client and the server, and the folder names;
+- [`.claude/rules/`](.claude/rules/) — the project's code style and its exceptions from the plugin's rules;
 - [`.claude/gh-tasks/rules.md`](.claude/gh-tasks/rules.md) — how a task is picked, built, checked and released
   (run with the gh-tasks plugin for Claude Code).
 
