@@ -7,13 +7,15 @@ import { ResultsHead } from "./ResultsHead/ResultsHead";
 import { ResultsIdle } from "./ResultsIdle/ResultsIdle";
 import { ResultsList } from "./ResultsList/ResultsList";
 import { ResultsLoading } from "./ResultsLoading/ResultsLoading";
-import { usePresenter } from "./_logic/usePresenter";
+import { usePresenter, type SearchResultsProps } from "./_logic/usePresenter";
+
+export type { SearchResultsProps } from "./_logic/usePresenter";
 
 // The results area: the heading and the genre chips, then the component of the current state. An empty field
 // shows only the idle message. While the shown results wait for the next answer they cannot be pressed, and they
 // dim unless the answer comes within a moment.
-export const SearchResults: FC = () => {
-    const { head, genreFilter, list, isBusy, isIdle, isLoading, empty, error } = usePresenter();
+export const SearchResults: FC<SearchResultsProps> = (props) => {
+    const { head, genreFilter, list, isBusy, isIdle, isLoading, empty, error } = usePresenter(props);
 
     return (
         <Container

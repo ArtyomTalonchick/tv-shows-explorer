@@ -30,6 +30,9 @@ const ALL: ShowsPage = {
     perPage: 3,
 };
 
+// «Clear search», handed down by the results screen.
+const onClear = vi.fn();
+
 const render = (status: SearchStatus, result: ShowsPage | null, search: Partial<SearchView> = {}) => {
     vi.mocked(getSearchView).mockReturnValue({
         status,
@@ -40,7 +43,7 @@ const render = (status: SearchStatus, result: ShowsPage | null, search: Partial<
         isLoading: false,
         ...search,
     });
-    return renderHook(() => usePresenter());
+    return renderHook(() => usePresenter({ onClear }));
 };
 
 describe("SearchResults usePresenter", () => {
@@ -82,7 +85,7 @@ describe("SearchResults usePresenter", () => {
         expect(loading).toMatchObject({ genreFilter: null, list: null, isBusy: false, isLoading: true });
         const empty = render("empty", null).result.current;
         expect(empty.head?.count).toBe("0 shows");
-        expect(empty.empty).toEqual({ query: "dark" });
+        expect(empty.empty).toEqual({ query: "dark", onClear });
         expect(render("error", null).result.current.error).toMatchObject({ onRetry: expect.any(Function) });
     });
 

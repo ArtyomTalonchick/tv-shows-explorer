@@ -1,6 +1,5 @@
 import { withViewTransition } from "@/lib/screen/withViewTransition";
 import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";
-import { useSearchStore } from "@/stores/useSearchStore";
 import { goHome } from "../goHome";
 
 vi.mock("@/lib/screen/withViewTransition", () => ({
@@ -8,14 +7,16 @@ vi.mock("@/lib/screen/withViewTransition", () => ({
 }));
 
 describe("goHome", () => {
-    it("goes back to the hero with a transition, with the field emptied and the search forgotten", async () => {
+    it("goes back to the hero with a transition, clearing the search inside it", async () => {
         useScreenStore.setState({ isStart: false });
-        useSearchStore.setState({ value: "dark", query: "dark", genre: "Drama", page: 2 });
+        const clear = vi.fn(() => {
+            expect(useScreenStore.getState().isStart).toBe(false);
+        });
 
-        await goHome();
+        await goHome(clear);
 
         expect(withViewTransition).toHaveBeenCalledTimes(1);
+        expect(clear).toHaveBeenCalledTimes(1);
         expect(useScreenStore.getState().isStart).toBe(true);
-        expect(useSearchStore.getState()).toMatchObject({ value: "", query: "", genre: null, page: 1, answer: null });
     });
 });

@@ -32,7 +32,7 @@ The user finds TV shows by typing a query. TVmaze does the search
    screen stays. Deleting the text by hand stays on it too.
 8. When the request fails, the error state offers Retry; Retry sends the current query again.
 9. The logo in the header is a button back to the start screen: it resets the query, the results, the genre and the
-   page, and plays the change of 2 backwards. Only the logo brings back the start screen; `Esc` and the browser's
+   page, cancels the request on its way, and plays the change of 2 backwards. Only the logo brings back the start screen; `Esc` and the browser's
    Back do not.
 10. While the shown results wait for an answer — to a new query, another genre or another page — nothing in them
     can be pressed or focused, and after 150 ms they dim to half their opacity (at once with reduced motion), so a
@@ -152,3 +152,9 @@ The user finds TV shows by typing a query. TVmaze does the search
   still decides what the results area shows, now from the store. `useSearchQuery`, `useScreenSwap`,
   `useQueryStore`, `useShowsSearch`, `lib/request/useRequest` and `lib/debounce/useDebouncedValue` are gone. This
   replaces the hooks of #16, #25 and #32 above. (#42)
+- «Clear the search and focus the field» is written once, in the Presenter of `ResultsScreen`, the common parent of
+  both triggers: it owns the field's ref, calls `clearSearch`, focuses the field, and hands the same `clear` to
+  `SearchBar` (the × of the field) and to `SearchResults` (`ResultsEmpty`'s «Clear search»). `SEARCH_FIELD_ID` is
+  gone. `goHome` takes the clear as a callback and runs it inside the view transition; the `SearchBar` Presenter
+  passes `clearSearch`, so the logo now cancels the request on its way too. This replaces the focus and `goHome`
+  part of #42 above. (#43)

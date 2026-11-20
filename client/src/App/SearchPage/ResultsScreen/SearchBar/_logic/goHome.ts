@@ -1,11 +1,11 @@
 import { withViewTransition } from "@/lib/screen/withViewTransition";
 import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";
-import { useSearchStore } from "@/stores/useSearchStore";
 
-// Back to the start hero, animated, with the field emptied and the search forgotten: its genre, page and answer.
-export const goHome = async (): Promise<void> => {
+// Back to the start hero, animated. `clear` empties the field and forgets the search inside the same transition, so
+// the hero comes back with an empty field.
+export const goHome = async (clear: () => void): Promise<void> => {
     await withViewTransition(() => {
-        useSearchStore.getState().clear();
+        clear();
         useScreenStore.getState().setIsStart(true);
     });
 };

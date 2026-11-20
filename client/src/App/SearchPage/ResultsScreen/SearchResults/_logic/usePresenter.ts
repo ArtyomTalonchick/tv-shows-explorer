@@ -10,6 +10,8 @@ import { changePage } from "./_tasks/changePage";
 import { selectGenre } from "./_tasks/selectGenre";
 import { getSearchView } from "./getSearchView";
 
+export type SearchResultsProps = Pick<ResultsEmptyProps, "onClear">;
+
 type UsePresenterResult = {
     // «Shows for “dark”» with «9 shows», or «4 of 9 shows · Drama» for a genre; hidden with an empty field.
     head: ResultsHeadProps | null;
@@ -24,7 +26,7 @@ type UsePresenterResult = {
     error: ResultsErrorProps | null;
 };
 
-export const usePresenter = (): UsePresenterResult => {
+export const usePresenter = ({ onClear }: SearchResultsProps): UsePresenterResult => {
     const asked = useSearchStore(
         useShallow((state) => ({
             value: state.value,
@@ -78,7 +80,7 @@ export const usePresenter = (): UsePresenterResult => {
         isBusy: shown !== null && isLoading,
         isIdle: status === "idle",
         isLoading: status === "loading",
-        empty: status === "empty" ? { query } : null,
+        empty: status === "empty" ? { query, onClear } : null,
         error: status === "error" ? { onRetry: handleRetry } : null,
     };
 };
