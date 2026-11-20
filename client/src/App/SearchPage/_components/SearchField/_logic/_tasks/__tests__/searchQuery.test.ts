@@ -24,11 +24,27 @@ describe("searchQuery", () => {
         ["an empty field", "  ", ""],
         ["the query already searched for", "dark ", "dark"],
     ])("asks nothing for %s", async (_, value, query) => {
-        useSearchStore.setState({ value, query, genre: "Drama" });
+        useSearchStore.setState({ value, query, genre: "Drama", answer: { query, data: null, failed: true } });
 
         await searchQuery();
 
         expect(useSearchStore.getState()).toMatchObject({ query, genre: "Drama" });
+        expect(loadShows).not.toHaveBeenCalled();
+    });
+
+    it("asks again for the query already searched for when its answer was dropped while typing", async () => {
+        useSearchStore.setState({ value: "dark", query: "dark", answer: null, isLoading: false });
+
+        await searchQuery();
+
+        expect(loadShows).toHaveBeenCalledTimes(1);
+    });
+
+    it("asks nothing for the query already on its way", async () => {
+        useSearchStore.setState({ value: "dark", query: "dark", answer: null, isLoading: true });
+
+        await searchQuery();
+
         expect(loadShows).not.toHaveBeenCalled();
     });
 });

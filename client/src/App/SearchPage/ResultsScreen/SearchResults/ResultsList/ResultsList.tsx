@@ -2,13 +2,11 @@ import { Box } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Pagination } from "@/lib/components/Pagination/Pagination";
 import { ShowCard } from "./ShowCard/ShowCard";
-import { usePresenter, type ResultsListProps } from "./_logic/usePresenter";
-
-export type { ResultsListProps } from "./_logic/usePresenter";
+import { usePresenter } from "./_logic/usePresenter";
 
 // Results: one page of show cards, three in a row (one column of rows on mobile), and the pages below.
-export const ResultsList: FC<ResultsListProps> = (props) => {
-    const { gridRef, cards, pagination } = usePresenter(props);
+export const ResultsList: FC = () => {
+    const { gridRef, shows, pagination } = usePresenter();
 
     return (
         <Box>
@@ -21,9 +19,9 @@ export const ResultsList: FC<ResultsListProps> = (props) => {
                 gap="8"
                 mb="12"
             >
-                {cards.map((card) => (
-                    <li key={card.id}>
-                        <ShowCard {...card.props} />
+                {shows.map((show) => (
+                    <li key={show.id}>
+                        <ShowCard show={show} />
                     </li>
                 ))}
             </Box>

@@ -2,13 +2,12 @@ import { Box, Button } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { StateMessage } from "@/lib/components/StateMessage/StateMessage";
-
-export type ResultsErrorProps = {
-    onRetry: () => void;
-};
+import { usePresenter } from "./_logic/usePresenter";
 
 // Error: the request failed; Retry sends the current query again.
-export const ResultsError: FC<ResultsErrorProps> = ({ onRetry }) => {
+export const ResultsError: FC = () => {
+    const { onRetry } = usePresenter();
+
     return (
         <Box flex="1" display="grid" mt="4">
             <StateMessage

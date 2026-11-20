@@ -3,15 +3,13 @@ import type { FC } from "react";
 import { SearchField } from "@/App/SearchPage/_components/SearchField/SearchField";
 import { FavoritesOpener } from "@/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
 import { Logo } from "@/App/SearchPage/_components/Logo/Logo";
-import { usePresenter, type SearchBarProps } from "./_logic/usePresenter";
-
-export type { SearchBarProps } from "./_logic/usePresenter";
+import { usePresenter } from "./_logic/usePresenter";
 
 // The compact header of the results screen. Its field takes over the focus from the hero's field, and the view
 // transition moves the field and the logo here from the hero. The logo leads back to the hero; the favourites
 // button is at the end. On a phone the logo and the button share the first row, and the field takes the second.
-export const SearchBar: FC<SearchBarProps> = (props) => {
-    const { fieldRef, onClear, caretColor, onHome } = usePresenter(props);
+export const SearchBar: FC = () => {
+    const { onHome } = usePresenter();
 
     return (
         <Box
@@ -51,14 +49,7 @@ export const SearchBar: FC<SearchBarProps> = (props) => {
                     minW={{ base: "full", md: "0" }}
                     order={{ base: "3", md: "0" }}
                 >
-                    <SearchField
-                        ref={fieldRef}
-                        size="sm"
-                        onClear={onClear}
-                        caretColor={caretColor}
-                        autoFocus
-                        viewTransitionName="search-field"
-                    />
+                    <SearchField size="sm" clearable autoFocus viewTransitionName="search-field" />
                 </Box>
                 <Box ml={{ base: "auto", md: "0" }}>
                     <FavoritesOpener />

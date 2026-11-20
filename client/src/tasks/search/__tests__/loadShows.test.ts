@@ -44,6 +44,7 @@ describe("loadShows", () => {
         expect(searchShows).toHaveBeenCalledWith({ query: "dark", genre: "Drama", page: 2 }, expect.any(AbortSignal));
         expect(useSearchStore.getState()).toMatchObject({
             request: null,
+            isLoading: false,
             answer: { query: "dark", data: pageOf(4), failed: false },
         });
     });
@@ -64,6 +65,7 @@ describe("loadShows", () => {
         useSearchStore.setState({ answer: found });
         void loadShows();
         expect(useSearchStore.getState().answer).toBe(found);
+        expect(useSearchStore.getState().isLoading).toBe(true);
 
         useSearchStore.setState({ answer: { query: "dar", data: pageOf(0), failed: false } });
         void loadShows();

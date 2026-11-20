@@ -1,17 +1,15 @@
 import { Box, chakra } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
+import { usePresenter, type CardPosterProps } from "./_logic/usePresenter";
 
-export type CardPosterProps = {
-    imageSrc: string | undefined;
-    imageAlt: string;
-    hasImage: boolean;
-    ratingLabel: string | null;
-};
+export type { CardPosterProps } from "./_logic/usePresenter";
 
 // The poster of a show card with the rating on it, or «No poster» in its place. It grows a little on the card's
 // hover.
-export const CardPoster: FC<CardPosterProps> = ({ imageSrc, imageAlt, hasImage, ratingLabel }) => {
+export const CardPoster: FC<CardPosterProps> = (props) => {
+    const { imageSrc, imageAlt, hasImage, ratingLabel } = usePresenter(props);
+
     return (
         <Box
             position="relative"

@@ -1,13 +1,11 @@
 import { Box, chakra, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
-
-export type ResultsHeadProps = {
-    query: string;
-    count: string | null;
-};
+import { usePresenter } from "./_logic/usePresenter";
 
 // «Results / Shows for “dark”» and the count on the right.
-export const ResultsHead: FC<ResultsHeadProps> = ({ query, count }) => {
+export const ResultsHead: FC = () => {
+    const { query, count } = usePresenter();
+
     return (
         <Box
             display="flex"

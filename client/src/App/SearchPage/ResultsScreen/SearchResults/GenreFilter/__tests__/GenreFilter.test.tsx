@@ -1,50 +1,81 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { ShowsPage } from "@tv-shows-explorer/shared";
 import { system } from "@/lib/theme/system";
+import { showToast } from "@/lib/toast/showToast";
+import { useSearchStore } from "@/stores/useSearchStore";
+import { clearSearch } from "@/tasks/search/clearSearch";
 import { GenreFilter } from "../GenreFilter";
+import { selectGenre } from "../_logic/_tasks/selectGenre";
 
-const GENRES = [
-    { genre: "Drama", count: 3 },
-    { genre: "Crime", count: 1 },
-];
+vi.mock("../_logic/_tasks/selectGenre", () => ({ selectGenre: vi.fn(async () => {}) }));
+vi.mock("@/lib/toast/showToast", () => ({ showToast: vi.fn() }));
 
-const renderFilter = (selected: string | null, onSelect = vi.fn()) => {
-    render(
-        <ChakraProvider value={system}>
-            <GenreFilter genres={GENRES} total={4} selected={selected} onSelect={onSelect} />
-        </ChakraProvider>,
-    );
-    return onSelect;
+const PAGE: ShowsPage = {
+    shows: [],
+    genres: [
+        { genre: "Drama", count: 3 },
+        { genre: "Crime", count: 1 },
+    ],
+    found: 4,
+    genre: null,
+    total: 4,
+    page: 1,
+    perPage: 3,
 };
 
+const renderFilter = (genre: string | null, query = "dark"): void => {
+    useSearchStore.setState({ value: query, query, genre, answer: { query: "dark", data: PAGE, failed: false } });
+    render(
+        <ChakraProvider value={system}>
+            <GenreFilter />
+        </ChakraProvider>,
+    );
+};
+
+const isPressed = (name: string): string | null => screen.getByRole("button", { name }).getAttribute("aria-pressed");
+
 describe("GenreFilter", () => {
-    it("shows «All» first, then the genres, each with its count", () => {
+    beforeEach(() => {
+        clearSearch();
+        vi.mocked(selectGenre).mockClear();
+    });
+
+    it("shows «All» first, then the genres of the shown answer, each with its count", () => {
         renderFilter(null);
 
         expect(screen.getAllByRole("button").map((button) => button.textContent)).toEqual(["All4", "Drama3", "Crime1"]);
         expect(screen.getByRole("group", { name: "Genre" })).toBeInTheDocument();
     });
 
-    it("marks «All» as pressed with no genre selected", () => {
-        renderFilter(null);
-
-        expect(screen.getByRole("button", { name: "All 4" })).toHaveAttribute("aria-pressed", "true");
-        expect(screen.getByRole("button", { name: "Drama 3" })).toHaveAttribute("aria-pressed", "false");
-    });
-
-    it("marks the selected genre as pressed", () => {
+    it("marks «All» with no genre selected, and the asked genre at once", () => {
         renderFilter("Drama");
 
-        expect(screen.getByRole("button", { name: "Drama 3" })).toHaveAttribute("aria-pressed", "true");
-        expect(screen.getByRole("button", { name: "All 4" })).toHaveAttribute("aria-pressed", "false");
+        expect(isPressed("Drama 3")).toBe("true");
+        expect(isPressed("All 4")).toBe("false");
+    });
+
+    it("keeps the genre of the shown answer marked while a new query waits and loads", () => {
+        renderFilter("Drama", "dark s");
+
+        expect(isPressed("All 4")).toBe("true");
     });
 
     it("asks for a genre and for all the shows", () => {
-        const onSelect = renderFilter("Drama");
+        renderFilter("Drama");
 
         fireEvent.click(screen.getByRole("button", { name: "Crime 1" }));
         fireEvent.click(screen.getByRole("button", { name: "All 4" }));
 
-        expect(onSelect.mock.calls).toEqual([["Crime"], [null]]);
+        expect(vi.mocked(selectGenre).mock.calls).toEqual([["Crime"], [null]]);
+    });
+
+    it("says so in a toast when the genre fails to load", async () => {
+        vi.mocked(selectGenre).mockRejectedValueOnce(new Error("502"));
+        renderFilter(null);
+
+        fireEvent.click(screen.getByRole("button", { name: "Crime 1" }));
+
+        await waitFor(() => expect(showToast).toHaveBeenCalledWith(expect.objectContaining({ urgent: true })));
     });
 });

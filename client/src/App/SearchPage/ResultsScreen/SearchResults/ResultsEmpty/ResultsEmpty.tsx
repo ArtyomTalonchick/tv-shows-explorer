@@ -1,15 +1,12 @@
 import { Box, Button } from "@chakra-ui/react";
 import type { FC } from "react";
 import { StateMessage } from "@/lib/components/StateMessage/StateMessage";
-
-export type ResultsEmptyProps = {
-    query: string;
-    // «Clear search»: empties the field and gives it the focus back, as the × button does.
-    onClear: () => void;
-};
+import { usePresenter } from "./_logic/usePresenter";
 
 // No results: TVmaze found nothing for the query.
-export const ResultsEmpty: FC<ResultsEmptyProps> = ({ query, onClear }) => {
+export const ResultsEmpty: FC = () => {
+    const { query, onClear } = usePresenter();
+
     return (
         <Box flex="1" display="grid" mt="4">
             <StateMessage

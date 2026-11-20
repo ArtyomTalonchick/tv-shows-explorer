@@ -17,23 +17,28 @@ export const loadShows = async ({ keepShown = false }: LoadShowsOptions = {}): P
 
     const controller = new AbortController();
     const kept = answer !== null && answer.data !== null && answer.data.found > 0 ? answer : null;
-    useSearchStore.setState({ request: controller, answer: kept });
+    useSearchStore.setState({ request: controller, isLoading: true, answer: kept });
 
     const isCurrent = (): boolean => useSearchStore.getState().request === controller;
 
     try {
         const data = await searchShows({ query, genre, page }, controller.signal);
         if (isCurrent()) {
-            useSearchStore.setState({ request: null, answer: { query, data, failed: false } });
+            useSearchStore.setState({ request: null, isLoading: false, answer: { query, data, failed: false } });
         }
     } catch (error) {
         if (!isCurrent()) {
             return;
         }
         if (keepShown && kept?.data) {
-            useSearchStore.setState({ request: null, genre: kept.data.genre, page: kept.data.page });
+            useSearchStore.setState({
+                request: null,
+                isLoading: false,
+                genre: kept.data.genre,
+                page: kept.data.page,
+            });
             throw error;
         }
-        useSearchStore.setState({ request: null, answer: { query, data: null, failed: true } });
+        useSearchStore.setState({ request: null, isLoading: false, answer: { query, data: null, failed: true } });
     }
 };

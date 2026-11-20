@@ -164,3 +164,14 @@ The user finds TV shows by typing a query. TVmaze does the search
   `loadShows({ keepShown: true })`, which on a failure of the current request keeps the shown answer, puts back its
   genre and page, and rejects; the `SearchResults` Presenter shows the toast. A request a later one cancelled rolls
   nothing back. A new query and Retry still show the error state. (#41)
+- Each part of the results reads the search store and calls its task itself; nothing is passed down only for a
+  child, as #32 decided. `SearchResults` only chooses the state; the heading, the genre chips, the list, «Nothing
+  found» and the error read what they show, and the chips and the pages call `selectGenre` and `changePage` and show
+  their own toast. A card gets its show, a favourites row its favorite. The store keeps what the screen reads:
+  `answer` is the answer on screen — `changeQuery` drops an empty or failed one as soon as another query is typed,
+  and `searchQuery` asks again for the same query whose answer it dropped — and `isLoading` is written by
+  `loadShows`, so no Presenter reads the request. `getSearchView` is gone. The chips and the pages mark the asked
+  genre and page while the shown answer is of the asked query, and the answer's own while a new query waits and
+  loads. The × of the field clears and focuses it through its own ref; «Clear search» focuses it by
+  `SEARCH_FIELD_ID`, which `SearchField` sets: one id instead of a ref passed through three units. This replaces the
+  `ResultsScreen` clear of #43 and the `SearchResults` toast of #41. (#46)
