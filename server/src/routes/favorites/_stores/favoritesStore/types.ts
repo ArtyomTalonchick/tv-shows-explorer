@@ -5,7 +5,8 @@ import type { Favorite } from "@tv-shows-explorer/shared";
 export type FavoritesStore = {
     // The favorites of one browser, in no particular order; none for a browser without a list.
     list: (clientId: string) => Promise<Favorite[]>;
-    has: (clientId: string, id: number) => Promise<boolean>;
+    // The favorite with this id; null when it is not there.
+    get: (clientId: string, id: number) => Promise<Favorite | null>;
     // Adds the favorite, or replaces the one with its id.
     put: (clientId: string, favorite: Favorite) => Promise<void>;
     // A show that is not there changes nothing.

@@ -1,12 +1,12 @@
 import type { Handler } from "hono";
 import { HttpError } from "@/lib/errors/HttpError";
 import type { FavoriteEnv } from "@/routes/favorites/types";
-import { listFavorites } from "@/tasks/favorites/listFavorites";
 import { parseAddedAt } from "./_logic/parseAddedAt";
 import { addFavorite } from "./_logic/_tasks/addFavorite/addFavorite";
 
-// `PUT /api/favorites/:id` with an optional `AddFavoriteBody`: adds the show and answers the list; a show already
-// there changes nothing. 404 when TVmaze has no such show, 502 when it does not answer.
+// `PUT /api/favorites/:id` with an optional `AddFavoriteBody`: adds the show and answers it (`Favorite`); a show
+// already there changes nothing and is answered as it is. 404 when TVmaze has no such show, 502 when it does not
+// answer.
 export const putFavoritesById: Handler<FavoriteEnv, "/:id"> = async (context) => {
     const { clientId, showId } = context.var;
     const addedAt = parseAddedAt(await context.req.text(), Date.now());
@@ -15,12 +15,11 @@ export const putFavoritesById: Handler<FavoriteEnv, "/:id"> = async (context) =>
     }
 
     try {
-        await addFavorite(clientId, showId, addedAt, context.req.raw.signal);
+        return context.json(await addFavorite(clientId, showId, addedAt, context.req.raw.signal));
     } catch (error) {
         if (error instanceof HttpError && error.status === 404) {
             return context.json({ error: "TVmaze has no such show" }, 404);
         }
         return context.json({ error: "TVmaze did not answer" }, 502);
     }
-    return context.json(await listFavorites(clientId));
 };

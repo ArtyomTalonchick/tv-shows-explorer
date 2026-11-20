@@ -28,8 +28,8 @@ describe("createMemoryStore", () => {
         await store.put("c2", favorite(2));
 
         expect(await store.list("c1")).toEqual([favorite(1)]);
-        expect(await store.has("c1", 2)).toBe(false);
-        expect(await store.has("c2", 2)).toBe(true);
+        expect(await store.get("c1", 2)).toBeNull();
+        expect(await store.get("c2", 2)).toEqual(favorite(2));
         expect(await store.list("c3")).toEqual([]);
     });
 

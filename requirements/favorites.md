@@ -11,12 +11,15 @@ All the favorites logic is on the server; the client shows the list and sends th
 1. Each browser has its own list. On its first start the client makes a client id (`crypto.randomUUID()`), keeps it,
    and sends it in the `X-Client-Id` header of every `/api/favorites` request. There are no accounts.
 2. `GET /api/favorites` answers the browser's list (`Favorite[]`), the newest first.
-3. `PUT /api/favorites/:id` adds the show with this TVmaze id and answers the list. The server takes the show from
+3. `PUT /api/favorites/:id` adds the show with this TVmaze id and answers that one `Favorite`; a show already there
+   is answered as it is. (#40) The server takes the show from
    the answers of the searches it keeps (`search.md`); a show it has not seen is asked of TVmaze
    (`GET https://api.tvmaze.com/shows/:id`).
 4. A favorite keeps what the list shows — id, name, genres, years, poster, the TVmaze link — and the time it was
    added, so the list needs no TVmaze request.
-5. `DELETE /api/favorites/:id` removes the show and answers the list.
+5. `DELETE /api/favorites/:id` removes the show and answers `204 No Content`. `GET` is the only request that answers
+   the whole list; after a change the client puts the answered favorite in its place by `addedAt`, or removes the
+   show by id. (#40)
 6. Undo of a removal sends `PUT /api/favorites/:id` with the `addedAt` of the removed favorite
    (`{ "addedAt": 1763300000000 }`): the show comes back to its old place in the list. Without a body the show is
    added now, at the top.
@@ -42,8 +45,8 @@ What the user sees (`design/v0.2/`): (#28)
 
 | State | What the server answers |
 |---|---|
-| No favorites | `GET` answers `[]` |
-| Favorites | `GET`, `PUT` and `DELETE` answer the browser's whole list, the newest first |
+| No favorites | `GET` answers `[]`; `DELETE` still answers 204 |
+| Favorites | `GET` answers the browser's whole list, the newest first; `PUT` the one `Favorite`; `DELETE` 204 (#40) |
 | No `X-Client-Id`, or not a UUID | 400, nothing changes |
 | A wrong id (not a whole number from 1) or body | 400, nothing changes |
 | TVmaze has no show with the id | 404, nothing changes |
@@ -86,12 +89,12 @@ What the user sees (`design/v0.2/`): (#28)
   and no accounts yet. A header, not a cookie: the client and the server live on different hosts, where browsers
   block third-party cookies. (#27)
 - Code and files say «favorite», the American spelling, as it is shorter to write. (#27)
-- The bookmark changes when the server answers, not at once: the server answers the whole list, so the bookmarks,
+- The bookmark changes when the server answers, not at once: the store changes by the answer, so the bookmarks,
   the counter and the drawer always show one list, and a failed request has nothing to roll back. A change of the
   in-memory list takes a moment, and by the first press the server is awake: the app has loaded the list on
   start. (#28)
-- A failed load of the list says so in a toast with Retry, and the bookmarks still work meanwhile: each change is
-  answered with the whole list. (#28)
+- A failed load of the list says so in a toast with Retry, and the bookmarks still work meanwhile. Until Retry the
+  counter and the drawer show only the changes of this session: a change answers only what it changed. (#28, #40)
 - A bookmark, not the star the issue named: the star marks the rating (`design/v0.2/`). (#28)
 - The favorites are kept in Firestore, not in the server's memory, a file or a local SQLite: the host may restart
   the server and wipe its disk at any time. Firestore because the server runs on Firebase (#29): no other account,
@@ -103,3 +106,6 @@ What the user sees (`design/v0.2/`): (#28)
   and the tests need no setup. (#34)
 - A toast stays pressable over the open drawer, so Undo of a removal from the drawer works there; keyboard focus
   stays in the drawer, so Undo is not reached by Tab while it is open. (#28)
+- A change answers only what it changed: `PUT` the one `Favorite`, `DELETE` `204 No Content` (the standard answer
+  for a success with no body, not a bare `200`). The server does not read the list again after a change, and the
+  answer does not grow with the list; the client keeps its list in order itself. (#40)

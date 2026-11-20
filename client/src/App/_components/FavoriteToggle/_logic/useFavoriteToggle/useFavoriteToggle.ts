@@ -1,6 +1,6 @@
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
 import { useState } from "react";
-import { useFavoritesStore } from "@/stores/useFavoritesStore";
+import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 import { addFavorite } from "../_tasks/addFavorite";
 import { removeFavorite } from "../_tasks/removeFavorite";
 import { showFavoriteToast } from "./showFavoriteToast";
@@ -18,7 +18,7 @@ export type UseFavoriteToggleResult = {
     toggle: () => void;
 };
 
-// The bookmark of one show. It changes when the server answers, not before: the server answers the whole list, so the
+// The bookmark of one show. It changes when the server answers, not before: the store changes by the answer, so the
 // bookmarks, the counter and the list always show the same list, and a failed request leaves them as they were.
 export const useFavoriteToggle = (show: FavoriteShow): UseFavoriteToggleResult => {
     const saved = useFavoritesStore((state) => state.favorites.find((favorite) => favorite.id === show.id) ?? null);

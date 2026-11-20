@@ -13,7 +13,7 @@ vi.mock("firebase-admin/app", () => {
 vi.mock("firebase-admin/firestore", () => {
     const doc = (path: string) => ({
         collection: (name: string) => collection(`${path}/${name}`),
-        get: async () => ({ exists: documents.has(path) }),
+        get: async () => ({ exists: documents.has(path), data: () => documents.get(path) }),
         set: async (data: unknown) => documents.set(path, data),
         delete: async () => documents.delete(path),
     });
@@ -70,8 +70,8 @@ describe("createFirestoreStore", () => {
         await store.remove("c1", 5);
 
         expect(await store.list("c1")).toEqual([favorite(2)]);
-        expect(await store.has("c1", 2)).toBe(true);
-        expect(await store.has("c1", 3)).toBe(false);
+        expect(await store.get("c1", 2)).toEqual(favorite(2));
+        expect(await store.get("c1", 3)).toBeNull();
         expect(await store.list("c3")).toEqual([]);
     });
 

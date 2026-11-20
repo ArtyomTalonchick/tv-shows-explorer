@@ -27,6 +27,12 @@ describe("fetchJson", () => {
         expect(fetchMock).toHaveBeenCalledWith("https://example.com/items/1", init);
     });
 
+    it("resolves undefined to a 204 answer, which has no body", async () => {
+        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 204 })));
+
+        await expect(fetchJson<void>("https://example.com/items/1", { method: "DELETE" })).resolves.toBeUndefined();
+    });
+
     it("rejects on a non-2xx answer", async () => {
         vi.stubGlobal("fetch", respond({ message: "busy" }, 503));
 

@@ -3,8 +3,8 @@ import { showToast } from "@/lib/toast/showToast";
 import { loadFavorites } from "./_tasks/loadFavorites";
 
 // The app loads the favorites once, on start: the counters of both screens, the bookmarks and the list show them. A
-// failure says so in a toast with Retry; until then the counter shows 0, and a press on a bookmark still works: the
-// server answers it with the whole list.
+// failure says so in a toast with Retry; until then the counter and the list show only the changes made since, and a
+// press on a bookmark still works.
 export const usePresenter = (): void => {
     useEffect(() => {
         const controller = new AbortController();

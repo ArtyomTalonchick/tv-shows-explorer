@@ -1,7 +1,6 @@
-import type { AddFavoriteBody, Favorite } from "@tv-shows-explorer/shared";
+import type { AddFavoriteBody } from "@tv-shows-explorer/shared";
 import { fetchJson } from "@/lib/http/fetchJson";
 import { API_URL } from "@/tasks/constants";
-import { useFavoritesStore } from "@/stores/useFavoritesStore";
 import { getClientId } from "./getClientId";
 
 type FavoritesRequest = {
@@ -12,20 +11,20 @@ type FavoritesRequest = {
     signal?: AbortSignal;
 };
 
-// Sends a request of `/api/favorites` as this browser and keeps the list the server answers, which is the whole list
-// after any change. Rejects on a network error or a non-2xx answer, and the store stays as it was.
-export const sendFavoritesRequest = async ({ method, id, body, signal }: FavoritesRequest): Promise<void> => {
+// Sends a request of `/api/favorites` as this browser and returns the answer: the whole list (`Favorite[]`) to `GET`,
+// the added `Favorite` to `PUT`, nothing to `DELETE`. The caller keeps it. Rejects on a network error or a non-2xx
+// answer.
+export const sendFavoritesRequest = async <T>({ method, id, body, signal }: FavoritesRequest): Promise<T> => {
     const url = id === undefined ? `${API_URL}/favorites` : `${API_URL}/favorites/${id}`;
     const headers: Record<string, string> = { "X-Client-Id": getClientId() };
     if (body !== undefined) {
         headers["Content-Type"] = "application/json";
     }
 
-    const favorites = await fetchJson<Favorite[]>(url, {
+    return await fetchJson<T>(url, {
         method,
         headers,
         body: body === undefined ? undefined : JSON.stringify(body),
         signal,
     });
-    useFavoritesStore.getState().setFavorites(favorites);
 };

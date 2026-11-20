@@ -18,8 +18,8 @@ export const createMemoryStore = (): FavoritesStore => {
         list: async (clientId) => {
             return [...(clients.get(clientId)?.values() ?? [])];
         },
-        has: async (clientId, id) => {
-            return clients.get(clientId)?.has(id) ?? false;
+        get: async (clientId, id) => {
+            return clients.get(clientId)?.get(id) ?? null;
         },
         put: async (clientId, favorite) => {
             const favorites = clients.get(clientId) ?? new Map<number, Favorite>();

@@ -1,5 +1,4 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { useFavoritesStore } from "@/stores/useFavoritesStore";
 import { getClientId } from "../getClientId";
 import { sendFavoritesRequest } from "../sendFavoritesRequest";
 
@@ -33,35 +32,33 @@ describe("getClientId", () => {
 describe("sendFavoritesRequest", () => {
     beforeEach(() => {
         localStorage.clear();
-        useFavoritesStore.setState({ favorites: [] });
     });
 
     afterEach(() => {
         vi.unstubAllGlobals();
     });
 
-    it("asks for the list as this browser and keeps the answer", async () => {
+    it("asks for the list as this browser and returns the answer", async () => {
         const fetchMock = respond([DARK]);
         vi.stubGlobal("fetch", fetchMock);
         const { signal } = new AbortController();
 
-        await sendFavoritesRequest({ method: "GET", signal });
-
+        await expect(sendFavoritesRequest({ method: "GET", signal })).resolves.toEqual([DARK]);
         expect(fetchMock).toHaveBeenCalledWith("/api/favorites", {
             method: "GET",
             headers: { "X-Client-Id": getClientId() },
             body: undefined,
             signal,
         });
-        expect(useFavoritesStore.getState().favorites).toEqual([DARK]);
     });
 
     it("sends the show's id and a JSON body", async () => {
-        const fetchMock = respond([DARK]);
+        const fetchMock = respond(DARK);
         vi.stubGlobal("fetch", fetchMock);
 
-        await sendFavoritesRequest({ method: "PUT", id: 17861, body: { addedAt: DARK.addedAt } });
-
+        await expect(
+            sendFavoritesRequest({ method: "PUT", id: 17861, body: { addedAt: DARK.addedAt } }),
+        ).resolves.toEqual(DARK);
         expect(fetchMock).toHaveBeenCalledWith("/api/favorites/17861", {
             method: "PUT",
             headers: { "X-Client-Id": getClientId(), "Content-Type": "application/json" },
@@ -70,11 +67,9 @@ describe("sendFavoritesRequest", () => {
         });
     });
 
-    it("leaves the list as it was when the server fails", async () => {
-        useFavoritesStore.setState({ favorites: [DARK] });
+    it("rejects when the server fails", async () => {
         vi.stubGlobal("fetch", respond({ error: "TVmaze did not answer" }, 502));
 
         await expect(sendFavoritesRequest({ method: "DELETE", id: 17861 })).rejects.toThrow();
-        expect(useFavoritesStore.getState().favorites).toEqual([DARK]);
     });
 });

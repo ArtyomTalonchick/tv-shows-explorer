@@ -1,5 +1,5 @@
 import type { Show } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/stores/favoritesStore/favoritesStore";
+import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
 import { searchCache } from "@/routes/_stores/searchCache";
 import { addFavorite } from "../addFavorite";
 
@@ -44,21 +44,20 @@ describe("addFavorite", () => {
         vi.stubGlobal("fetch", fetchMock);
         searchCache.set("dark", { shows: [show(1), show(2)], savedAt: 0 });
 
-        await addFavorite(CLIENT, 2, 100, signal);
+        const added = await addFavorite(CLIENT, 2, 100, signal);
 
         expect(fetchMock).not.toHaveBeenCalled();
-        expect(await stored()).toEqual([
-            {
-                id: 2,
-                name: "Show 2",
-                genres: ["Drama"],
-                premiered: "2017-12-01",
-                ended: null,
-                image: "2.jpg",
-                url: "https://www.tvmaze.com/shows/2",
-                addedAt: 100,
-            },
-        ]);
+        expect(await stored()).toEqual([added]);
+        expect(added).toEqual({
+            id: 2,
+            name: "Show 2",
+            genres: ["Drama"],
+            premiered: "2017-12-01",
+            ended: null,
+            image: "2.jpg",
+            url: "https://www.tvmaze.com/shows/2",
+            addedAt: 100,
+        });
     });
 
     it("asks TVmaze for a show the cache does not hold", async () => {
@@ -78,15 +77,16 @@ describe("addFavorite", () => {
         expect(await stored()).toEqual([]);
     });
 
-    it("changes nothing and asks nothing when the show is already there", async () => {
+    it("changes nothing, asks nothing and returns the saved favorite when the show is already there", async () => {
         vi.stubGlobal("fetch", respond(tvmazeShow(7)));
         await addFavorite(CLIENT, 7, 100, signal);
         const fetchMock = vi.fn();
         vi.stubGlobal("fetch", fetchMock);
 
-        await addFavorite(CLIENT, 7, 200, signal);
+        const again = await addFavorite(CLIENT, 7, 200, signal);
 
         expect(fetchMock).not.toHaveBeenCalled();
+        expect(again).toMatchObject({ id: 7, addedAt: 100 });
         expect(await stored()).toMatchObject([{ id: 7, addedAt: 100 }]);
     });
 

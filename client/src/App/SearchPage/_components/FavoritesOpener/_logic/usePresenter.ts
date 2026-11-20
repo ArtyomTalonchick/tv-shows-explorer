@@ -1,6 +1,6 @@
 import type { HTMLChakraProps } from "@chakra-ui/react";
 import { useFavoritesDrawerStore } from "@/App/_stores/useFavoritesDrawerStore";
-import { useFavoritesStore } from "@/stores/useFavoritesStore";
+import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 
 const COUNT_STYLES = {
     zero: { bg: "bg.muted", color: "fg.muted" },

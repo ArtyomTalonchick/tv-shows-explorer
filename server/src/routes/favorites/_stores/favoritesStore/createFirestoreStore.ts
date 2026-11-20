@@ -20,9 +20,9 @@ export const createFirestoreStore = (): FavoritesStore => {
             const snapshot = await favoritesOf(clientId).get();
             return snapshot.docs.map((doc) => doc.data() as Favorite);
         },
-        has: async (clientId, id) => {
+        get: async (clientId, id) => {
             const snapshot = await favoritesOf(clientId).doc(String(id)).get();
-            return snapshot.exists;
+            return snapshot.exists ? (snapshot.data() as Favorite) : null;
         },
         put: async (clientId, favorite) => {
             await favoritesOf(clientId).doc(String(favorite.id)).set(favorite);

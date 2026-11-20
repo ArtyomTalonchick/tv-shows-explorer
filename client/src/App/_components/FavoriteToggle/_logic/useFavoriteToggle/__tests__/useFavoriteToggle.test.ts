@@ -1,7 +1,7 @@
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { Favorite } from "@tv-shows-explorer/shared";
 import { toaster } from "@/lib/toast/toaster";
-import { useFavoritesStore } from "@/stores/useFavoritesStore";
+import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 import { useFavoriteToggle } from "../useFavoriteToggle";
 
 const DARK: Favorite = {
@@ -33,7 +33,7 @@ describe("useFavoriteToggle", () => {
     });
 
     it("adds a show when the server answers, and says so", async () => {
-        vi.stubGlobal("fetch", respond([DARK]));
+        vi.stubGlobal("fetch", respond(DARK));
         const { result } = renderHook(() => useFavoriteToggle(DARK));
 
         expect(result.current).toMatchObject({ pressed: false, label: "Add Dark to favourites" });
@@ -48,7 +48,7 @@ describe("useFavoriteToggle", () => {
 
     it("removes a show and puts it back in its old place on Undo", async () => {
         useFavoritesStore.setState({ favorites: [DARK] });
-        const fetchMock = respond([]);
+        const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
         vi.stubGlobal("fetch", fetchMock);
         const { result } = renderHook(() => useFavoriteToggle(DARK));
 
@@ -61,7 +61,7 @@ describe("useFavoriteToggle", () => {
         );
         expect(lastToast()).toMatchObject({ meta: { icon: "bookmark", tone: "muted" }, action: { label: "Undo" } });
 
-        fetchMock.mockResolvedValue(new Response(JSON.stringify([DARK])));
+        fetchMock.mockResolvedValue(new Response(JSON.stringify(DARK)));
         act(() => lastToast()?.action?.onClick());
 
         await waitFor(() => expect(result.current.pressed).toBe(true));

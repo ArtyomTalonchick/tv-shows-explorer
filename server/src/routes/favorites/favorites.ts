@@ -7,7 +7,7 @@ import { putFavoritesById } from "./putFavoritesById/putFavoritesById";
 import type { FavoritesEnv } from "./types";
 
 // `/api/favorites`: the favorites of one browser, named by the UUID it sends in the `X-Client-Id` header; there are
-// no accounts. Each method answers that browser's whole list, the newest first (`Favorite[]`).
+// no accounts. `GET` answers that browser's whole list; a change answers only what it changed.
 // prettier-ignore
 export const favorites = new Hono<FavoritesEnv>()
     .use(requireClientId)
