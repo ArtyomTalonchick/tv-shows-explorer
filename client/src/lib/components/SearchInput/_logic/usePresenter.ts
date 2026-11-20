@@ -16,26 +16,10 @@ export type SearchInputProps = Omit<HTMLChakraProps<"input">, "value" | "onChang
     ref?: Ref<HTMLInputElement>;
 };
 
-type Size = NonNullable<SearchInputProps["size"]>;
-
-type SizeStyles = { root: HTMLChakraProps<"label">; input: HTMLChakraProps<"input"> };
-
-// What changes between the sizes of the field: the padding of the pill and the size of the text.
-const SIZE_STYLES = {
-    md: {
-        root: { py: "3", ps: "6", pe: "3" },
-        input: { fontSize: "lg" },
-    },
-    sm: {
-        root: { py: "2", ps: "4", pe: "2" },
-        input: { fontSize: "md" },
-    },
-} satisfies Record<Size, SizeStyles>;
-
 type UsePresenterResult = Pick<SearchInputProps, "value" | "onClear" | "label" | "viewTransitionName"> & {
     // The rest of the props, for the input.
     inputProps: HTMLChakraProps<"input"> & { ref?: Ref<HTMLInputElement> };
-    sizeStyles: SizeStyles;
+    size: NonNullable<SearchInputProps["size"]>;
     handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
     // The clear button, while the field holds text.
     showClear: boolean;
@@ -52,7 +36,7 @@ export const usePresenter = ({
 }: SearchInputProps): UsePresenterResult => {
     return {
         inputProps,
-        sizeStyles: SIZE_STYLES[size],
+        size,
         viewTransitionName,
         label,
         value,

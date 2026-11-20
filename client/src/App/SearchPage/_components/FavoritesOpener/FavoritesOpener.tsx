@@ -1,12 +1,17 @@
-import { chakra } from "@chakra-ui/react";
+import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { usePresenter } from "./_logic/usePresenter";
 
+const COUNT_STYLES = {
+    zero: { bg: "bg.muted", color: "fg.muted" },
+    some: { bg: "accent.solid", color: "accent.contrast" },
+} satisfies Record<"zero" | "some", HTMLChakraProps<"span">>;
+
 // .fav-button of design/library, in the hero and in the search bar: a round glass button with a bookmark,
 // «Favourites» and the number of them. It opens the favourites list in a drawer.
 export const FavoritesOpener: FC = () => {
-    const { count, countStyles, open } = usePresenter();
+    const { count, countTone, open } = usePresenter();
 
     return (
         <chakra.button
@@ -48,7 +53,7 @@ export const FavoritesOpener: FC = () => {
                 rounded="full"
                 fontSize="xs"
                 fontWeight="extrabold"
-                {...countStyles}
+                {...COUNT_STYLES[countTone]}
             >
                 {count}
             </chakra.span>

@@ -1,4 +1,3 @@
-import type { HTMLChakraProps } from "@chakra-ui/react";
 import type { Show } from "@tv-shows-explorer/shared";
 import { useFavoriteToggle } from "./useFavoriteToggle/useFavoriteToggle";
 
@@ -9,33 +8,15 @@ export type FavoriteToggleProps = {
     variant?: "poster" | "plain";
 };
 
-type Variant = NonNullable<FavoriteToggleProps["variant"]>;
-
-const VARIANT_STYLES = {
-    poster: {
-        bg: "bg.glass",
-        borderColor: "border",
-        color: "fg",
-        backdropFilter: "blur({blurs.glass})",
-        _hover: { borderColor: "fg.subtle" },
-    },
-    plain: {
-        bg: "transparent",
-        borderColor: "transparent",
-        color: "fg.muted",
-        _hover: { bg: "border", color: "fg" },
-    },
-} satisfies Record<Variant, HTMLChakraProps<"button">>;
-
 type UsePresenterResult = {
     pressed: boolean;
     label: string;
-    variantStyles: HTMLChakraProps<"button">;
+    variant: NonNullable<FavoriteToggleProps["variant"]>;
     handleClick: () => void;
 };
 
 export const usePresenter = ({ show, variant = "poster" }: FavoriteToggleProps): UsePresenterResult => {
     const { pressed, label, toggle } = useFavoriteToggle(show);
 
-    return { pressed, label, variantStyles: VARIANT_STYLES[variant], handleClick: toggle };
+    return { pressed, label, variant, handleClick: toggle };
 };

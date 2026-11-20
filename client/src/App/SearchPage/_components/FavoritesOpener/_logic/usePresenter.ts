@@ -1,16 +1,10 @@
-import type { HTMLChakraProps } from "@chakra-ui/react";
 import { useFavoritesDrawerStore } from "@/App/_stores/useFavoritesDrawerStore";
 import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
-
-const COUNT_STYLES = {
-    zero: { bg: "bg.muted", color: "fg.muted" },
-    some: { bg: "accent.solid", color: "accent.contrast" },
-} satisfies Record<"zero" | "some", HTMLChakraProps<"span">>;
 
 type UsePresenterResult = {
     // The number of favourites; 0 is shown too, in a muted badge.
     count: number;
-    countStyles: HTMLChakraProps<"span">;
+    countTone: "zero" | "some";
     open: () => void;
 };
 
@@ -20,7 +14,7 @@ export const usePresenter = (): UsePresenterResult => {
 
     return {
         count,
-        countStyles: COUNT_STYLES[count === 0 ? "zero" : "some"],
+        countTone: count === 0 ? "zero" : "some",
         open: () => setIsOpen(true),
     };
 };

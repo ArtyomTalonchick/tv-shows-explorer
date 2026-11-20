@@ -1,13 +1,21 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text, type BoxProps } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { usePresenter, type StateMessageProps } from "./_logic/usePresenter";
 
 export type { StateMessageProps } from "./_logic/usePresenter";
 
+type Tone = NonNullable<StateMessageProps["tone"]>;
+
+// What changes between the tones: an error has a solid border and an accent icon.
+const TONE_STYLES = {
+    neutral: { root: { borderStyle: "dashed" }, indicator: { color: "fg.muted" } },
+    error: { root: { borderStyle: "solid" }, indicator: { color: "accent.fg" } },
+} satisfies Record<Tone, { root: BoxProps; indicator: BoxProps }>;
+
 // .state and .state--error of design/library: EmptyState and ErrorState.
 export const StateMessage: FC<StateMessageProps> = (props) => {
-    const { icon, title, text, action, borderStyle, indicatorColor, role } = usePresenter(props);
+    const { icon, title, text, action, tone, role } = usePresenter(props);
 
     return (
         <Box
@@ -20,9 +28,9 @@ export const StateMessage: FC<StateMessageProps> = (props) => {
             py="16"
             px="6"
             borderWidth="1px"
-            borderStyle={borderStyle}
             borderColor="border"
             rounded="lg"
+            {...TONE_STYLES[tone].root}
         >
             <Box
                 display="grid"
@@ -31,7 +39,7 @@ export const StateMessage: FC<StateMessageProps> = (props) => {
                 mb="2"
                 rounded="full"
                 bg="bg.subtle"
-                color={indicatorColor}
+                {...TONE_STYLES[tone].indicator}
             >
                 <Icon name={icon} boxSize="8" strokeWidth="1.75" />
             </Box>

@@ -1,14 +1,28 @@
-import { chakra } from "@chakra-ui/react";
+import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
 import { usePresenter, type SearchInputProps } from "./_logic/usePresenter";
 
 export type { SearchInputProps } from "./_logic/usePresenter";
 
+type Size = NonNullable<SearchInputProps["size"]>;
+
+// What changes between the sizes of the field: the padding of the pill and the size of the text.
+const SIZE_STYLES = {
+    md: {
+        root: { py: "3", ps: "6", pe: "3" },
+        input: { fontSize: "lg" },
+    },
+    sm: {
+        root: { py: "2", ps: "4", pe: "2" },
+        input: { fontSize: "md" },
+    },
+} satisfies Record<Size, { root: HTMLChakraProps<"label">; input: HTMLChakraProps<"input"> }>;
+
 // .search-input of design/library: a pill with an icon, the field, and the clear button.
 // No submit button: the query is sent while typing.
 export const SearchInput: FC<SearchInputProps> = (props) => {
-    const { inputProps, sizeStyles, viewTransitionName, label, value, handleChange, onClear, showClear } =
+    const { inputProps, size, viewTransitionName, label, value, handleChange, onClear, showClear } =
         usePresenter(props);
 
     return (
@@ -28,7 +42,7 @@ export const SearchInput: FC<SearchInputProps> = (props) => {
             viewTransitionName={viewTransitionName}
             _hover={{ borderColor: "fg.subtle" }}
             _focusWithin={{ borderColor: "accent.solid", color: "fg.muted" }}
-            {...sizeStyles.root}
+            {...SIZE_STYLES[size].root}
         >
             <Icon name="search" />
             <chakra.input
@@ -45,7 +59,7 @@ export const SearchInput: FC<SearchInputProps> = (props) => {
                 outline="none"
                 _placeholder={{ color: "fg.subtle" }}
                 css={{ "&::-webkit-search-cancel-button": { display: "none" } }}
-                {...sizeStyles.input}
+                {...SIZE_STYLES[size].input}
                 // After the styles, so a caller can change one; before the field's own props, so it cannot replace them.
                 {...inputProps}
                 type="search"

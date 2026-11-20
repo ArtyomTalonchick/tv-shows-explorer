@@ -1,13 +1,19 @@
-import { chakra, Toast } from "@chakra-ui/react";
+import { chakra, Toast, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "@/lib/components/Icon/Icon";
+import type { ToastMeta } from "@/lib/toast/showToast";
 import { usePresenter, type ToastCardProps } from "./_logic/usePresenter";
 
 export type { ToastCardProps } from "./_logic/usePresenter";
 
+const TONE_STYLES = {
+    accent: { color: "accent.fg", css: { "& svg": { fill: "currentColor" } } },
+    muted: { color: "fg.muted" },
+} satisfies Record<ToastMeta["tone"], HTMLChakraProps<"span">>;
+
 // .toast of design/library: an icon, one line of text and an optional action, such as Undo.
 export const ToastCard: FC<ToastCardProps> = (props) => {
-    const { text, icon, iconStyles, actionLabel } = usePresenter(props);
+    const { text, icon, tone, actionLabel } = usePresenter(props);
 
     return (
         <Toast.Root
@@ -28,7 +34,7 @@ export const ToastCard: FC<ToastCardProps> = (props) => {
             boxShadow="overlay"
             fontSize="sm"
         >
-            <chakra.span display="inline-flex" flex="none" {...iconStyles}>
+            <chakra.span display="inline-flex" flex="none" {...TONE_STYLES[tone]}>
                 <Icon name={icon} boxSize="4" />
             </chakra.span>
             <Toast.Description minW="0" fontSize="sm" opacity="1" css={{ "& b": { fontWeight: "bold" } }}>
