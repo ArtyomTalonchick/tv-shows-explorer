@@ -1,5 +1,6 @@
 import type { Show } from "@tv-shows-explorer/shared";
-import { useFavoriteToggle } from "./useFavoriteToggle/useFavoriteToggle";
+import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
+import { toggle } from "./toggle/toggle";
 
 export type FavoriteToggleProps = {
     // The show the bookmark adds to the favourites or removes from them.
@@ -9,14 +10,22 @@ export type FavoriteToggleProps = {
 };
 
 type UsePresenterResult = {
+    // The show is a favourite.
     pressed: boolean;
+    // What a press does, for screen readers: «Add Dark to favourites».
     label: string;
     variant: NonNullable<FavoriteToggleProps["variant"]>;
+    // Adds or removes the show, and says so in a toast.
     handleClick: () => void;
 };
 
 export const usePresenter = ({ show, variant = "poster" }: FavoriteToggleProps): UsePresenterResult => {
-    const { pressed, label, toggle } = useFavoriteToggle(show);
+    const saved = useFavoritesStore((state) => state.favorites.find((favorite) => favorite.id === show.id) ?? null);
 
-    return { pressed, label, variant, handleClick: toggle };
+    return {
+        pressed: saved !== null,
+        label: saved === null ? `Add ${show.name} to favourites` : `Remove ${show.name} from favourites`,
+        variant,
+        handleClick: () => void toggle(show, saved),
+    };
 };

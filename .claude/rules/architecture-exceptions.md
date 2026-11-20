@@ -16,3 +16,14 @@ A table of styles per variant lives in the component file, above the View, and t
 Presenter returns: `{...VARIANT_STYLES[variant]}`. The plugin reads `TABLE[key]` in a View as «a value picked by a
 condition» (core `view-presenter.md`); here it is a style lookup, like a theme token. The default of the key and a
 key chosen by a condition stay in the Presenter. Code-style: the variant styles rule (#12, #47).
+
+## A plain function of the UI side calls a task
+
+ArtyomTalonchick/claude-simple-architecture#62 · since #51
+
+A handler that calls a task and decides what follows on the screen — a toast at once, an error toast when the task
+rejects, Undo — is a plain function in its own file in the unit's `_logic/` (`FavoriteToggle/_logic/toggle/toggle.ts`,
+with its part `undo.ts`), and the Presenter calls it: `handleClick: () => void toggle(show, saved)`. The plugin reads a plain
+function that calls a task as a violation (core `stateful-logic-and-functions.md`) and leaves such a handler to the
+Presenter, inline or with the task passed as a callback. Only the UI side calls such a function: a task never does,
+and the steps of the business action stay in the task. Code-style: the handler rule (#51).
