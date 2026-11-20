@@ -1,28 +1,13 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import type { FavoriteRowProps } from "../FavoriteRow/FavoriteRow";
+import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 
-export type FavoritesListProps = {
-    // The newest first, as the server answers them.
+type UsePresenterResult = {
+    // The newest first, as the store keeps them.
     favorites: Favorite[];
 };
 
-type RowItem = { id: number; props: FavoriteRowProps };
+export const usePresenter = (): UsePresenterResult => {
+    const favorites = useFavoritesStore((state) => state.favorites);
 
-type UsePresenterResult = {
-    rows: RowItem[];
-};
-
-export const usePresenter = ({ favorites }: FavoritesListProps): UsePresenterResult => {
-    const rows = favorites.map((favorite): RowItem => ({
-        id: favorite.id,
-        props: {
-            name: favorite.name,
-            href: favorite.url,
-            image: favorite.image,
-            meta: { show: favorite },
-            toggle: { show: favorite },
-        },
-    }));
-
-    return { rows };
+    return { favorites };
 };

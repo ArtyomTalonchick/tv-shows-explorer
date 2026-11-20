@@ -10,7 +10,7 @@ export type { FavoriteRowProps } from "./_logic/usePresenter";
 // .fav-row of design/library: a list item with a thumbnail, the name and one line of details, and a plain bookmark
 // at its end. The name turns to the accent on hover, as on a show card.
 export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
-    const { name, href, imageSrc, hasImage, meta, toggle } = usePresenter(props);
+    const { favorite, name, href, imageSrc, hasImage } = usePresenter(props);
 
     return (
         <chakra.li
@@ -68,10 +68,10 @@ export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
                     >
                         {name}
                     </chakra.span>
-                    <ShowMeta {...meta} mt="1" truncate />
+                    <ShowMeta show={favorite} mt="1" truncate />
                 </Box>
             </chakra.a>
-            <FavoriteToggle {...toggle} variant="plain" />
+            <FavoriteToggle show={favorite} variant="plain" />
         </chakra.li>
     );
 };
