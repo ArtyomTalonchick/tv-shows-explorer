@@ -114,3 +114,5 @@ followed by hand. A new preference the owner states during a task is added here 
   standards rather than Express for the server. (#24)
 - A tool's config lists every key, even one equal to its default (`"tasks": "_tasks"` in
   `.claude/simple-architecture/config.json`), so the whole setting is read in one place. (#37)
+- An env file (`.env`, `.env.production`, …) never goes to git, even when what it holds is public: `.gitignore` keeps
+  `.env*` out, an example is `.env.example`, and CI passes the values from repository variables or secrets. (#44)
