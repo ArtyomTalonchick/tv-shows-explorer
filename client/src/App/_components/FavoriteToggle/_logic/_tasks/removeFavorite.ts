@@ -1,6 +1,6 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
-import { sendFavoritesRequest } from "@/tasks/favorites/sendFavoritesRequest/sendFavoritesRequest";
+import { sendFavoritesRequest } from "@/tasks/favorites/sendFavoritesRequest";
 
 // Removes the show from the browser's favorites: the store drops it at once, and a failed request puts it back in its
 // place and rejects as `sendFavoritesRequest` does.
