@@ -65,18 +65,21 @@ followed by hand. A new preference the owner states during a task is added here 
   // View: {pagination && <Pagination {...pagination} />}
   ```
 
-- Styles that depend on a variant (`size`, `tone`) are a table in the Presenter, checked with `satisfies Record<…>`
+- Styles that depend on a variant (`size`, `tone`) are a table in the component file, above the View: they are pure
+  presentation. The Presenter returns only the ready key — the variant with its default applied, or a key it chose
+  (`count === 0 ? "zero" : "some"`) — and the View reads the row. The table is checked with `satisfies Record<…>`
   whose keys come from the props type and whose values are Chakra prop types, not only `as const`: a misspelt
   style or a missing variant is then a type error. Values are not checked against the tokens (no `strictTokens`);
-  the editor's hints are enough. (#12)
+  the editor's hints are enough. An exception from the plugin's rules: see `architecture-exceptions.md`. (#12, #47)
 
-  ```ts
+  ```tsx
+  // SearchInput.tsx, above the View
   type Size = NonNullable<SearchInputProps["size"]>;
   const SIZE_STYLES = {
     md: { root: { py: "3" }, input: { fontSize: "lg" } },
     sm: { root: { py: "2" }, input: { fontSize: "md" } },
   } satisfies Record<Size, { root: HTMLChakraProps<"label">; input: HTMLChakraProps<"input"> }>;
-  // View: <chakra.label … {...sizeStyles.root}>
+  // View: const { size } = usePresenter(props); <chakra.label … {...SIZE_STYLES[size].root}>
   ```
 
 - A result that can succeed or fail is a flat object with a flag and a nullable field, not a union checked with
