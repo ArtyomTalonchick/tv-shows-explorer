@@ -50,7 +50,7 @@ An npm workspaces monorepo in TypeScript:
 | `shared/` | The API types the client and the server share: types only |
 | `design/` | Design tokens, mockups and screenshots of each version |
 | `requirements/` | What each feature does: the source of truth for the code |
-| `.github/workflows/` | CI (lint, format, type check, tests of every package), and the deploy of the client to GitHub Pages and of the server to Firebase |
+| `.github/workflows/` | CI (lint, format, type check, tests of every package), and the deploy of the client to GitHub Pages and of the server to Firebase; the deploy needs the repository variable `VITE_API_URL` (the server's address) and the secret `FIREBASE_SERVICE_ACCOUNT` |
 | `firebase.json`, `.firebaserc` | The Firebase project and its Cloud Function, built from `server/` |
 | `.claude/` | Claude Code settings and the gh-tasks rules |
 | `CHANGELOG.md` | Changes per version |

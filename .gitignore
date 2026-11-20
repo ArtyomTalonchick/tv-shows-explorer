@@ -12,3 +12,7 @@ dist
 
 # Screenshots and logs of the Playwright MCP browser
 .playwright-mcp/
+
+# Env files stay on the machine; an example of each is kept as `.env.example`
+.env*
+!.env.example

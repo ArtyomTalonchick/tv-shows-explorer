@@ -29,7 +29,19 @@ jobs:
                   node-version: 24
                   cache: npm
             - run: npm ci
+            # The site calls the server at the repository variable `VITE_API_URL`; without it the build would call
+            # `/api` on GitHub Pages, so the deploy stops here instead.
+            - name: Check VITE_API_URL
+              env:
+                  VITE_API_URL: ${{ vars.VITE_API_URL }}
+              run: |
+                  if [ -z "$VITE_API_URL" ]; then
+                    echo "::error::The repository variable VITE_API_URL is not set"
+                    exit 1
+                  fi
             - run: npm run build
+              env:
+                  VITE_API_URL: ${{ vars.VITE_API_URL }}
             - uses: actions/configure-pages@v5
             - uses: actions/upload-pages-artifact@v3
               with:
