@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Chip } from "@/lib/components/Chip/Chip";
+import { GenreFilterChip } from "./GenreFilterChip/GenreFilterChip";
 import { usePresenter } from "./_logic/usePresenter";
 
 // The genre chips above the list: «All», then the genres of the results. They wrap on wide screens and scroll
@@ -22,7 +22,7 @@ export const GenreFilter: FC = () => {
             mb={{ base: "8", md: "10" }}
         >
             {chips.map((chip) => (
-                <Chip key={chip.key} {...chip.props} />
+                <GenreFilterChip key={chip.key} {...chip.props} />
             ))}
         </Box>
     );
