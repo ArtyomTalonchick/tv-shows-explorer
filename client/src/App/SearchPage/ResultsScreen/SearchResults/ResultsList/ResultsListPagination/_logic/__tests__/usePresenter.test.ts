@@ -17,7 +17,7 @@ const renderList = (state: { query: string; page: number }, data: ShowsPage = PA
     return renderHook(() => usePresenter()).result;
 };
 
-describe("ResultsList usePresenter", () => {
+describe("ResultsListPagination usePresenter", () => {
     beforeEach(() => {
         clearSearch();
     });

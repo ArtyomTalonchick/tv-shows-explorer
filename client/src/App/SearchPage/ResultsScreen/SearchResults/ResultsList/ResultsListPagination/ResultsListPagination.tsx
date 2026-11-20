@@ -1,0 +1,10 @@
+import type { FC } from "react";
+import { Pagination } from "@/lib/components/Pagination/Pagination";
+import { usePresenter } from "./_logic/usePresenter";
+
+// The pages below the show cards, hidden when every show fits on one page.
+export const ResultsListPagination: FC = () => {
+    const { pagination } = usePresenter();
+
+    return pagination && <Pagination {...pagination} />;
+};

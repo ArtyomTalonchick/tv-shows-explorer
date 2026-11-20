@@ -1,17 +1,18 @@
 import { Box } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Pagination } from "@/lib/components/Pagination/Pagination";
+import { RESULTS_GRID_ID } from "./constants";
+import { ResultsListPagination } from "./ResultsListPagination/ResultsListPagination";
 import { ShowCard } from "./ShowCard/ShowCard";
 import { usePresenter } from "./_logic/usePresenter";
 
 // Results: one page of show cards, three in a row (one column of rows on mobile), and the pages below.
 export const ResultsList: FC = () => {
-    const { gridRef, shows, pagination } = usePresenter();
+    const { shows } = usePresenter();
 
     return (
         <Box>
             <Box
-                ref={gridRef}
+                id={RESULTS_GRID_ID}
                 as="ul"
                 listStyle="none"
                 display="grid"
@@ -25,7 +26,7 @@ export const ResultsList: FC = () => {
                     </li>
                 ))}
             </Box>
-            {pagination && <Pagination {...pagination} />}
+            <ResultsListPagination />
         </Box>
     );
 };
