@@ -1,4 +1,5 @@
 import type { SearchAnswer } from "~/stores/useSearchStore";
+import { hasShows } from "~/tasks/search/hasShows";
 
 export type SearchStatus = "idle" | "loading" | "results" | "empty" | "error";
 
@@ -14,5 +15,5 @@ export const getSearchStatus = (value: string, answer: SearchAnswer | null): Sea
     if (answer.data === null) {
         return "error";
     }
-    return answer.data.found > 0 ? "results" : "empty";
+    return hasShows(answer) ? "results" : "empty";
 };

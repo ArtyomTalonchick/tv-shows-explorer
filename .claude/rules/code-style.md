@@ -43,6 +43,9 @@ followed by hand. A new preference the owner states during a task is added here 
   })();
   ```
 
+- A condition of more than two parts gets a name: a constant, or a function when it is repeated or asked in more
+  than one place (`hasShows(answer)`, `const asked = next === query && answered`). (#55)
+
 - A collection is walked by its own methods — `forEach`, `map`, `filter`, `reduce` — not by `for...of` or
   `for...in`; a test over several inputs is `it.each`. ESLint `no-restricted-syntax`. (#26)
 

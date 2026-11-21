@@ -1,4 +1,5 @@
 import { useSearchStore } from "~/stores/useSearchStore";
+import { hasShows } from "~/tasks/search/hasShows";
 
 // Keeps what the field holds. A field emptied, or left with spaces only, stops the search at once: the request on its
 // way is cancelled and the results are idle, so the same query typed back is a new search, not the old answer kept.
@@ -15,8 +16,7 @@ export const changeQuery = (value: string): void => {
         return;
     }
 
-    const found = answer !== null && answer.data !== null && answer.data.found > 0;
-    if (typed !== query && !found) {
+    if (typed !== query && !hasShows(answer)) {
         useSearchStore.setState({ answer: null });
     }
 };

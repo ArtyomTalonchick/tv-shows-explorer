@@ -1,4 +1,5 @@
 import { useSearchStore } from "~/stores/useSearchStore";
+import { hasShows } from "./hasShows";
 import { searchShows } from "./searchShows";
 
 type LoadShowsOptions = {
@@ -16,7 +17,7 @@ export const loadShows = async ({ keepShown = false }: LoadShowsOptions = {}): P
     request?.abort();
 
     const controller = new AbortController();
-    const kept = answer !== null && answer.data !== null && answer.data.found > 0 ? answer : null;
+    const kept = hasShows(answer) ? answer : null;
     useSearchStore.setState({ request: controller, isLoading: true, answer: kept });
 
     const isCurrent = (): boolean => useSearchStore.getState().request === controller;
@@ -30,7 +31,7 @@ export const loadShows = async ({ keepShown = false }: LoadShowsOptions = {}): P
         if (!isCurrent()) {
             return;
         }
-        if (keepShown && kept?.data) {
+        if (keepShown && kept) {
             useSearchStore.setState({
                 request: null,
                 isLoading: false,

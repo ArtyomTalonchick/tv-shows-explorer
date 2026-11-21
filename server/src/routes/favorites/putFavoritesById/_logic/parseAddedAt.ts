@@ -12,7 +12,8 @@ export const parseAddedAt = (text: string, now: number): number | null => {
             return null;
         }
     })();
-    if (typeof body !== "object" || body === null || Array.isArray(body)) {
+    const isObject = typeof body === "object" && body !== null && !Array.isArray(body);
+    if (!isObject) {
         return null;
     }
 
@@ -21,5 +22,6 @@ export const parseAddedAt = (text: string, now: number): number | null => {
         return now;
     }
 
-    return typeof addedAt === "number" && Number.isSafeInteger(addedAt) && addedAt > 0 ? addedAt : null;
+    const isTime = typeof addedAt === "number" && Number.isSafeInteger(addedAt) && addedAt > 0;
+    return isTime ? addedAt : null;
 };

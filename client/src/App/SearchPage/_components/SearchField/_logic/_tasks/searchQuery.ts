@@ -8,7 +8,8 @@ export const searchQuery = async (): Promise<void> => {
     const { value, query, answer, isLoading } = useSearchStore.getState();
     const next = value.trim();
     const answered = answer !== null || isLoading;
-    if (next === "" || (next === query && answered)) {
+    const asked = next === query && answered;
+    if (next === "" || asked) {
         return;
     }
 
