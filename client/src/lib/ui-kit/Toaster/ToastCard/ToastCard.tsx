@@ -1,6 +1,6 @@
 import { chakra, Toast, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Icon } from "@/lib/components/Icon/Icon";
+import { Icon } from "@/lib/ui-kit/Icon/Icon";
 import type { ToastMeta } from "@/lib/toast/showToast";
 import { usePresenter, type ToastCardProps } from "./_logic/usePresenter";
 

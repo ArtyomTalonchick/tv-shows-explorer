@@ -83,7 +83,7 @@ the tokens themselves. Posters are loaded from TVmaze.
 
 ## The library
 
-`library/` is the design side of the UI kit in `src/lib/components/`: one class (or block of classes) here is one
+`library/` is the design side of the UI kit in `src/lib/ui-kit/`: one class (or block of classes) here is one
 component there. A component goes into the code when the first implementation task needs it.
 
 | Component | Classes | Variants and states |

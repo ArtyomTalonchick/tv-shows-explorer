@@ -1,4 +1,4 @@
-import type { ChipProps } from "@/lib/components/Chip/Chip";
+import type { ChipProps } from "@/lib/ui-kit/Chip/Chip";
 import { showToast } from "@/lib/toast/showToast";
 import { useSearchStore } from "@/stores/useSearchStore";
 import { selectGenre } from "./_tasks/selectGenre";

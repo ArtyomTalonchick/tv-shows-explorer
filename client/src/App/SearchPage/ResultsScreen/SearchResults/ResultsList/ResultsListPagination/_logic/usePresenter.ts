@@ -1,5 +1,5 @@
 import { RESULTS_GRID_ID } from "@/App/SearchPage/ResultsScreen/SearchResults/ResultsList/constants";
-import type { PaginationProps } from "@/lib/components/Pagination/Pagination";
+import type { PaginationProps } from "@/lib/ui-kit/Pagination/Pagination";
 import { getPageCount } from "@/lib/pagination/getPageCount";
 import { scrollToTopIfAbove } from "@/lib/screen/scrollToTopIfAbove";
 import { useSearchStore } from "@/stores/useSearchStore";

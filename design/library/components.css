@@ -1,5 +1,5 @@
 /*
-  Component library of TV Shows Explorer — the design side of src/lib/components/.
+  Component library of TV Shows Explorer — the design side of src/lib/ui-kit/.
   Every colour, size, radius, shadow and duration is a CSS variable from ../tokens.json (see library.js).
   Pixel values below are only hairlines (1px borders) and are not design decisions.
   The modifiers .is-hover and .is-active draw the pointer states statically, for the showcase and screenshots.

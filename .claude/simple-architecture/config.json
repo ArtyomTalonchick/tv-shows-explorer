@@ -17,7 +17,7 @@
     "shared": "shared/src",
     "folders": {
         "lib": "lib",
-        "uiKit": "lib/components",
+        "uiKit": "lib/ui-kit",
         "components": "_components",
         "stores": "_stores",
         "tasks": "_tasks",

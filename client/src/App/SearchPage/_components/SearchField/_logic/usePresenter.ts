@@ -1,6 +1,6 @@
 import { useMemo, useRef, type RefObject } from "react";
 import { debounce } from "@/lib/debounce/debounce";
-import type { SearchInputProps } from "@/lib/components/SearchInput/SearchInput";
+import type { SearchInputProps } from "@/lib/ui-kit/SearchInput/SearchInput";
 import { useSearchStore } from "@/stores/useSearchStore";
 import { clearSearch } from "@/tasks/search/clearSearch";
 import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";

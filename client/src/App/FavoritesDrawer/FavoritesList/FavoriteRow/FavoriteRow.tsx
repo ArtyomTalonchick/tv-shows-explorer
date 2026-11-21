@@ -2,7 +2,7 @@ import { Box, chakra } from "@chakra-ui/react";
 import type { FC } from "react";
 import { FavoriteToggle } from "@/App/_components/FavoriteToggle/FavoriteToggle";
 import { ShowMeta } from "@/App/_components/ShowMeta/ShowMeta";
-import { Icon } from "@/lib/components/Icon/Icon";
+import { Icon } from "@/lib/ui-kit/Icon/Icon";
 import { usePresenter, type FavoriteRowProps } from "./_logic/usePresenter";
 
 export type { FavoriteRowProps } from "./_logic/usePresenter";

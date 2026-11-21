@@ -1,6 +1,6 @@
 import { Box, Text } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Icon } from "@/lib/components/Icon/Icon";
+import { Icon } from "@/lib/ui-kit/Icon/Icon";
 import { PageButton } from "./PageButton/PageButton";
 import { usePresenter, type PaginationProps } from "./_logic/usePresenter";
 

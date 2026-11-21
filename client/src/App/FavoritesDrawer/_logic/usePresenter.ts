@@ -1,4 +1,4 @@
-import type { DrawerProps } from "@/lib/components/Drawer/Drawer";
+import type { DrawerProps } from "@/lib/ui-kit/Drawer/Drawer";
 import { useFavoritesDrawerStore } from "@/App/_stores/useFavoritesDrawerStore";
 import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
 

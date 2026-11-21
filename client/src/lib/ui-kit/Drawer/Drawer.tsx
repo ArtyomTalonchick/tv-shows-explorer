@@ -1,6 +1,6 @@
 import { Box, chakra, Drawer as ChakraDrawer, Portal, Text } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Icon } from "@/lib/components/Icon/Icon";
+import { Icon } from "@/lib/ui-kit/Icon/Icon";
 import { usePresenter, type DrawerProps } from "./_logic/usePresenter";
 
 export type { DrawerProps } from "./_logic/usePresenter";

@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import type { FC } from "react";
-import { StateMessage } from "@/lib/components/StateMessage/StateMessage";
+import { StateMessage } from "@/lib/ui-kit/StateMessage/StateMessage";
 
 // An empty field on the results screen: the user has not typed a query yet, or has cleared it.
 export const ResultsIdle: FC = () => {

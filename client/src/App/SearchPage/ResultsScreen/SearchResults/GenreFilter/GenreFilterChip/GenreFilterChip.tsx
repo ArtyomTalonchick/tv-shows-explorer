@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Chip } from "@/lib/components/Chip/Chip";
+import { Chip } from "@/lib/ui-kit/Chip/Chip";
 import { usePresenter, type GenreFilterChipProps } from "./_logic/usePresenter";
 
 export type { GenreFilterChipProps } from "./_logic/usePresenter";

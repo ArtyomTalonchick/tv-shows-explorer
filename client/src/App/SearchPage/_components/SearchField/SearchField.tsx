@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { SearchInput } from "@/lib/components/SearchInput/SearchInput";
+import { SearchInput } from "@/lib/ui-kit/SearchInput/SearchInput";
 import { usePresenter, type SearchFieldProps } from "./_logic/usePresenter";
 
 export type { SearchFieldProps } from "./_logic/usePresenter";
