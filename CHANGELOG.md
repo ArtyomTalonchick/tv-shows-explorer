@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+## 0.2.2 — 2026-11-21
+
+- Internal changes only; nothing changes for the user.
+
 ## 0.2.1 — 2026-11-20
 
 - Adding or removing a favourite shows at once — the bookmark, the counter and the list — without waiting for the
