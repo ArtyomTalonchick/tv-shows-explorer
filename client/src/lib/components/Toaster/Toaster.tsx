@@ -1,10 +1,12 @@
 import { Portal, Toaster as ChakraToaster } from "@chakra-ui/react";
 import type { FC } from "react";
-import { toaster } from "@/lib/toast/toaster";
+import { usePresenter } from "./_logic/usePresenter";
 import { ToastCard } from "./ToastCard/ToastCard";
 
 // .toast-region of design/library: the toasts of `showToast`, at the bottom centre above everything, the drawer too.
 export const Toaster: FC = () => {
+    const { toaster } = usePresenter();
+
     return (
         <Portal>
             <ChakraToaster toaster={toaster} insetInline={{ mdDown: "4" }} zIndex="toast">

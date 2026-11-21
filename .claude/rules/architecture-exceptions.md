@@ -24,6 +24,9 @@ ArtyomTalonchick/claude-simple-architecture#62 · since #51
 A handler that calls a task and decides what follows on the screen — a toast at once, an error toast when the task
 rejects, Undo — is a plain function in its own file in the unit's `_logic/` (`FavoriteToggle/_logic/toggle/toggle.ts`,
 with its part `undo.ts`), and the Presenter calls it: `handleClick: () => void toggle(show, saved)`. The plugin reads a plain
-function that calls a task as a violation (core `stateful-logic-and-functions.md`) and leaves such a handler to the
-Presenter, inline or with the task passed as a callback. Only the UI side calls such a function: a task never does,
-and the steps of the business action stay in the task. Code-style: the handler rule (#51).
+function that calls a task as a violation (core `stateful-logic-and-functions.md`, `imports.md`) and leaves such a
+handler to the Presenter, inline or with the task passed as a callback. Since 0.2.8 it also reads the part `undo.ts`
+as a task, being a step of a business action (core `entry-folders.md`): here it is the screen's answer to a toast's
+Undo, and the step itself — putting the show back — is the task `addFavorite` it calls. Only the UI side calls such a
+function: a task never does, and the steps of the business action stay in the task. Code-style: the handler rule
+(#51).
