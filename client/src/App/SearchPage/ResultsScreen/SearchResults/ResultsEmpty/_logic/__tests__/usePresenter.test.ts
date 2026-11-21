@@ -1,6 +1,6 @@
 import { act, renderHook } from "@testing-library/react";
-import { useSearchStore } from "@/stores/useSearchStore";
-import { SEARCH_FIELD_ID } from "@/App/SearchPage/constants";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { SEARCH_FIELD_ID } from "~/App/SearchPage/constants";
 import { usePresenter } from "../usePresenter";
 
 describe("ResultsEmpty usePresenter", () => {

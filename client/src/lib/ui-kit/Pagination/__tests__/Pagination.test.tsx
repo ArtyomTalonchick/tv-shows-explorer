@@ -1,6 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import { system } from "@/lib/theme/system";
+import { system } from "~/lib/theme/system";
 import { Pagination, type PageRange } from "../Pagination";
 
 // The range as plain numbers, so a test reads what Pagination passes to its user's words.

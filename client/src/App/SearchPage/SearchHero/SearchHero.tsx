@@ -1,7 +1,7 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
-import { FavoritesOpener } from "@/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
-import { Logo } from "@/App/SearchPage/_components/Logo/Logo";
+import { FavoritesOpener } from "~/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
+import { Logo } from "~/App/SearchPage/_components/Logo/Logo";
 import { PosterWall } from "./PosterWall/PosterWall";
 import { SearchHeroInput } from "./SearchHeroInput/SearchHeroInput";
 

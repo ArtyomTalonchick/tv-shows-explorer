@@ -1,4 +1,4 @@
-import { showToast } from "@/lib/toast/showToast";
+import { showToast } from "~/lib/toast/showToast";
 
 // The toast after another page whose shows did not load; the shown page stays.
 export const showPageNotLoadedToast = (page: number): void => {

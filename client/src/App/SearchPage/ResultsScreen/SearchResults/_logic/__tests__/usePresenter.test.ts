@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import type { ShowsPage } from "@tv-shows-explorer/shared";
-import { useSearchStore } from "@/stores/useSearchStore";
-import { clearSearch } from "@/tasks/search/clearSearch";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { clearSearch } from "~/tasks/search/clearSearch";
 import { usePresenter } from "../usePresenter";
 
 const pageOf = (found: number, genres = [{ genre: "Drama", count: found }]): ShowsPage => ({

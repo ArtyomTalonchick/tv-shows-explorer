@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { showToast } from "@/lib/toast/showToast";
+import { showToast } from "~/lib/toast/showToast";
 import { loadFavorites } from "./_tasks/loadFavorites";
 
 // The app loads the favorites once, on start: the counters of both screens, the bookmarks and the list show them. A

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { showToast, type ShowToastOptions } from "@/lib/toast/showToast";
+import { showToast, type ShowToastOptions } from "~/lib/toast/showToast";
 
 type FavoriteToast = {
     // What happened to the show: a change the server made, or one it did not.

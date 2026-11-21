@@ -1,6 +1,6 @@
 import { Box, Heading, Text, type BoxProps } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Icon } from "@/lib/ui-kit/Icon/Icon";
+import { Icon } from "~/lib/ui-kit/Icon/Icon";
 import { usePresenter, type StateMessageProps } from "./_logic/usePresenter";
 
 export type { StateMessageProps } from "./_logic/usePresenter";

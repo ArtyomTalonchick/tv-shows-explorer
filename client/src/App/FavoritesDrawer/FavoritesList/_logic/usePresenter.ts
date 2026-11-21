@@ -1,5 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
+import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
 
 type UsePresenterResult = {
     // The newest first, as the store keeps them.

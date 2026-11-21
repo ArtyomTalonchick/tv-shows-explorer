@@ -1,5 +1,5 @@
 import type { ShowsPage } from "@tv-shows-explorer/shared";
-import type { SearchAnswer } from "@/stores/useSearchStore";
+import type { SearchAnswer } from "~/stores/useSearchStore";
 import { getSearchStatus, type SearchStatus } from "../getSearchStatus";
 
 const pageOf = (found: number): ShowsPage => ({

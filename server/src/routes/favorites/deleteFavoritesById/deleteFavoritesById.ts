@@ -1,5 +1,5 @@
 import type { Handler } from "hono";
-import type { FavoriteEnv } from "@/routes/favorites/types";
+import type { FavoriteEnv } from "~/routes/favorites/types";
 import { removeFavorite } from "./_logic/_tasks/removeFavorite";
 
 // `DELETE /api/favorites/:id`: removes the show and answers 204 with no body; a show that is not there changes

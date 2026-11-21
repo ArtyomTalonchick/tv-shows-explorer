@@ -1,10 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
-import { withViewTransition } from "@/lib/screen/withViewTransition";
-import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";
-import { useSearchStore } from "@/stores/useSearchStore";
+import { withViewTransition } from "~/lib/screen/withViewTransition";
+import { useScreenStore } from "~/App/SearchPage/_stores/useScreenStore";
+import { useSearchStore } from "~/stores/useSearchStore";
 import { usePresenter } from "../usePresenter";
 
-vi.mock("@/lib/screen/withViewTransition", () => ({
+vi.mock("~/lib/screen/withViewTransition", () => ({
     withViewTransition: vi.fn(async (update: () => void) => update()),
 }));
 

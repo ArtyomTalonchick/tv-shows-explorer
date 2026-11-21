@@ -1,6 +1,6 @@
 import type { Handler } from "hono";
-import { HttpError } from "@/lib/errors/HttpError";
-import type { FavoriteEnv } from "@/routes/favorites/types";
+import { HttpError } from "~/lib/errors/HttpError";
+import type { FavoriteEnv } from "~/routes/favorites/types";
 import { parseAddedAt } from "./_logic/parseAddedAt";
 import { addFavorite } from "./_logic/_tasks/addFavorite/addFavorite";
 

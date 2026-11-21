@@ -1,5 +1,5 @@
 import type { Show } from "@tv-shows-explorer/shared";
-import { searchCache } from "@/routes/_stores/searchCache";
+import { searchCache } from "~/routes/_stores/searchCache";
 import { dropExpiredSearches } from "../dropExpiredSearches";
 import { readCachedSearch } from "../readCachedSearch";
 import { writeCachedSearch } from "../writeCachedSearch";

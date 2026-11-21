@@ -1,4 +1,4 @@
-import { useSearchStore } from "@/stores/useSearchStore";
+import { useSearchStore } from "~/stores/useSearchStore";
 import { formatShowCount } from "./formatShowCount";
 
 type UsePresenterResult = {

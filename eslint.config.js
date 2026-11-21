@@ -17,7 +17,7 @@ export default defineConfig([
         languageOptions: { ecmaVersion: 2022 },
         rules: {
             // Imports in three groups, with no empty line between them: packages (the workspace's
-            // `@tv-shows-explorer/shared` too), then own code through `@/`, then relative paths. A reader sees at
+            // `@tv-shows-explorer/shared` too), then own code through `~/`, then relative paths. A reader sees at
             // once what comes from outside the app and what stays inside the unit.
             "import-x/order": [
                 "error",
@@ -25,7 +25,7 @@ export default defineConfig([
                     groups: [["builtin", "external"], "internal", ["parent", "sibling", "index"]],
                     pathGroups: [
                         { pattern: "@tv-shows-explorer/**", group: "external" },
-                        { pattern: "@/**", group: "internal" },
+                        { pattern: "~/**", group: "internal" },
                     ],
                     pathGroupsExcludedImportTypes: ["builtin"],
                     "newlines-between": "never",

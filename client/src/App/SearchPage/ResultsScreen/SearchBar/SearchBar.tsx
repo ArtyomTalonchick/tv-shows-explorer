@@ -1,8 +1,8 @@
 import { Box, chakra, Container } from "@chakra-ui/react";
 import type { FC } from "react";
-import { SearchField } from "@/App/SearchPage/_components/SearchField/SearchField";
-import { FavoritesOpener } from "@/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
-import { Logo } from "@/App/SearchPage/_components/Logo/Logo";
+import { SearchField } from "~/App/SearchPage/_components/SearchField/SearchField";
+import { FavoritesOpener } from "~/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
+import { Logo } from "~/App/SearchPage/_components/Logo/Logo";
 import { usePresenter } from "./_logic/usePresenter";
 
 // The compact header of the results screen. Its field takes over the focus from the hero's field, and the view

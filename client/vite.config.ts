@@ -10,7 +10,7 @@ export default defineConfig({
         proxy: { "/api": `http://localhost:${process.env.API_PORT ?? 4310}` },
     },
     resolve: {
-        alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+        alias: { "~": fileURLToPath(new URL("./src", import.meta.url)) },
     },
     test: {
         environment: "jsdom",

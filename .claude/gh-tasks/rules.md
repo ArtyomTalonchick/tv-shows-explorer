@@ -26,7 +26,7 @@ except under `auto`).
   `requirements/` files the issue names, then follows the `simple-architecture` skill.
 - Tests live in a `__tests__/` folder next to the code they test
   (`client/src/App/SearchPage/_logic/__tests__/useSearchQuery.test.ts`), never beside the source files. Code of the
-  folder that holds `__tests__/` is imported relatively (`../useSearchQuery`); anything else through the `@/`
+  folder that holds `__tests__/` is imported relatively (`../useSearchQuery`); anything else through the `~/`
   alias.
 - `requirements/` is the source of truth. When the issue, the mockup or the code contradicts it, stop and ask
   the user; record the decision under `## Decisions` in that requirements file.

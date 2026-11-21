@@ -12,7 +12,7 @@
         "verbatimModuleSyntax": true,
         "moduleDetection": "force",
         "noEmit": true,
-        "paths": { "@/*": ["./src/*"] },
+        "paths": { "~/*": ["./src/*"] },
         "skipLibCheck": true,
 
         "strict": true,

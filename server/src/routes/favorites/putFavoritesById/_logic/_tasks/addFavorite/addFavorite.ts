@@ -1,5 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
+import { favoritesStore } from "~/routes/favorites/_stores/favoritesStore/favoritesStore";
 import { fetchTvmazeShow } from "./fetchTvmazeShow";
 import { findCachedShow } from "./findCachedShow";
 

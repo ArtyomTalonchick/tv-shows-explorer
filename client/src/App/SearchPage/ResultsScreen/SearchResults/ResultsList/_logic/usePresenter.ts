@@ -1,5 +1,5 @@
 import type { Show } from "@tv-shows-explorer/shared";
-import { useSearchStore } from "@/stores/useSearchStore";
+import { useSearchStore } from "~/stores/useSearchStore";
 
 type UsePresenterResult = {
     // One page of the shown answer.

@@ -1,4 +1,4 @@
-import { getPageCount } from "@/lib/pagination/getPageCount";
+import { getPageCount } from "~/lib/pagination/getPageCount";
 
 // The items the current page holds, from 1: `first`–`last` of `total`; a page of one item has `first === last`.
 export type PageRange = {

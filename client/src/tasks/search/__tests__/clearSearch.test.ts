@@ -1,4 +1,4 @@
-import { useSearchStore } from "@/stores/useSearchStore";
+import { useSearchStore } from "~/stores/useSearchStore";
 import { clearSearch } from "../clearSearch";
 
 describe("clearSearch", () => {

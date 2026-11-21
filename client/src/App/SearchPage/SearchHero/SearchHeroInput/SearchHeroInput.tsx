@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { SearchField } from "@/App/SearchPage/_components/SearchField/SearchField";
+import { SearchField } from "~/App/SearchPage/_components/SearchField/SearchField";
 import { usePresenter } from "./_logic/usePresenter";
 
 // The search field of the hero. It is not focused on start: focusing it opens the results screen.

@@ -1,9 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { render, screen } from "@testing-library/react";
 import type { ShowsPage } from "@tv-shows-explorer/shared";
-import { system } from "@/lib/theme/system";
-import { useSearchStore } from "@/stores/useSearchStore";
-import { clearSearch } from "@/tasks/search/clearSearch";
+import { system } from "~/lib/theme/system";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { clearSearch } from "~/tasks/search/clearSearch";
 import { GenreFilter } from "../GenreFilter";
 
 const PAGE: ShowsPage = {

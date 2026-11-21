@@ -1,7 +1,7 @@
 import type { ToastOptions } from "@chakra-ui/react";
 import type { ReactNode } from "react";
-import type { IconName } from "@/lib/ui-kit/Icon/Icon";
-import type { ToastMeta } from "@/lib/toast/showToast";
+import type { IconName } from "~/lib/ui-kit/Icon/Icon";
+import type { ToastMeta } from "~/lib/toast/showToast";
 
 export type ToastCardProps = {
     // A toast as `showToast` made it.

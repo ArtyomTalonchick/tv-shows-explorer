@@ -1,6 +1,6 @@
 import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Icon } from "@/lib/ui-kit/Icon/Icon";
+import { Icon } from "~/lib/ui-kit/Icon/Icon";
 import { usePresenter, type SearchInputProps } from "./_logic/usePresenter";
 
 export type { SearchInputProps } from "./_logic/usePresenter";

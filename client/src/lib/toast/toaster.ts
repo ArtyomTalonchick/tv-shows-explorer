@@ -1,5 +1,5 @@
 import { createToaster } from "@chakra-ui/react";
-import { system } from "@/lib/theme/system";
+import { system } from "~/lib/theme/system";
 
 // The one toaster of the app: <Toaster /> shows what `showToast` puts in it, at the bottom centre, for
 // durations.toast each.

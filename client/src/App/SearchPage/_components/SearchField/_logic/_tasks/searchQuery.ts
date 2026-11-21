@@ -1,5 +1,5 @@
-import { useSearchStore } from "@/stores/useSearchStore";
-import { loadShows } from "@/tasks/search/loadShows";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { loadShows } from "~/tasks/search/loadShows";
 
 // Searches for what the field holds, trimmed; the genre and the page start over. Called once typing has stopped, so
 // it reads the field as it is then. An empty field asks nothing, and so does the query already searched for, unless

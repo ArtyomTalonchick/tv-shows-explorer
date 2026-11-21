@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Drawer } from "@/lib/ui-kit/Drawer/Drawer";
+import { Drawer } from "~/lib/ui-kit/Drawer/Drawer";
 import { FavoritesEmpty } from "./FavoritesEmpty/FavoritesEmpty";
 import { FavoritesList } from "./FavoritesList/FavoritesList";
 import { usePresenter } from "./_logic/usePresenter";

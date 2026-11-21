@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import type { FC } from "react";
-import { StateMessage } from "@/lib/ui-kit/StateMessage/StateMessage";
+import { StateMessage } from "~/lib/ui-kit/StateMessage/StateMessage";
 
 // No favourites yet: how to add one.
 export const FavoritesEmpty: FC = () => {

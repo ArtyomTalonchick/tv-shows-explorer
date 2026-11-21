@@ -1,4 +1,4 @@
-import { useSearchStore } from "@/stores/useSearchStore";
+import { useSearchStore } from "~/stores/useSearchStore";
 import type { GenreFilterChipProps } from "../GenreFilterChip/GenreFilterChip";
 
 type ChipItem = { key: string; props: GenreFilterChipProps };

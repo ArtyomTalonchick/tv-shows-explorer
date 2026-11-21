@@ -1,8 +1,8 @@
 import { Box, chakra, Heading } from "@chakra-ui/react";
 import type { Show } from "@tv-shows-explorer/shared";
 import type { FC } from "react";
-import { FavoriteToggle } from "@/App/_components/FavoriteToggle/FavoriteToggle";
-import { ShowMeta } from "@/App/_components/ShowMeta/ShowMeta";
+import { FavoriteToggle } from "~/App/_components/FavoriteToggle/FavoriteToggle";
+import { ShowMeta } from "~/App/_components/ShowMeta/ShowMeta";
 import { CardPoster } from "./CardPoster/CardPoster";
 
 export type ShowCardProps = {

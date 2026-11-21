@@ -1,6 +1,6 @@
-import { withViewTransition } from "@/lib/screen/withViewTransition";
-import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";
-import { clearSearch } from "@/tasks/search/clearSearch";
+import { withViewTransition } from "~/lib/screen/withViewTransition";
+import { useScreenStore } from "~/App/SearchPage/_stores/useScreenStore";
+import { clearSearch } from "~/tasks/search/clearSearch";
 
 type UsePresenterResult = {
     // The logo: back to the start screen, with the search cleared and the request on its way cancelled.

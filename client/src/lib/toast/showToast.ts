@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { IconName } from "@/lib/ui-kit/Icon/Icon";
+import type { IconName } from "~/lib/ui-kit/Icon/Icon";
 import { toaster } from "./toaster";
 
 export type ToastMeta = {

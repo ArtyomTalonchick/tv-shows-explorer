@@ -1,4 +1,4 @@
-import { loadShows } from "@/tasks/search/loadShows";
+import { loadShows } from "~/tasks/search/loadShows";
 
 type UsePresenterResult = {
     // Sends the current query again.

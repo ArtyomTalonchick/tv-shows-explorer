@@ -1,8 +1,8 @@
-import { useSearchStore } from "@/stores/useSearchStore";
-import { loadShows } from "@/tasks/search/loadShows";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { loadShows } from "~/tasks/search/loadShows";
 import { selectGenre } from "../selectGenre";
 
-vi.mock("@/tasks/search/loadShows", () => ({ loadShows: vi.fn(async () => {}) }));
+vi.mock("~/tasks/search/loadShows", () => ({ loadShows: vi.fn(async () => {}) }));
 
 describe("selectGenre", () => {
     beforeEach(() => {

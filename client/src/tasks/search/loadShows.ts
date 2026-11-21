@@ -1,4 +1,4 @@
-import { useSearchStore } from "@/stores/useSearchStore";
+import { useSearchStore } from "~/stores/useSearchStore";
 import { searchShows } from "./searchShows";
 
 type LoadShowsOptions = {

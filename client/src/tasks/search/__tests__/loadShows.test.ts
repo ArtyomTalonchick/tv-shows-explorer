@@ -1,5 +1,5 @@
 import type { ShowsPage } from "@tv-shows-explorer/shared";
-import { useSearchStore } from "@/stores/useSearchStore";
+import { useSearchStore } from "~/stores/useSearchStore";
 import { clearSearch } from "../clearSearch";
 import { loadShows } from "../loadShows";
 import { searchShows } from "../searchShows";

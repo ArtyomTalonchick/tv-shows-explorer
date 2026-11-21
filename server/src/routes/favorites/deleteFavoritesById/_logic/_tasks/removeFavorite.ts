@@ -1,4 +1,4 @@
-import { favoritesStore } from "@/routes/favorites/_stores/favoritesStore/favoritesStore";
+import { favoritesStore } from "~/routes/favorites/_stores/favoritesStore/favoritesStore";
 
 // Removes the show from the favorites of one browser; a show that is not there changes nothing.
 export const removeFavorite = async (clientId: string, id: number): Promise<void> => {

@@ -1,4 +1,4 @@
-import { HttpError } from "@/lib/errors/HttpError";
+import { HttpError } from "~/lib/errors/HttpError";
 import { fetchJson } from "../fetchJson";
 
 const respond = (body: unknown, status = 200) =>

@@ -1,7 +1,7 @@
 import { Box, Button } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Icon } from "@/lib/ui-kit/Icon/Icon";
-import { StateMessage } from "@/lib/ui-kit/StateMessage/StateMessage";
+import { Icon } from "~/lib/ui-kit/Icon/Icon";
+import { StateMessage } from "~/lib/ui-kit/StateMessage/StateMessage";
 import { usePresenter } from "./_logic/usePresenter";
 
 // Error: the request failed; Retry sends the current query again.

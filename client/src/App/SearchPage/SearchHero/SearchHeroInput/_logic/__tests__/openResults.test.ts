@@ -1,15 +1,15 @@
-import { redrawCaret } from "@/lib/screen/redrawCaret";
-import { waitForKeyboard } from "@/lib/screen/waitForKeyboard";
-import { withViewTransition } from "@/lib/screen/withViewTransition";
-import { FOCUS_KEEPER_ID } from "@/App/SearchPage/constants";
-import { useScreenStore } from "@/App/SearchPage/_stores/useScreenStore";
+import { redrawCaret } from "~/lib/screen/redrawCaret";
+import { waitForKeyboard } from "~/lib/screen/waitForKeyboard";
+import { withViewTransition } from "~/lib/screen/withViewTransition";
+import { FOCUS_KEEPER_ID } from "~/App/SearchPage/constants";
+import { useScreenStore } from "~/App/SearchPage/_stores/useScreenStore";
 import { openResults } from "../openResults";
 
-vi.mock("@/lib/screen/withViewTransition", () => ({
+vi.mock("~/lib/screen/withViewTransition", () => ({
     withViewTransition: vi.fn(async (update: () => void) => update()),
 }));
-vi.mock("@/lib/screen/redrawCaret", () => ({ redrawCaret: vi.fn() }));
-vi.mock("@/lib/screen/waitForKeyboard", () => ({ waitForKeyboard: vi.fn(async () => {}) }));
+vi.mock("~/lib/screen/redrawCaret", () => ({ redrawCaret: vi.fn() }));
+vi.mock("~/lib/screen/waitForKeyboard", () => ({ waitForKeyboard: vi.fn(async () => {}) }));
 
 // The invisible field the tap focuses, as `FocusKeeper` renders it.
 const addKeeper = (): HTMLInputElement => {

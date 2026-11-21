@@ -1,6 +1,6 @@
 import type { ShowsPage } from "@tv-shows-explorer/shared";
-import { useSearchStore } from "@/stores/useSearchStore";
-import { clearSearch } from "@/tasks/search/clearSearch";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { clearSearch } from "~/tasks/search/clearSearch";
 import { changeQuery } from "../changeQuery";
 
 const ANSWER = { query: "dark", data: null, failed: true };

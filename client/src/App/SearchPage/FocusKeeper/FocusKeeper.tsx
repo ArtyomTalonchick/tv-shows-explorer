@@ -1,6 +1,6 @@
 import { chakra } from "@chakra-ui/react";
 import type { FC } from "react";
-import { FOCUS_KEEPER_ID } from "@/App/SearchPage/constants";
+import { FOCUS_KEEPER_ID } from "~/App/SearchPage/constants";
 
 // An invisible field that holds the focus from a tap on the hero field until the keyboard is open. iOS opens the
 // keyboard a moment after the tap, and only if the field focused in the tap still has the focus then; the hero field

@@ -1,8 +1,8 @@
-import { useSearchStore } from "@/stores/useSearchStore";
-import { loadShows } from "@/tasks/search/loadShows";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { loadShows } from "~/tasks/search/loadShows";
 import { changePage } from "../changePage";
 
-vi.mock("@/tasks/search/loadShows", () => ({ loadShows: vi.fn(async () => {}) }));
+vi.mock("~/tasks/search/loadShows", () => ({ loadShows: vi.fn(async () => {}) }));
 
 describe("changePage", () => {
     it("loads another page of the genre", async () => {

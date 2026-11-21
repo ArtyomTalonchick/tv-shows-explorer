@@ -1,15 +1,15 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import type { ShowsPage } from "@tv-shows-explorer/shared";
-import { system } from "@/lib/theme/system";
-import { showToast } from "@/lib/toast/showToast";
-import { useSearchStore } from "@/stores/useSearchStore";
-import { clearSearch } from "@/tasks/search/clearSearch";
+import { system } from "~/lib/theme/system";
+import { showToast } from "~/lib/toast/showToast";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { clearSearch } from "~/tasks/search/clearSearch";
 import { GenreFilterChip } from "../GenreFilterChip";
 import { selectGenre } from "../_logic/_tasks/selectGenre";
 
 vi.mock("../_logic/_tasks/selectGenre", () => ({ selectGenre: vi.fn(async () => {}) }));
-vi.mock("@/lib/toast/showToast", () => ({ showToast: vi.fn() }));
+vi.mock("~/lib/toast/showToast", () => ({ showToast: vi.fn() }));
 
 const PAGE: ShowsPage = { shows: [], genres: [], found: 4, genre: null, total: 4, page: 1, perPage: 3 };
 

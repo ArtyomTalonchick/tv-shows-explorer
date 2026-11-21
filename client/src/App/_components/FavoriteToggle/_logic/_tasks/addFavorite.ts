@@ -1,6 +1,6 @@
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
-import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
-import { sendFavoritesRequest } from "@/tasks/favorites/sendFavoritesRequest";
+import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
+import { sendFavoritesRequest } from "~/tasks/favorites/sendFavoritesRequest";
 import { toFavorite } from "./toFavorite";
 
 // Adds the show to the browser's favorites: the store shows it at once, and a failed request takes it out again and

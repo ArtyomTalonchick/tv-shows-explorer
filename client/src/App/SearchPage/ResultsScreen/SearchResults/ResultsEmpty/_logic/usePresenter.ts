@@ -1,6 +1,6 @@
-import { useSearchStore } from "@/stores/useSearchStore";
-import { clearSearch } from "@/tasks/search/clearSearch";
-import { SEARCH_FIELD_ID } from "@/App/SearchPage/constants";
+import { useSearchStore } from "~/stores/useSearchStore";
+import { clearSearch } from "~/tasks/search/clearSearch";
+import { SEARCH_FIELD_ID } from "~/App/SearchPage/constants";
 
 type UsePresenterResult = {
     // The query nothing was found for.

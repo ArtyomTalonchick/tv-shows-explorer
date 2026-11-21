@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import { Toaster } from "@/lib/ui-kit/Toaster/Toaster";
+import { Toaster } from "~/lib/ui-kit/Toaster/Toaster";
 import { FavoritesDrawer } from "./FavoritesDrawer/FavoritesDrawer";
 import { SearchPage } from "./SearchPage/SearchPage";
 import { usePresenter } from "./_logic/usePresenter";

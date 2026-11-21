@@ -1,6 +1,6 @@
 import { Box, Button } from "@chakra-ui/react";
 import type { FC } from "react";
-import { StateMessage } from "@/lib/ui-kit/StateMessage/StateMessage";
+import { StateMessage } from "~/lib/ui-kit/StateMessage/StateMessage";
 import { usePresenter } from "./_logic/usePresenter";
 
 // No results: TVmaze found nothing for the query.

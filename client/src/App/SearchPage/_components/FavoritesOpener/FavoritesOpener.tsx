@@ -1,6 +1,6 @@
 import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Icon } from "@/lib/ui-kit/Icon/Icon";
+import { Icon } from "~/lib/ui-kit/Icon/Icon";
 import { usePresenter } from "./_logic/usePresenter";
 
 const COUNT_STYLES = {

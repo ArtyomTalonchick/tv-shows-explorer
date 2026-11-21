@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { toaster } from "@/lib/toast/toaster";
-import { useFavoritesStore } from "@/App/_stores/useFavoritesStore";
+import { toaster } from "~/lib/toast/toaster";
+import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
 import { usePresenter } from "../usePresenter";
 
 const DARK: Favorite = {

@@ -1,4 +1,4 @@
-import type { SearchAnswer } from "@/stores/useSearchStore";
+import type { SearchAnswer } from "~/stores/useSearchStore";
 
 export type SearchStatus = "idle" | "loading" | "results" | "empty" | "error";
 

@@ -1,4 +1,4 @@
-import { toaster } from "@/lib/toast/toaster";
+import { toaster } from "~/lib/toast/toaster";
 
 type UsePresenterResult = {
     // The one toaster of the app, which `showToast` fills.
