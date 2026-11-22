@@ -19,6 +19,9 @@ design task, or a task that is neither (`type:ops`, `type:wish`).
 Always show the plan and wait for «ok», even when there are no questions (the plan gate is on for every task,
 except under `auto`).
 
+The plan of an implementation task lists its commits in order: for each, the subject and what can be checked on the
+site after it, or «refactor».
+
 ## Implement
 <!-- next-task, before coding: project rules, schema or migration conventions -->
 - A design task changes only files under `design/`.
@@ -33,15 +36,25 @@ except under `auto`).
 
 ## Verify
 <!-- next-task, after checks and before showing: manual checks, reviewers, local URLs -->
-For an implementation task:
-- Run the app, take a screenshot of the changed screen and compare it with the mockup in `design/vX.Y/`; show
-  the differences.
-- Run the `architecture-reviewer` agent on the change; fix what it finds or show why not.
+For an implementation task, before each commit is shown for approval, and again after a change to it — on that
+commit's files only, so a small step stays quick:
+- `npx eslint <files>` and `npx prettier --check <files>` in the project root.
+- `npx vitest related --run <files>` in the workspace of the files: the tests that reach them.
+- `npm run typecheck -w <workspace>` for each workspace the commit changes: a type check cannot be narrowed to files.
+- Run the `architecture-reviewer` agent on the commit's diff; fix what it finds or show why not.
+- A commit that changes a screen: run the app, take a screenshot of that screen and compare it with the mockup in
+  `design/vX.Y/`; show the differences.
+- Say what to open and check on the site after this commit.
+
+After the last commit of the task, once: run every command of `checks` on the whole project. A failure found there
+is fixed in the commit it belongs to; the history is local until the release.
 
 ## Commit
 <!-- commit, before committing: anything beyond config.commit -->
-A task is split into commits that each show or change something the user can see, or are a refactor of code already
-in use; a commit adds no code that nothing uses yet. Every commit passes the checks on its own. (#28)
+An implementation task is split into small commits, so each is easy to review and to check: one commit is one logical
+step. A step either moves the site forward by something that can be checked on it, or is a refactor of code already
+in use. A commit adds no code that nothing uses yet. Every commit passes its checks (see `## Verify`) on its own. A
+design, `type:ops` or docs task is not split by this rule. (#28)
 
 These go into the task's commit — its last one, when it has several — not a separate one:
 - The feature file in `requirements/` that the task changes or creates is updated to match the change.
