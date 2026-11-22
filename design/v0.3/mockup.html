@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premiere — v0.3 mockup: accounts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../library/components.css">
+<link rel="icon" href="../icon/favicon-32.png" sizes="32x32">
+<script src="../library/library.js"></script>
+<!--
+  v0.3: accounts on top of the v0.2 screens - the sign-in and sign-up pages, the user or the guest in the header,
+  the bookmark and the favourites button of a guest, and a show removed inside the favourites list (#56).
+  Components come from ../library/components.css only; the styles below are page layout (screens, header, hero,
+  grid, the auth page) and the captions.
+  Open through a local server: npx http-server design, then /v0.3/mockup.html
+  Each state is a .screen with an id (see SCREENS below). The states of v0.1 and v0.2 do not change, except for
+  the header.
+-->
+<style>
+  .caption { max-width: var(--sizes-content); margin: 0 auto; padding: var(--spacing-12) var(--spacing-12) var(--spacing-4); color: var(--colors-fg-subtle); font-size: var(--fontSizes-xs); letter-spacing: var(--letterSpacings-eyebrow); text-transform: uppercase; }
+  .caption b { color: var(--colors-fg); }
+  .screen { position: relative; display: flex; flex-direction: column; min-height: 100svh; overflow: hidden; border-top: 1px solid var(--colors-border); border-bottom: 1px solid var(--colors-border); background: var(--colors-bg); }
+  .container { max-width: var(--sizes-content); margin: 0 auto; padding: 0 var(--spacing-12); }
+  /* In the app the drawer and the toast are fixed to the viewport; here, to their screen. */
+  .screen .drawer-layer, .screen .toast-region { position: absolute; }
+
+  /* The poster wall and its glow: behind the start hero and the auth pages */
+  .backdrop::before { content: ""; position: absolute; inset: 0; z-index: 1; background: radial-gradient(60% 50% at 50% 55%, var(--colors-accent-glow), transparent 70%); }
+  .backdrop::after { content: ""; position: absolute; inset: 0; z-index: 1; background: radial-gradient(70% 70% at 50% 50%, transparent, var(--colors-bg) 85%); }
+  .wall { position: absolute; inset: calc(var(--spacing-10) * -1); display: grid; grid-template-columns: repeat(8, 1fr); gap: var(--spacing-3); opacity: .14; filter: grayscale(.6) blur(2px); transform: rotate(-6deg) scale(1.15); }
+  .wall img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: var(--radii-sm); }
+
+  /* The top row over the hero and the auth pages: logo left, the account on the right */
+  .top { position: absolute; top: var(--spacing-6); left: 0; right: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: var(--spacing-3); padding: 0 var(--spacing-12); }
+  .account { display: flex; align-items: center; gap: var(--spacing-3); }
+
+  /* Start */
+  .hero { min-height: 100svh; display: grid; place-items: center; text-align: center; padding: var(--spacing-30) var(--spacing-6) var(--spacing-24); }
+  .hero-inner { position: relative; z-index: 2; max-width: var(--sizes-hero); display: grid; justify-items: center; }
+  .hero .display { margin: var(--spacing-6) 0; }
+  .hero .lead { max-width: var(--sizes-prose); margin-bottom: var(--spacing-10); }
+
+  /* Sign-in, sign-up: the card in the middle of the page */
+  .auth { flex: 1; display: grid; place-items: center; padding: var(--spacing-30) var(--spacing-6) var(--spacing-16); }
+  .auth .auth-card { position: relative; z-index: 2; }
+
+  /* With a query: a compact header (logo, search, account), then the list */
+  .bar { position: sticky; top: 0; z-index: 3; border-bottom: 1px solid var(--colors-border); background: var(--colors-bg-glass); backdrop-filter: blur(var(--blurs-glass)); }
+  .bar .container { display: flex; align-items: center; gap: var(--spacing-6); padding-top: var(--spacing-4); padding-bottom: var(--spacing-4); }
+  .bar .search-input { margin-left: auto; }
+  .list { flex: 1; display: flex; flex-direction: column; width: 100%; padding-top: var(--spacing-12); padding-bottom: var(--spacing-16); }
+  .head { display: flex; justify-content: space-between; align-items: end; gap: var(--spacing-4); flex-wrap: wrap; margin-bottom: var(--spacing-8); }
+  .head .title { margin-top: var(--spacing-3); }
+  .count { color: var(--colors-fg-muted); }
+  .head + .chips { margin-bottom: var(--spacing-10); }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--spacing-8); margin-bottom: var(--spacing-12); }
+
+  @media (max-width: 760px) {
+    .caption { padding: var(--spacing-10) var(--spacing-4) var(--spacing-4); }
+    .container { padding: 0 var(--spacing-4); }
+    .top { padding: 0 var(--spacing-4); }
+    .wall { grid-template-columns: repeat(4, 1fr); }
+    .hero .lead { font-size: var(--fontSizes-lg); }
+    .auth { place-items: start center; padding: var(--spacing-24) var(--spacing-4) var(--spacing-10); }
+    .auth .auth-card { padding: var(--spacing-6); }
+    /* Logo and account on the first row, the search field full width below */
+    .bar .container { flex-wrap: wrap; gap: var(--spacing-3); }
+    .bar .account { margin-left: auto; }
+    /* On a phone «Sign in» drops its icon, so the logo, the favourites and the account fit on one row */
+    .account { gap: var(--spacing-2); }
+    .account .btn .icon { display: none; }
+    .bar .search-input { order: 3; margin-left: 0; max-width: none; }
+    .list { padding-top: var(--spacing-8); padding-bottom: var(--spacing-10); }
+    .head { margin-bottom: var(--spacing-6); }
+    .head + .chips { flex-wrap: nowrap; overflow-x: auto; margin: 0 calc(var(--spacing-4) * -1) var(--spacing-8); padding: 0 var(--spacing-4); scrollbar-width: none; }
+    .grid { grid-template-columns: minmax(0, 1fr); gap: var(--spacing-8); }
+    .grid .show-card { display: grid; grid-template-columns: var(--sizes-thumb) minmax(0, 1fr); column-gap: var(--spacing-4); align-items: center; padding-right: var(--spacing-12); }
+    .grid .show-card__poster { grid-row: span 2; }
+    .grid .show-card__name { margin-top: 0; align-self: end; white-space: normal; }
+    .grid .show-card__meta { align-self: start; white-space: normal; }
+    .grid .show-card-wrap > .fav-toggle { top: calc(50% - var(--spacing-10) / 2); right: 0; }
+  }
+</style>
+</head>
+<body class="tokens-pending">
+<main id="app"></main>
+
+<script>
+  const P = (a, b) => `https://static.tvmaze.com/uploads/images/medium_portrait/${a}/${b}.jpg`;
+  const SHOWS = [
+    { name: "Breaking Bad", genres: ["Drama", "Crime", "Thriller"], rating: 9.2, years: "2008–2019", poster: P(501, 1253519) },
+    { name: "Dark", genres: ["Drama", "Science-Fiction"], rating: 8.2, years: "2017–2020", poster: P(504, 1262352) },
+    { name: "Darkroom", genres: ["Documentary"], rating: null, years: "2019", poster: null }, // made up: no poster, no rating
+    { name: "Severance", genres: ["Drama", "Science-Fiction"], rating: 7.7, years: "2022–", poster: P(548, 1371406) },
+    { name: "Mr. Robot", genres: ["Drama", "Crime"], rating: 8.3, years: "2015–2019", poster: P(211, 528026) },
+    { name: "True Detective", genres: ["Drama", "Crime"], rating: 8.1, years: "2014–", poster: P(490, 1226764) },
+    { name: "The Last of Us", genres: ["Drama", "Action"], rating: 7.9, years: "2023–", poster: P(563, 1409008) },
+    { name: "The Bear", genres: ["Drama", "Comedy"], rating: 7.3, years: "2022–2026", poster: P(629, 1574642) },
+    { name: "Dune: Prophecy", genres: ["Drama", "Science-Fiction"], rating: 7.2, years: "2024–", poster: P(543, 1358056) },
+  ];
+  const PER_PAGE = 3;
+  const EMAIL = "anna@example.com";
+  const PHONE = matchMedia("(max-width: 760px)").matches;
+  const byName = (name) => SHOWS.find((s) => s.name === name);
+  const icon = (id) => `<svg class="icon"><use href="#${id}"/></svg>`;
+
+  // Components: the markup of ../library/index.html, filled with data.
+  const logo = () => `<a class="logo" href="#" aria-label="tv/explorer — back to start">tv<span>/</span>explorer</a>`;
+  const search = ({ value = "", small = false } = {}) => `
+    <label class="search-input ${small ? "search-input--sm" : ""}">${icon("search")}
+      <input aria-label="Search shows" placeholder="Search shows, e.g. Dark" value="${value}">
+      ${value ? `<button class="search-input__clear" aria-label="Clear search">${icon("close")}</button>` : ""}
+    </label>`;
+  const favButton = (n) => n === null
+    ? `<button class="fav-button fav-button--guest">${icon("bookmark")}<span class="fav-button__label">Favourites</span></button>`
+    : `<button class="fav-button" aria-haspopup="dialog">${icon("bookmark")}<span class="fav-button__label">Favourites</span>
+        <span class="fav-button__count ${n === 0 ? "fav-button__count--zero" : ""}">${n}</span></button>`;
+  const userMenu = (open) => `
+    <div class="user-menu ${PHONE ? "user-menu--compact" : ""}">
+      <button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="${open}" ${PHONE ? `aria-label="${EMAIL}"` : ""}>
+        <span class="user-menu__avatar" aria-hidden="true">${EMAIL[0]}</span><span class="user-menu__email">${EMAIL}</span></button>
+      ${open ? `<div class="user-menu__panel" role="menu"><div class="user-menu__head"><div class="eyebrow">Signed in as</div>
+        <span class="user-menu__head-email">${EMAIL}</span></div>
+        <button class="user-menu__item" role="menuitem">${icon("log-out")}Sign out</button></div>` : ""}
+    </div>`;
+  const signInButton = () => `<a class="btn btn--glass" href="#sign-in">${icon("user")}Sign in</a>`;
+  // favs === null: a guest
+  const account = (favs, menuOpen = false) => `<div class="account">${favButton(favs && favs.length)}${favs ? userMenu(menuOpen) : signInButton()}</div>`;
+  const toggle = (s, on, plain = false) => `
+    <button class="fav-toggle ${plain ? "fav-toggle--plain" : ""}" aria-pressed="${on}"
+      aria-label="${on ? `Remove ${s.name} from favourites` : `Add ${s.name} to favourites`}">${icon("bookmark")}</button>`;
+  const card = (s, favs) => `
+    <div class="show-card-wrap">
+      <a class="show-card" href="#">
+        <div class="show-card__poster">${s.poster ? `<img src="${s.poster}" alt="${s.name} poster">`
+          : `<div class="show-card__no-poster">${icon("film")}No poster</div>`}
+          ${s.rating ? `<span class="show-card__rating">★ ${s.rating}</span>` : ""}</div>
+        <h3 class="show-card__name">${s.name}</h3>
+        <p class="show-card__meta">${s.years} · ${s.genres.join(", ")}</p>
+      </a>${toggle(s, !!favs && favs.includes(s.name))}
+    </div>`;
+  const chips = () => {
+    const counts = {};
+    SHOWS.forEach((s) => s.genres.forEach((g) => (counts[g] = (counts[g] || 0) + 1)));
+    const genres = Object.keys(counts).sort((a, b) => counts[b] - counts[a] || a.localeCompare(b));
+    const chip = (label, n, on) => `<button class="chip" aria-pressed="${on}">${label} <span class="chip__count">${n}</span></button>`;
+    return `<div class="chips" role="group" aria-label="Genre">${chip("All", SHOWS.length, true)}${genres.map((g) => chip(g, counts[g], false)).join("")}</div>`;
+  };
+  const pagination = () => `<nav class="pagination" aria-label="Pages">
+      <button class="pagination__item" aria-label="Previous page" disabled>${icon("chevron-left")}</button>
+      <button class="pagination__item" aria-current="page">1</button><button class="pagination__item">2</button><button class="pagination__item">3</button>
+      <button class="pagination__item" aria-label="Next page">${icon("chevron-right")}</button>
+    </nav><p class="pagination__info">Shows 1–3 of ${SHOWS.length}</p>`;
+  const row = (s, removed = false) => `
+    <li class="fav-row ${removed ? "fav-row--removed" : ""}"><a class="fav-row__link" href="#">
+      <span class="fav-row__thumb">${s.poster ? `<img src="${s.poster}" alt="">` : icon("film")}</span>
+      <span class="fav-row__text"><span class="fav-row__name">${s.name}</span>${removed
+        ? `<span class="fav-row__status">Removed</span>`
+        : `<span class="fav-row__meta">${s.years} · ${s.genres.join(", ")}</span>`}</span>
+    </a>${removed
+      ? `<button class="fav-toggle fav-toggle--plain" aria-pressed="false" aria-label="Put ${s.name} back in favourites">${icon("bookmark")}</button>`
+      : toggle(s, true, true)}</li>`;
+  const drawer = (rows, removed) => `
+    <div class="drawer-layer"><aside class="drawer" role="dialog" aria-modal="true" aria-label="Favourites">
+      <header class="drawer__header"><div><div class="eyebrow">Your list</div>
+        <h2 class="drawer__title">Favourites <span class="drawer__count">${rows.length - removed.length}</span></h2></div>
+        <button class="drawer__close" aria-label="Close favourites">${icon("close")}</button></header>
+      <div class="drawer__body"><ul class="fav-list">${rows.map((n) => row(byName(n), removed.includes(n))).join("")}</ul></div>
+    </aside></div>`;
+  // A guest's drawer: no list, no counter; what favourites need and the way to them.
+  const guestDrawer = () => `
+    <div class="drawer-layer"><aside class="drawer" role="dialog" aria-modal="true" aria-label="Favourites">
+      <header class="drawer__header"><div><div class="eyebrow">Your list</div><h2 class="drawer__title">Favourites</h2></div>
+        <button class="drawer__close" aria-label="Close favourites">${icon("close")}</button></header>
+      <div class="drawer__body"><div class="state"><div class="state__icon">${icon("bookmark")}</div>
+        <h3 class="state__title">Sign in to keep favourites</h3>
+        <p class="state__text">Your list is kept with your account, on every device.</p>
+        <a class="btn btn--sm" href="#sign-in">Sign in</a>
+        <p class="state__text">No account yet? <a class="link" href="#sign-up">Sign up</a></p></div></div>
+    </aside></div>`;
+  // The answer to a guest's bookmark: nothing is added; the toast says why and leads to sign-in.
+  const guestToast = (s) => `
+    <div class="toast-region"><div class="toast" role="status">${icon("bookmark")}
+      <p class="toast__text">Sign in to keep <b>${s.name}</b> in your favourites</p>
+      <a class="toast__action" href="#sign-in">Sign in</a></div></div>`;
+
+  // Form parts
+  const field = ({ label, type = "email", value = "", placeholder = "", hint = "", error = "", disabled = false }) => `
+    <label class="field ${error ? "field--invalid" : ""} ${disabled ? "is-disabled" : ""}"><span class="field__label">${label}</span>
+      <span class="field__control"><input type="${type}" value="${value}" placeholder="${placeholder}" ${error ? `aria-invalid="true"` : ""} ${disabled ? "disabled" : ""}>
+        ${type === "password" ? `<button class="field__toggle" type="button" aria-label="Show password" ${disabled ? "disabled" : ""}>${icon("eye")}</button>` : ""}</span>
+      ${error ? `<span class="field__error">${icon("alert")}<span>${error}</span></span>` : hint ? `<span class="field__hint">${hint}</span>` : ""}
+    </label>`;
+  const alertBox = (html) => `<div class="form-alert" role="alert">${icon("alert")}<p class="form-alert__text">${html}</p></div>`;
+  const submit = (label, loading) => loading
+    ? `<button class="btn btn--block is-loading" aria-busy="true"><span class="spinner" aria-hidden="true"></span>${loading}</button>`
+    : `<button class="btn btn--block">${label}</button>`;
+  const authPage = (html) => `
+    <div class="backdrop"><div class="wall" aria-hidden="true">${Array(4).fill(SHOWS.filter((s) => s.poster).map((s) => `<img src="${s.poster}" alt="">`).join("")).join("")}</div></div>
+    <div class="top">${logo()}</div>
+    <section class="auth">${html}</section>`;
+  const signIn = ({ email = "", password = "", alert = "", loading = false } = {}) => authPage(`
+    <div class="auth-card">
+      <header><div class="eyebrow">Welcome back</div><h1 class="auth-card__title">Sign in</h1>
+        <p class="auth-card__text">Your favourites are kept with your account.</p></header>
+      <form class="auth-card__form" onsubmit="return false" novalidate>
+        ${alert ? alertBox(alert) : ""}
+        ${field({ label: "Email", value: email, placeholder: "name@example.com", disabled: loading })}
+        ${field({ label: "Password", type: "password", value: password, disabled: loading })}
+        ${submit("Sign in", loading && "Signing in…")}
+      </form>
+      <p class="auth-card__footer">No account yet? <a class="link" href="#sign-up">Sign up</a></p>
+    </div>`);
+  const signUp = ({ email = "", password = "", emailError = "", passwordError = "", alert = "", loading = false } = {}) => authPage(`
+    <div class="auth-card">
+      <header><div class="eyebrow">New here</div><h1 class="auth-card__title">Create an account</h1>
+        <p class="auth-card__text">Keep your favourites on every device.</p></header>
+      <form class="auth-card__form" onsubmit="return false" novalidate>
+        ${alert ? alertBox(alert) : ""}
+        ${field({ label: "Email", value: email, placeholder: "name@example.com", error: emailError, disabled: loading })}
+        ${field({ label: "Password", type: "password", value: password, hint: "At least 8 characters", error: passwordError, disabled: loading })}
+        ${submit("Create account", loading && "Creating account…")}
+      </form>
+      <p class="auth-card__footer">Have an account? <a class="link" href="#sign-in">Sign in</a></p>
+    </div>`);
+
+  // Page layout
+  const start = (favs) => `
+    <section class="hero backdrop" aria-label="Search">
+      <div class="top">${logo()}${account(favs)}</div>
+      <div class="wall" aria-hidden="true">${Array(4).fill(SHOWS.filter((s) => s.poster).map((s) => `<img src="${s.poster}" alt="">`).join("")).join("")}</div>
+      <div class="hero-inner">
+        <div class="eyebrow">TVmaze · 80 000+ shows</div>
+        <h1 class="display">Find your next obsession.</h1>
+        <p class="lead">Search any show, see its rating and genres — in one dark, quiet place.</p>
+        ${search()}
+      </div>
+    </section>`;
+  const results = (favs, { menuOpen = false, overlay = "" } = {}) => `
+    <header class="bar"><div class="container">${logo()}${search({ value: "dark", small: true })}${account(favs, menuOpen)}</div></header>
+    <section class="list container">
+      <div class="head"><div><div class="eyebrow">Results</div><h2 class="title">Shows for <em>“dark”</em></h2></div><div class="count">${SHOWS.length} shows</div></div>
+      ${chips()}
+      <div class="grid">${SHOWS.slice(0, PER_PAGE).map((s) => card(s, favs)).join("")}</div>
+      ${pagination()}
+    </section>${overlay}`;
+
+  const SAVED = ["Dark", "Breaking Bad", "Severance"];
+  const SCREENS = [
+    ["start-guest", "Start, a guest — the favourites button without a counter and «Sign in» in the top-right corner", start(null)],
+    ["start-user", "Start, signed in — the favourites button with its counter and the user: the initial and the email (only the initial on a phone)", start(SAVED)],
+    ["results-guest", "Results, a guest — every bookmark is empty; the search works as before", results(null)],
+    ["guest-bookmark", "A guest presses the bookmark of Dark — it stays empty, nothing is sent; a toast says why for 4 s and its «Sign in» leads to sign-in. The guest stays on the results", results(null, { overlay: guestToast(byName("Dark")) })],
+    ["guest-favourites", "A guest presses Favourites — the drawer opens as for a user, with no counter and no list: what favourites need, «Sign in» and the way to sign up", results(null, { overlay: guestDrawer() })],
+    ["results-user", "Results, signed in — the bookmarks of v0.2, the counter of the user's own list", results(SAVED)],
+    ["user-menu", "User menu — a press on the user opens the full email and «Sign out»; signing out makes the page a guest's at once, with no request. Escape and a press outside close it", results(SAVED, { menuOpen: true })],
+    ["sign-in", "Sign in — from «Sign in» in the header, the guest toast or the guest drawer. The button checks the fields before the request; success leads back to the page the user came from", signIn()],
+    ["sign-in-loading", "Sign in, a request on its way — the fields and the eye are disabled, the button shows a spinner and takes no presses", signIn({ email: EMAIL, password: "severance", loading: true })],
+    ["sign-in-wrong", "Sign in, wrong email or password — one message for both, so the form does not tell which emails have an account; the password stays for a fix", signIn({ email: EMAIL, password: "severance", alert: "Wrong email or password." })],
+    ["sign-in-failed", "Sign in, the server did not answer — the fields keep their values, a press on «Sign in» tries again", signIn({ email: EMAIL, password: "severance", alert: "Couldn’t reach the server. Check your connection and try again." })],
+    ["sign-up", "Sign up — email and password; the hint gives the password rule before anything is typed. Success signs the user in and leads to the search page", signUp()],
+    ["sign-up-invalid", "Sign up, wrong fields — checked when a field is left and on submit, before any request; each error stands under its field and goes once the value is right", signUp({ email: "anna@example", password: "dark", emailError: "Enter an email like name@example.com", passwordError: "The password needs at least 8 characters" })],
+    ["sign-up-taken", "Sign up, the email is taken — the server's answer stands under the email field, with the way to sign in", signUp({ email: EMAIL, password: "severance", emailError: `This email already has an account. <a class="link" href="#sign-in">Sign in instead</a>` })],
+    ["sign-up-failed", "Sign up, the server did not answer — as on sign-in: the values stay, the button tries again", signUp({ email: EMAIL, password: "severance", alert: "Couldn’t reach the server. Check your connection and try again." })],
+    ["favourites-removed", "Favourites, a show removed inside the list (#56) — Severance keeps its place, dimmed, «Removed», with an empty bookmark; the removal is sent at once and the counters drop to 2; no toast. A second press puts it back. Closing the list (backdrop, ×, Escape) drops the removed rows", results(SAVED.filter((n) => n !== "Severance"), { overlay: drawer(SAVED, ["Severance"]) })],
+  ];
+
+  document.getElementById("app").innerHTML = SCREENS.map(([id, text, html], i) =>
+    `<p class="caption"><b>${i + 1} · ${id}</b> — ${text}</p><div class="screen" id="${id}">${html}</div>`).join("");
+</script>
+</body>
+</html>

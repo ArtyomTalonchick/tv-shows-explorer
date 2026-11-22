@@ -36,6 +36,8 @@ Contrast (WCAG AA): primary text 17.7:1, secondary text 7.7:1, accent text 6.8:1
 | `v0.1/screens/*.png` | One screenshot per state: `desktop-<state>.png` (1440px) and `mobile-<state>.png` (390px) |
 | `v0.2/mockup.html` | Favourites on top of the v0.1 search screen: the bookmark on the cards, the toasts, the favourites button and the list in a drawer |
 | `v0.2/screens/*.png` | One screenshot per state, named as in v0.1 |
+| `v0.3/mockup.html` | Accounts: the sign-in and sign-up pages in every state, the user or the guest in the header, what a guest's bookmark and favourites button answer (a toast, a drawer), and a show removed inside the favourites list |
+| `v0.3/screens/*.png` | One screenshot per state, named as in v0.1 |
 | `icon/` | The app icon: `icon.svg`, `icon-maskable.svg` and their PNG exports |
 
 ## Tokens
@@ -89,7 +91,8 @@ component there. A component goes into the code when the first implementation ta
 | Component | Classes | Variants and states |
 |---|---|---|
 | Text | `.eyebrow`, `.display`, `.title`, `.lead`, `.logo` | — |
-| Button | `.btn`, `.btn--ghost`, `.btn--sm` | default, hover, active, focus, disabled |
+| Button | `.btn`, `.btn--ghost`, `.btn--sm`, `.btn--block`, `.btn--glass` | default, hover, active, focus, disabled, loading (`.is-loading` with a spinner); glass: a quiet header button, as tall as the favourites button |
+| Link | `.link` | default, hover |
 | SearchInput | `.search-input`, `.search-input--sm`, `__clear` | empty, hover, focus with text and clear (×), loading (spinner), disabled |
 | Chip | `.chip`, `.chip--selected` / `aria-pressed`, `__count` | default, hover, active, focus, selected, disabled |
 | ShowCard | `.show-card`, `__poster`, `__rating`, `__no-poster`, `__name`, `__meta` | default, hover, no rating, no poster |
@@ -97,10 +100,14 @@ component there. A component goes into the code when the first implementation ta
 | Skeleton, Spinner | `.skeleton--poster`, `--line`, `--line-short`, `--chip`, `.spinner`, `.spinner--lg` | — |
 | EmptyState, ErrorState | `.state`, `.state--error`, `__icon`, `__title`, `__text` | — |
 | FavouriteToggle | `.fav-toggle` / `aria-pressed`, `.fav-toggle--plain`, `.show-card-wrap` | off, on, hover, press, focus; on a poster and plain. A bookmark, not a star: the star marks the rating |
-| FavouritesButton | `.fav-button`, `__label`, `__count`, `__count--zero` | zero, with shows, hover, active, focus |
-| Toast | `.toast-region`, `.toast`, `.toast--added`, `__text`, `__action` | added, removed with Undo |
+| FavouritesButton | `.fav-button`, `__label`, `__count`, `__count--zero`, `.fav-button--guest` | zero, with shows, hover, active, focus; a guest's, with no counter |
+| Toast | `.toast-region`, `.toast`, `.toast--added`, `__text`, `__action` | added, removed with Undo, a guest's bookmark with «Sign in» |
 | Drawer | `.drawer-layer`, `.drawer`, `__header`, `__title`, `__count`, `__close`, `__body` | filled, empty (an EmptyState inside) |
-| FavouriteRow | `.fav-list`, `.fav-row`, `__link`, `__thumb`, `__name`, `__meta` | default, hover, no poster |
+| FavouriteRow | `.fav-list`, `.fav-row`, `__link`, `__thumb`, `__name`, `__meta`, `.fav-row--removed`, `__status` | default, hover, no poster, removed inside the open list |
+| TextField | `.field`, `__label`, `__control`, `__toggle`, `__hint`, `__error`, `.field--invalid` | empty, hover, focus, filled, invalid, disabled; a password with the eye button |
+| FormAlert | `.form-alert`, `__text` | wrong email or password, no answer |
+| AuthCard | `.auth-card`, `__title`, `__text`, `__form`, `__footer` | — |
+| UserMenu | `.user-menu`, `__trigger`, `__avatar`, `__email`, `__panel`, `__head`, `__item`, `.user-menu--compact` | closed, hover, focus, long email, compact, open |
 
 Rules:
 

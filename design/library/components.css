@@ -21,7 +21,7 @@ body.tokens-pending { visibility: hidden; }
 .logo span { color: var(--colors-accent-fg); }
 
 /* ---------- Button ---------- */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-2); background: var(--colors-accent-solid); color: var(--colors-accent-contrast); border: 0; border-radius: var(--radii-full); padding: var(--spacing-3) var(--spacing-6); font: var(--fontWeights-bold) var(--fontSizes-md) var(--fonts-body); cursor: pointer; white-space: nowrap; transition: background var(--durations-fast) var(--easings-standard), color var(--durations-fast) var(--easings-standard); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--spacing-2); background: var(--colors-accent-solid); color: var(--colors-accent-contrast); border: 0; border-radius: var(--radii-full); padding: var(--spacing-3) var(--spacing-6); font: var(--fontWeights-bold) var(--fontSizes-md) var(--fonts-body); text-decoration: none; cursor: pointer; white-space: nowrap; transition: background var(--durations-fast) var(--easings-standard), color var(--durations-fast) var(--easings-standard); }
 .btn:hover, .btn.is-hover { background: var(--colors-accent-hover); }
 .btn:active, .btn.is-active { background: var(--colors-accent-active); }
 .btn--ghost { background: var(--colors-bg-muted); color: var(--colors-fg); }
@@ -29,6 +29,20 @@ body.tokens-pending { visibility: hidden; }
 .btn--ghost:active, .btn--ghost.is-active { background: var(--colors-bg-subtle); }
 .btn--sm { padding: var(--spacing-2) var(--spacing-4); font-size: var(--fontSizes-sm); }
 .btn:disabled, .btn.is-disabled { background: var(--colors-bg-muted); color: var(--colors-fg-subtle); cursor: not-allowed; }
+.btn--block { display: flex; width: 100%; }
+/* A quiet button of the header, next to the favourites button and the user: the same glass pill and height. */
+.btn--glass { gap: var(--spacing-2); border: 1px solid var(--colors-border); background: var(--colors-bg-glass); color: var(--colors-fg); padding: var(--spacing-2) var(--spacing-4); font: var(--fontWeights-semibold) var(--fontSizes-sm) / var(--spacing-6) var(--fonts-body); backdrop-filter: blur(var(--blurs-glass)); }
+.btn--glass:hover, .btn--glass.is-hover { border-color: var(--colors-fg-subtle); background: var(--colors-bg-muted); }
+.btn--glass:active, .btn--glass.is-active { background: var(--colors-bg-subtle); }
+/* A request is on its way: the button keeps its colour and width, a small spinner in the text colour comes before
+   the label, and the button takes no more presses. */
+.btn.is-loading { cursor: progress; pointer-events: none; }
+.btn .spinner { width: var(--spacing-4); height: var(--spacing-4); border-width: 2px; border-color: transparent; border-top-color: currentColor; border-right-color: currentColor; }
+
+/* ---------- Link ---------- */
+/* A text link inside a sentence: to sign-in from sign-up and back, «Sign in instead». */
+.link { color: var(--colors-accent-fg); font-weight: var(--fontWeights-semibold); text-decoration: none; border-radius: var(--radii-sm); }
+.link:hover, .link.is-hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------- SearchInput ---------- */
 /* No submit button: the query is sent while typing (debounced). Clear (×) shows when there is text,
@@ -124,10 +138,13 @@ body.tokens-pending { visibility: hidden; }
 .fav-button:active, .fav-button.is-active { background: var(--colors-bg-subtle); }
 .fav-button__count { display: grid; place-items: center; min-width: var(--spacing-6); height: var(--spacing-6); padding: 0 var(--spacing-2); border-radius: var(--radii-full); background: var(--colors-accent-solid); color: var(--colors-accent-contrast); font-size: var(--fontSizes-xs); font-weight: var(--fontWeights-extrabold); }
 .fav-button__count--zero { background: var(--colors-bg-muted); color: var(--colors-fg-muted); }
+/* A guest has no favourites: no counter, and the press leads to sign-in. */
+.fav-button--guest { padding-right: var(--spacing-4); line-height: var(--spacing-6); }
 
 /* ---------- Toast ---------- */
 /* The answer to adding or removing a favourite. .toast-region places it at the bottom centre above everything;
-   a toast leaves after durations.toast. --added fills the bookmark; «removed» has Undo. */
+   a toast leaves after durations.toast. --added fills the bookmark; «removed» has Undo; a guest's bookmark gets
+   a toast whose action (a link) is «Sign in». */
 .toast-region { position: fixed; left: 50%; bottom: var(--spacing-6); z-index: var(--zIndex-toast); transform: translateX(-50%); display: grid; gap: var(--spacing-2); width: max-content; max-width: calc(100% - var(--spacing-8)); }
 .toast { display: flex; align-items: center; gap: var(--spacing-3); padding: var(--spacing-3) var(--spacing-3) var(--spacing-3) var(--spacing-4); min-height: var(--spacing-12); border: 1px solid var(--colors-border); border-radius: var(--radii-md); background: var(--colors-bg-muted); color: var(--colors-fg); box-shadow: var(--shadows-overlay); font-size: var(--fontSizes-sm); }
 /* The icon is as tall as the capitals of the text, so neither looks higher than the other. */
@@ -135,7 +152,7 @@ body.tokens-pending { visibility: hidden; }
 .toast--added > .icon { color: var(--colors-accent-fg); fill: currentColor; }
 .toast__text { min-width: 0; }
 .toast__text b { font-weight: var(--fontWeights-bold); }
-.toast__action { flex: none; margin-left: var(--spacing-2); border: 0; border-radius: var(--radii-sm); background: transparent; color: var(--colors-accent-fg); padding: var(--spacing-1) var(--spacing-2); font: var(--fontWeights-bold) var(--fontSizes-sm) var(--fonts-body); cursor: pointer; transition: background var(--durations-fast) var(--easings-standard); }
+.toast__action { flex: none; margin-left: var(--spacing-2); border: 0; border-radius: var(--radii-sm); background: transparent; color: var(--colors-accent-fg); padding: var(--spacing-1) var(--spacing-2); font: var(--fontWeights-bold) var(--fontSizes-sm) var(--fonts-body); text-decoration: none; cursor: pointer; transition: background var(--durations-fast) var(--easings-standard); }
 .toast__action:hover, .toast__action.is-hover { background: var(--colors-border); }
 
 /* ---------- Drawer ---------- */
@@ -164,6 +181,63 @@ body.tokens-pending { visibility: hidden; }
 .fav-row__name { display: block; font-size: var(--fontSizes-md); font-weight: var(--fontWeights-bold); line-height: var(--lineHeights-tight); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color var(--durations-fast) var(--easings-standard); }
 .fav-row:hover .fav-row__name, .fav-row.is-hover .fav-row__name { color: var(--colors-accent-fg); }
 .fav-row__meta { display: block; margin-top: var(--spacing-1); color: var(--colors-fg-muted); font-size: var(--fontSizes-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Removed inside the open list: the row keeps its place, dimmed, with an empty bookmark that puts the show back;
+   it leaves when the list closes. */
+.fav-row--removed .fav-row__link { opacity: 0.4; }
+.fav-row--removed:hover .fav-row__name, .fav-row--removed.is-hover .fav-row__name { color: inherit; }
+.fav-row__status { display: block; margin-top: var(--spacing-1); color: var(--colors-fg-subtle); font-size: var(--fontSizes-xs); font-weight: var(--fontWeights-semibold); letter-spacing: var(--letterSpacings-eyebrow); text-transform: uppercase; }
+
+/* ---------- TextField ---------- */
+/* A labelled input of a form. The hint below says the rule; when the value breaks it (checked on leaving the field
+   and on submit), the error with its icon takes the hint's place and the border stays in the accent, focused or
+   not. __toggle is the eye button of a password field: it shows the password and hides it again. */
+.field { display: grid; align-content: start; gap: var(--spacing-2); min-width: 0; }
+.field__label { font-size: var(--fontSizes-sm); font-weight: var(--fontWeights-semibold); color: var(--colors-fg); }
+.field__control { display: flex; align-items: center; gap: var(--spacing-2); border: 1px solid var(--colors-border); border-radius: var(--radii-md); background: var(--colors-bg); padding: var(--spacing-1) var(--spacing-1) var(--spacing-1) var(--spacing-4); transition: border-color var(--durations-fast) var(--easings-standard); }
+.field__control:hover, .field__control.is-hover { border-color: var(--colors-fg-subtle); }
+.field__control:focus-within, .field__control.is-active { border-color: var(--colors-accent-solid); }
+.field__control input { flex: 1; min-width: 0; min-height: var(--spacing-10); background: none; border: 0; padding: 0; color: var(--colors-fg); font: var(--fontWeights-medium) var(--fontSizes-md) var(--fonts-body); outline: none; }
+.field__control input::placeholder { color: var(--colors-fg-subtle); }
+.field__toggle { display: grid; place-items: center; width: var(--spacing-10); height: var(--spacing-10); flex: none; border: 0; border-radius: var(--radii-sm); background: transparent; color: var(--colors-fg-muted); cursor: pointer; }
+.field__toggle:hover, .field__toggle.is-hover { background: var(--colors-bg-muted); color: var(--colors-fg); }
+.field__hint { color: var(--colors-fg-subtle); font-size: var(--fontSizes-sm); }
+.field__error { display: flex; align-items: flex-start; gap: var(--spacing-2); color: var(--colors-accent-fg); font-size: var(--fontSizes-sm); font-weight: var(--fontWeights-medium); }
+.field__error .icon { width: var(--spacing-4); height: var(--spacing-4); margin-top: 1px; }
+.field--invalid .field__control, .field__control:has([aria-invalid="true"]) { border-color: var(--colors-accent-solid); }
+.field.is-disabled .field__control { opacity: 0.5; }
+.field.is-disabled input, .field.is-disabled .field__toggle { cursor: not-allowed; }
+
+/* ---------- FormAlert ---------- */
+/* What the server said about the whole form, above its fields: a wrong email or password, no answer. */
+.form-alert { display: flex; align-items: flex-start; gap: var(--spacing-3); padding: var(--spacing-3) var(--spacing-4); border: 1px solid var(--colors-accent-solid); border-radius: var(--radii-md); background: var(--colors-accent-subtle); color: var(--colors-fg); font-size: var(--fontSizes-sm); }
+.form-alert > .icon { width: var(--spacing-4); height: var(--spacing-4); margin-top: 1px; color: var(--colors-accent-fg); }
+.form-alert__text b { font-weight: var(--fontWeights-bold); }
+
+/* ---------- AuthCard ---------- */
+/* The card of the sign-in and sign-up pages: a header, the form, and the link to the other page. sizes.form wide. */
+.auth-card { display: grid; gap: var(--spacing-8); width: 100%; max-width: var(--sizes-form); padding: var(--spacing-8); border: 1px solid var(--colors-border); border-radius: var(--radii-lg); background: var(--colors-bg-subtle); box-shadow: var(--shadows-overlay); }
+.auth-card__title { margin-top: var(--spacing-3); font-size: var(--fontSizes-2xl); font-weight: var(--fontWeights-extrabold); letter-spacing: var(--letterSpacings-tight); line-height: var(--lineHeights-tight); }
+.auth-card__text { margin-top: var(--spacing-2); color: var(--colors-fg-muted); font-size: var(--fontSizes-sm); }
+.auth-card__form { display: grid; gap: var(--spacing-6); }
+.auth-card__footer { color: var(--colors-fg-muted); font-size: var(--fontSizes-sm); text-align: center; }
+
+/* ---------- UserMenu ---------- */
+/* The signed-in user in the header: the initial in a circle and the email (cut at sizes.email); a press opens a menu
+   with the full email and «Sign out». --compact drops the email (a phone). Escape and a press outside close it. */
+.user-menu { position: relative; flex: none; }
+.user-menu__trigger { display: inline-flex; align-items: center; gap: var(--spacing-2); border: 1px solid var(--colors-border); border-radius: var(--radii-full); background: var(--colors-bg-glass); color: var(--colors-fg); padding: var(--spacing-1) var(--spacing-4) var(--spacing-1) var(--spacing-1); font: var(--fontWeights-semibold) var(--fontSizes-sm) / var(--lineHeights-tight) var(--fonts-body); cursor: pointer; backdrop-filter: blur(var(--blurs-glass)); transition: background var(--durations-fast) var(--easings-standard), border-color var(--durations-fast) var(--easings-standard); }
+.user-menu__trigger:hover, .user-menu__trigger.is-hover, .user-menu__trigger[aria-expanded="true"] { border-color: var(--colors-fg-subtle); background: var(--colors-bg-muted); }
+.user-menu__avatar { display: grid; place-items: center; width: var(--spacing-8); height: var(--spacing-8); flex: none; border-radius: var(--radii-full); background: var(--colors-fg); color: var(--colors-bg); font-size: var(--fontSizes-sm); font-weight: var(--fontWeights-extrabold); text-transform: uppercase; }
+.user-menu__email { max-width: var(--sizes-email); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.user-menu--compact .user-menu__trigger { padding-right: var(--spacing-1); }
+.user-menu--compact .user-menu__email { display: none; }
+.user-menu__panel { position: absolute; top: calc(100% + var(--spacing-2)); right: 0; z-index: var(--zIndex-popover); width: var(--sizes-menu); padding: var(--spacing-2); border: 1px solid var(--colors-border); border-radius: var(--radii-md); background: var(--colors-bg-subtle); box-shadow: var(--shadows-overlay); }
+.user-menu__head { padding: var(--spacing-2) var(--spacing-3) var(--spacing-3); border-bottom: 1px solid var(--colors-border); margin-bottom: var(--spacing-2); }
+.user-menu__head .eyebrow { color: var(--colors-fg-subtle); }
+.user-menu__head-email { display: block; margin-top: var(--spacing-2); font-weight: var(--fontWeights-semibold); overflow-wrap: anywhere; }
+.user-menu__item { display: flex; align-items: center; gap: var(--spacing-3); width: 100%; padding: var(--spacing-2) var(--spacing-3); border: 0; border-radius: var(--radii-sm); background: transparent; color: var(--colors-fg); font: var(--fontWeights-semibold) var(--fontSizes-sm) var(--fonts-body); text-align: left; cursor: pointer; }
+.user-menu__item:hover, .user-menu__item.is-hover { background: var(--colors-bg-muted); }
+.user-menu__item .icon { width: var(--spacing-4); height: var(--spacing-4); color: var(--colors-fg-muted); }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
