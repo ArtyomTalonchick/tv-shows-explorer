@@ -80,7 +80,7 @@ followed by hand. A new preference the owner states during a task is added here 
   (`count === 0 ? "zero" : "some"`) — and the View reads the row. The table is checked with `satisfies Record<…>`
   whose keys come from the props type and whose values are Chakra prop types, not only `as const`: a misspelt
   style or a missing variant is then a type error. Values are not checked against the tokens (no `strictTokens`);
-  the editor's hints are enough. An exception from the plugin's rules: see `architecture-exceptions.md`. (#12, #47)
+  the editor's hints are enough. (#12, #47)
 
   ```tsx
   // SearchInput.tsx, above the View
@@ -94,8 +94,7 @@ followed by hand. A new preference the owner states during a task is added here 
 
 - A handler that calls a task and shows what follows on the screen (toasts, Undo) is a plain function in its own
   file in `_logic/` (`toggle/toggle.ts`, with its part `toggle/undo.ts`), with its own test; the Presenter only reads the store and calls it.
-  A hook that only hands the Presenter what it returns is not written. An exception from the plugin's rules: see
-  `architecture-exceptions.md`. (#51)
+  A hook that only hands the Presenter what it returns is not written. (#51)
 - A result that can succeed or fail is a flat object with a flag and a nullable field, not a union checked with
   `in`: `{ data: T | null; failed: boolean }`, read as `if (shown.failed)` and `shown?.data ?? []`. (#16)
 - The simplest code that does the job. A rare case that the next load puts right (two presses within a fraction of a

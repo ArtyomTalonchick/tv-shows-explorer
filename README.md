@@ -35,7 +35,7 @@ What each feature does is described in [`requirements/`](requirements/README.md)
 The architecture rules live in their own repository, a Claude Code plugin:
 [`claude-simple-architecture`](https://github.com/ArtyomTalonchick/claude-simple-architecture).
 This version is built by the rules of
-[`v0.2.8`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.2.8). The client and the server
+[`v0.3.0`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.3.0). The client and the server
 both follow them: the same levels, tasks and stores on each side.
 
 In this repository:
