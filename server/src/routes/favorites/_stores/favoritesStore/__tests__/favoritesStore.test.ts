@@ -1,5 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { createFirestoreStore } from "../createFirestoreStore";
+import { favoritesStore } from "../favoritesStore";
 
 // A fake Firestore: documents by their full path, enough for collection().doc().collection().doc().
 const { documents, initializeApp } = vi.hoisted(() => {
@@ -39,9 +39,7 @@ const favorite = (id: number): Favorite => ({
     addedAt: id * 100,
 });
 
-describe("createFirestoreStore", () => {
-    const store = createFirestoreStore();
-
+describe("favoritesStore", () => {
     afterEach(() => {
         documents.clear();
     });
@@ -49,29 +47,29 @@ describe("createFirestoreStore", () => {
     it("starts Firebase on the first call, not on import, and only once", async () => {
         expect(initializeApp).not.toHaveBeenCalled();
 
-        await store.list("c1");
-        await store.list("c1");
+        await favoritesStore.list("c1");
+        await favoritesStore.list("c1");
 
         expect(initializeApp).toHaveBeenCalledTimes(1);
     });
 
     it("keeps a document per show under the browser's client id", async () => {
-        await store.put("c1", favorite(7));
+        await favoritesStore.put("c1", favorite(7));
 
         expect([...documents.entries()]).toEqual([["clients/c1/favorites/7", favorite(7)]]);
     });
 
     it("lists, finds and removes the favorites of the given browser only", async () => {
-        await store.put("c1", favorite(1));
-        await store.put("c1", favorite(2));
-        await store.put("c2", favorite(3));
+        await favoritesStore.put("c1", favorite(1));
+        await favoritesStore.put("c1", favorite(2));
+        await favoritesStore.put("c2", favorite(3));
 
-        await store.remove("c1", 1);
-        await store.remove("c1", 5);
+        await favoritesStore.remove("c1", 1);
+        await favoritesStore.remove("c1", 5);
 
-        expect(await store.list("c1")).toEqual([favorite(2)]);
-        expect(await store.get("c1", 2)).toEqual(favorite(2));
-        expect(await store.get("c1", 3)).toBeNull();
-        expect(await store.list("c3")).toEqual([]);
+        expect(await favoritesStore.list("c1")).toEqual([favorite(2)]);
+        expect(await favoritesStore.get("c1", 2)).toEqual(favorite(2));
+        expect(await favoritesStore.get("c1", 3)).toBeNull();
+        expect(await favoritesStore.list("c3")).toEqual([]);
     });
 });
