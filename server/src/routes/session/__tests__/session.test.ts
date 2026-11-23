@@ -30,13 +30,14 @@ describe("POST /", () => {
         vi.unstubAllEnvs();
     });
 
-    it("signs the user in with a token that names them", async () => {
+    it("signs the user in with an access token and a refresh token that name them", async () => {
         const { status, body } = await signIn('{"email":"anna@example.com","password":"severance"}');
 
         expect(status).toBe(200);
-        const { token, user } = body as SessionResponse;
+        const { accessToken, refreshToken, user } = body as SessionResponse;
         expect(user).toEqual({ id: "u1", email: "anna@example.com" });
-        expect(await verify(token, "test-secret", "HS256")).toMatchObject({ sub: "u1", email: "anna@example.com" });
+        expect(await verify(accessToken, "test-secret", "HS256")).toMatchObject({ sub: "u1", typ: "access" });
+        expect(await verify(refreshToken, "test-secret", "HS256")).toMatchObject({ sub: "u1", typ: "refresh" });
     });
 
     it("takes the email in any case and with outer spaces", async () => {

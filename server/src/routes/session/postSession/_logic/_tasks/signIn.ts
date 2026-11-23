@@ -2,10 +2,10 @@ import { normalizeEmail } from "@tv-shows-explorer/shared";
 import type { Credentials, SessionResponse } from "@tv-shows-explorer/shared";
 import { verifyPassword } from "~/lib/password/verifyPassword";
 import { usersStore } from "~/routes/_stores/usersStore/usersStore";
-import { issueAccessToken } from "~/tasks/issueAccessToken";
+import { startSession } from "~/tasks/session/startSession";
 
-// Signs in the account of the email, when the password is its own: returns the token and the user, or null both for
-// an email without an account and for a wrong password.
+// Signs in the account of the email, when the password is its own: returns a new pair of tokens and the user, or null
+// both for an email without an account and for a wrong password.
 export const signIn = async (credentials: Credentials): Promise<SessionResponse | null> => {
     const stored = await usersStore.findByEmail(normalizeEmail(credentials.email));
     if (stored === null) {
@@ -18,5 +18,5 @@ export const signIn = async (credentials: Credentials): Promise<SessionResponse 
     }
 
     const user = { id: stored.id, email: stored.email };
-    return { token: await issueAccessToken(user), user };
+    return await startSession(user);
 };

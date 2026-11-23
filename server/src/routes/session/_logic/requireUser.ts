@@ -1,7 +1,7 @@
 import type { MiddlewareHandler } from "hono";
 import { verify } from "hono/jwt";
 import type { SessionEnv } from "~/routes/session/types";
-import { readJwtSecret } from "~/tasks/readJwtSecret";
+import { readJwtSecret } from "~/tasks/session/jwt/readJwtSecret";
 
 const BEARER = "Bearer ";
 

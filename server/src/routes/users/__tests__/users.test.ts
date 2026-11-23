@@ -25,13 +25,14 @@ describe("POST /", () => {
         vi.unstubAllEnvs();
     });
 
-    it("makes an account and answers a token that names it", async () => {
+    it("makes an account and answers an access token and a refresh token that name it", async () => {
         const { status, body } = await signUp('{"email":"  Anna@Example.com ","password":"severance"}');
 
         expect(status).toBe(201);
-        const { token, user } = body as SessionResponse;
+        const { accessToken, refreshToken, user } = body as SessionResponse;
         expect(user).toEqual({ id: expect.any(String), email: "anna@example.com" });
-        expect(await verify(token, "test-secret", "HS256")).toMatchObject({ sub: user.id, email: user.email });
+        expect(await verify(accessToken, "test-secret", "HS256")).toMatchObject({ sub: user.id, typ: "access" });
+        expect(await verify(refreshToken, "test-secret", "HS256")).toMatchObject({ sub: user.id, typ: "refresh" });
     });
 
     it("looks the email up normalized, and keeps it with a hash, never the password", async () => {
