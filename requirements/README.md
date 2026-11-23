@@ -22,6 +22,19 @@ TV Shows Explorer searches TV shows with the public [TVmaze API](https://www.tvm
 
 Each feature gets its own file here once a task builds or changes it.
 
+## Pages
+
+Each page has its own address; a direct visit to it opens that page, and the browser's Back and Forward move
+between the pages. (#60)
+
+| Address | Page |
+|---|---|
+| `/` | The search: the start screen, and the results screen once the field is focused. The two screens share the address. |
+| `/sign-in` | Sign in. |
+| `/sign-up` | Sign up. |
+
+Any other address leads to the search and is replaced by `/`.
+
 ## Feature files
 
 One file per feature: `requirements/<feature>.md`, named in kebab case (`search.md`, `genre-filter.md`). A task

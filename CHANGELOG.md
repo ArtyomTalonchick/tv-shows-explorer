@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - The app moves to https://tv-shows-explorer.web.app, with its server on the same domain; any address of the app
   opens it directly.
+- The sign-in and sign-up pages have their own addresses, `/sign-in` and `/sign-up`; an unknown address leads to
+  the search.
 
 ## 0.2.2 — 2026-11-21
 

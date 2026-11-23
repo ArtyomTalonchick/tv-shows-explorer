@@ -79,6 +79,23 @@ describe("App", () => {
         expect(searchRequests(fetchMock)).toHaveLength(0);
     });
 
+    it.each([
+        ["/sign-in", "Sign in"],
+        ["/sign-up", "Sign up"],
+    ])("opens %s on a direct visit, with the way back to the search", (path, title) => {
+        stubServer();
+
+        renderApp(path);
+
+        expect(screen.getByRole("heading", { level: 1, name: title })).toBeInTheDocument();
+        expect(window.location.pathname).toBe(path);
+
+        fireEvent.click(screen.getByRole("link", { name: "Back to search" }));
+
+        expect(screen.getByRole("heading", { level: 1, name: "Find your next obsession." })).toBeInTheDocument();
+        expect(window.location.pathname).toBe("/");
+    });
+
     it("leads an unknown address to the search page", () => {
         stubServer();
 
