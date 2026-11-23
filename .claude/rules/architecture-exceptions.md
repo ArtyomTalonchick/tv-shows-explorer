@@ -26,3 +26,13 @@ when the Google credentials or `GOOGLE_CLOUD_PROJECT` are missing. The plugin's 
 and call no task from a start (core `imports.md`, `tasks.md`), so the reviewer reports Levels, Imports, and Stateful
 logic and plain functions on it. They give such a check no other place either; the project keeps it in the root
 unit's tasks folder until the plugin settles the case.
+
+## The shared package holds the rule of valid credentials
+
+ArtyomTalonchick/claude-simple-architecture#35 · since #61
+
+`shared/src/credentials/` exports runtime code next to the `Credentials` type of `credentials.ts`: `normalizeEmail`,
+`isValidEmail`, and `isValidPassword` with `PASSWORD_MIN_LENGTH`, one per file. The plugin's rules keep the shared types package to types only
+(core `imports.md`), so the reviewer reports Imports on it. The client checks the sign-up form by this rule and the
+server checks the request by it; two copies, one per app, would drift apart unseen. The project keeps the rule in
+the shared package, with its tests, until the plugin settles the case.
