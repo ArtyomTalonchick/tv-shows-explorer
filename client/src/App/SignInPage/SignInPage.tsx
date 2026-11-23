@@ -1,7 +1,14 @@
 import type { FC } from "react";
-import { PagePlaceholder } from "~/App/_components/PagePlaceholder/PagePlaceholder";
+import { AuthPage } from "~/App/_components/AuthPage/AuthPage";
 
-// The sign-in page at /sign-in; its form comes with the accounts of the client.
+// The sign-in page at /sign-in.
 export const SignInPage: FC = () => {
-    return <PagePlaceholder title="Sign in" />;
+    return (
+        <AuthPage
+            eyebrow="Welcome back"
+            title="Sign in"
+            text="Your favourites are kept with your account."
+            footer={{ text: "No account yet?", link: "Sign up", to: "/sign-up" }}
+        />
+    );
 };

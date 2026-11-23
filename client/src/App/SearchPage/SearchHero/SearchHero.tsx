@@ -1,11 +1,9 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
 import { FavoritesOpener } from "~/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
-import { Logo } from "~/App/SearchPage/_components/Logo/Logo";
-import { PosterWall } from "./PosterWall/PosterWall";
+import { Backdrop } from "~/App/_components/Backdrop/Backdrop";
+import { Logo } from "~/App/_components/Logo/Logo";
 import { SearchHeroInput } from "./SearchHeroInput/SearchHeroInput";
-
-const layer = { content: '""', position: "absolute", inset: "0" } as const;
 
 // The start screen: the full-viewport hero with the search field, the logo and the favourites button above it.
 export const SearchHero: FC = () => {
@@ -21,12 +19,8 @@ export const SearchHero: FC = () => {
             pt="30"
             pb="24"
             px="6"
-            _before={{
-                ...layer,
-                bgImage: "radial-gradient(60% 50% at 50% 55%, {colors.accent.glow}, transparent 70%)",
-            }}
-            _after={{ ...layer, bgImage: "radial-gradient(70% 70% at 50% 50%, transparent, {colors.bg} 85%)" }}
         >
+            <Backdrop />
             <Flex
                 position="absolute"
                 top={{ base: "6", md: "8" }}
@@ -39,7 +33,6 @@ export const SearchHero: FC = () => {
                 <Logo />
                 <FavoritesOpener />
             </Flex>
-            <PosterWall />
             <Box position="relative" zIndex="2" maxW="hero" display="grid" justifyItems="center">
                 <Text textStyle="eyebrow">TVmaze · 80 000+ shows</Text>
                 <Heading as="h1" textStyle="display" my="6">

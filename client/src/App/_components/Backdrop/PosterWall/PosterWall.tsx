@@ -2,7 +2,7 @@ import { Box, Image } from "@chakra-ui/react";
 import type { FC } from "react";
 import { usePresenter } from "./_logic/usePresenter";
 
-// The faded, tilted wall of posters behind the hero.
+// The faded, tilted wall of posters behind the hero and the auth pages.
 export const PosterWall: FC = () => {
     const { posters } = usePresenter();
 

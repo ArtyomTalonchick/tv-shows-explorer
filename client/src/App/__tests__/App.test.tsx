@@ -81,8 +81,8 @@ describe("App", () => {
 
     it.each([
         ["/sign-in", "Sign in"],
-        ["/sign-up", "Sign up"],
-    ])("opens %s on a direct visit, with the way back to the search", (path, title) => {
+        ["/sign-up", "Create an account"],
+    ])("opens %s on a direct visit, with the logo that leads back to the search", (path, title) => {
         stubServer();
 
         renderApp(path);
@@ -90,10 +90,25 @@ describe("App", () => {
         expect(screen.getByRole("heading", { level: 1, name: title })).toBeInTheDocument();
         expect(window.location.pathname).toBe(path);
 
-        fireEvent.click(screen.getByRole("link", { name: "Back to search" }));
+        fireEvent.click(screen.getByRole("link", { name: "tv/explorer — back to start" }));
 
         expect(screen.getByRole("heading", { level: 1, name: "Find your next obsession." })).toBeInTheDocument();
         expect(window.location.pathname).toBe("/");
+    });
+
+    it("leads from the sign-in page to the sign-up page and back", () => {
+        stubServer();
+        renderApp("/sign-in");
+
+        fireEvent.click(screen.getByRole("link", { name: "Sign up" }));
+
+        expect(screen.getByRole("heading", { level: 1, name: "Create an account" })).toBeInTheDocument();
+        expect(window.location.pathname).toBe("/sign-up");
+
+        fireEvent.click(screen.getByRole("link", { name: "Sign in" }));
+
+        expect(screen.getByRole("heading", { level: 1, name: "Sign in" })).toBeInTheDocument();
+        expect(window.location.pathname).toBe("/sign-in");
     });
 
     it("leads an unknown address to the search page", () => {
