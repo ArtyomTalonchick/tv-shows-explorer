@@ -41,7 +41,9 @@ commit's files only, so a small step stays quick:
 - `npx eslint <files>` and `npx prettier --check <files>` in the project root.
 - `npx vitest related --run <files>` in the workspace of the files: the tests that reach them.
 - `npm run typecheck -w <workspace>` for each workspace the commit changes: a type check cannot be narrowed to files.
-- Run the `architecture-reviewer` agent on the commit's diff; fix what it finds or show why not.
+- Run the `architecture-reviewer` agent on the commit's diff; fix what it finds or show why not. Skip it when the
+  commit changes no file the reviewer checks — none under an app's root level, pure zone, tasks or stores folder,
+  or the shared package — only configs, CI, docs and static assets; say that it was skipped. (#59)
 - A commit that changes a screen: run the app, take a screenshot of that screen and compare it with the mockup in
   `design/vX.Y/`; show the differences.
 - Say what to open and check on the site after this commit.
