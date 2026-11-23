@@ -16,15 +16,6 @@ type FavoritesRequest = {
 // answer.
 export const sendFavoritesRequest = async <T>({ method, id, body, signal }: FavoritesRequest): Promise<T> => {
     const url = id === undefined ? `${API_URL}/favorites` : `${API_URL}/favorites/${id}`;
-    const headers: Record<string, string> = { "X-Client-Id": getClientId() };
-    if (body !== undefined) {
-        headers["Content-Type"] = "application/json";
-    }
 
-    return await fetchJson<T>(url, {
-        method,
-        headers,
-        body: body === undefined ? undefined : JSON.stringify(body),
-        signal,
-    });
+    return await fetchJson<T>(url, { method, headers: { "X-Client-Id": getClientId() }, body, signal });
 };

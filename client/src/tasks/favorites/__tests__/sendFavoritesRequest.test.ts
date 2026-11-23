@@ -59,12 +59,13 @@ describe("sendFavoritesRequest", () => {
         await expect(
             sendFavoritesRequest({ method: "PUT", id: 17861, body: { addedAt: DARK.addedAt } }),
         ).resolves.toEqual(DARK);
-        expect(fetchMock).toHaveBeenCalledWith("/api/favorites/17861", {
-            method: "PUT",
-            headers: { "X-Client-Id": getClientId(), "Content-Type": "application/json" },
-            body: '{"addedAt":1763300000000}',
-            signal: undefined,
-        });
+        const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+        const headers = new Headers(init.headers);
+        expect(url).toBe("/api/favorites/17861");
+        expect(init.method).toBe("PUT");
+        expect(init.body).toBe('{"addedAt":1763300000000}');
+        expect(headers.get("X-Client-Id")).toBe(getClientId());
+        expect(headers.get("Content-Type")).toBe("application/json");
     });
 
     it("rejects when the server fails", async () => {

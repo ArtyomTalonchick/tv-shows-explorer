@@ -18,14 +18,32 @@ describe("fetchJson", () => {
         expect(fetchMock).toHaveBeenCalledWith("https://example.com/items", { signal });
     });
 
-    it("sends the method, the headers and the body it is given", async () => {
+    it("sends the method and the headers it is given", async () => {
         const fetchMock = respond([]);
         vi.stubGlobal("fetch", fetchMock);
-        const init = { method: "PUT", headers: { "X-Client-Id": "id" }, body: "{}" };
+        const init = { method: "DELETE", headers: { "X-Client-Id": "id" } };
 
         await fetchJson("https://example.com/items/1", init);
 
         expect(fetchMock).toHaveBeenCalledWith("https://example.com/items/1", init);
+    });
+
+    it("sends a body as JSON, with its content type next to the caller's headers", async () => {
+        const fetchMock = respond({ id: 1 });
+        vi.stubGlobal("fetch", fetchMock);
+
+        await fetchJson("https://example.com/items/1", {
+            method: "PUT",
+            headers: { "X-Client-Id": "id" },
+            body: { name: "Dark" },
+        });
+
+        const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+        const headers = new Headers(init.headers);
+        expect(init.method).toBe("PUT");
+        expect(init.body).toBe('{"name":"Dark"}');
+        expect(headers.get("Content-Type")).toBe("application/json");
+        expect(headers.get("X-Client-Id")).toBe("id");
     });
 
     it("resolves undefined to a 204 answer, which has no body", async () => {
