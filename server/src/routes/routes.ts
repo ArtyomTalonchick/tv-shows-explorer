@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { favorites } from "./favorites/favorites";
 import { health } from "./health/health";
+import { session } from "./session/session";
 import { shows } from "./shows/shows";
 import { users } from "./users/users";
 
@@ -12,4 +13,5 @@ export const routes = new Hono()
     .route("/health", health)
     .route("/shows", shows)
     .route("/favorites", favorites)
-    .route("/users", users);
+    .route("/users", users)
+    .route("/session", session);
