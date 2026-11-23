@@ -36,7 +36,9 @@ export const FavoritesOpener: FC = () => {
             lineHeight="tight"
             whiteSpace="nowrap"
             cursor="pointer"
-            transition="background {durations.fast} {easings.standard}, border-color {durations.fast} {easings.standard}"
+            transitionProperty="background, border-color"
+            transitionDuration="fast"
+            transitionTimingFunction="standard"
             focusVisibleRing="none"
             _focusVisible={{ outline: "3px solid", outlineColor: "accent.solid", outlineOffset: "3px" }}
             _hover={{ borderColor: "fg.subtle", bg: "bg.muted" }}
