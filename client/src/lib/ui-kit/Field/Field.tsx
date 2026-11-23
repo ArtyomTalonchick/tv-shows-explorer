@@ -59,6 +59,14 @@ export const Field: FC<FieldProps> = (props) => {
                     outline="none"
                     _placeholder={{ color: "fg.subtle" }}
                     _disabled={{ cursor: "not-allowed" }}
+                    // The browser paints an autofilled input in its own colours: an inset shadow of the field's
+                    // background covers its fill, and the fill itself waits for a transition that never ends.
+                    _autofill={{
+                        boxShadow: "0 0 0 1000px {colors.bg} inset",
+                        WebkitTextFillColor: "{colors.fg}",
+                        caretColor: "{colors.fg}",
+                        transition: "background-color 600000s 0s",
+                    }}
                     // After the styles, so a caller can change one; before the field's own props, so it cannot replace them.
                     {...inputProps}
                     id={inputId}
