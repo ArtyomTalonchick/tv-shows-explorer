@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+- The app moves to https://tv-shows-explorer.web.app, with its server on the same domain; any address of the app
+  opens it directly.
+
 ## 0.2.2 — 2026-11-21
 
 - Internal changes only; nothing changes for the user.
