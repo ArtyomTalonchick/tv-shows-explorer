@@ -1,11 +1,11 @@
 import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
-import { FavoritesOpener } from "~/App/SearchPage/_components/FavoritesOpener/FavoritesOpener";
+import { Account } from "~/App/SearchPage/_components/Account/Account";
 import { Backdrop } from "~/App/_components/Backdrop/Backdrop";
 import { Logo } from "~/App/_components/Logo/Logo";
 import { SearchHeroInput } from "./SearchHeroInput/SearchHeroInput";
 
-// The start screen: the full-viewport hero with the search field, the logo and the favourites button above it.
+// The start screen: the full-viewport hero with the search field, the logo and the account block above it.
 export const SearchHero: FC = () => {
     return (
         <Box
@@ -31,7 +31,7 @@ export const SearchHero: FC = () => {
                 justifyContent="space-between"
             >
                 <Logo />
-                <FavoritesOpener />
+                <Account />
             </Flex>
             <Box position="relative" zIndex="2" maxW="hero" display="grid" justifyItems="center">
                 <Text textStyle="eyebrow">TVmaze · 80 000+ shows</Text>
