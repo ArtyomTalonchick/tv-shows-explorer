@@ -5,8 +5,9 @@ import { readJwtSecret } from "~/tasks/readJwtSecret";
 
 const BEARER = "Bearer ";
 
-// Lets a request through only with a token of this server in `Authorization: Bearer <token>`, signed with HS256 and
-// not expired, and passes its user id (`sub`) on to the handlers as `context.var.userId`; otherwise answers 401.
+// Lets a request through only with an access token of this server in `Authorization: Bearer <token>`: signed with
+// HS256, not expired, and of `typ` "access", so a refresh token does not open the routes. Passes its user id (`sub`)
+// on to the handlers as `context.var.userId`; otherwise answers 401.
 export const requireUser: MiddlewareHandler<SessionEnv> = async (context, next) => {
     const header = context.req.header("Authorization") ?? "";
     const secret = readJwtSecret();
@@ -16,7 +17,8 @@ export const requireUser: MiddlewareHandler<SessionEnv> = async (context, next) 
         }
         try {
             const payload = await verify(header.slice(BEARER.length), secret, "HS256");
-            return typeof payload.sub === "string" ? payload.sub : null;
+            const { sub, typ } = payload;
+            return typ === "access" && typeof sub === "string" ? sub : null;
         } catch {
             return null;
         }

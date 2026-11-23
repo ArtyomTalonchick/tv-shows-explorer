@@ -73,8 +73,8 @@ describe("POST /", () => {
 
 describe("GET /", () => {
     const now = (): number => Math.floor(Date.now() / 1000);
-    const token = async (exp: number, secret = "test-secret"): Promise<string> => {
-        return await sign({ sub: "u1", email: "anna@example.com", iat: now(), exp }, secret, "HS256");
+    const token = async (exp: number, secret = "test-secret", typ = "access"): Promise<string> => {
+        return await sign({ sub: "u1", email: "anna@example.com", typ, iat: now(), exp }, secret, "HS256");
     };
     const getSession = async (authorization?: string) => {
         const headers = authorization === undefined ? undefined : { Authorization: authorization };
@@ -108,6 +108,7 @@ describe("GET /", () => {
         ["a broken token", async () => "Bearer not.a.token"],
         ["an expired token", async () => `Bearer ${await token(now() - 60)}`],
         ["a token of another secret", async () => `Bearer ${await token(now() + 60, "other-secret")}`],
+        ["a refresh token", async () => `Bearer ${await token(now() + 60, "test-secret", "refresh")}`],
     ])("answers 401 to %s", async (_case, authorization) => {
         const { status } = await getSession(await authorization());
 

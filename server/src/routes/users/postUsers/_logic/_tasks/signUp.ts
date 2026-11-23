@@ -3,7 +3,7 @@ import { normalizeEmail } from "@tv-shows-explorer/shared";
 import type { Credentials, SessionResponse, User } from "@tv-shows-explorer/shared";
 import { hashPassword } from "~/lib/password/hashPassword";
 import { usersStore } from "~/routes/_stores/usersStore/usersStore";
-import { issueToken } from "~/tasks/issueToken";
+import { issueAccessToken } from "~/tasks/issueAccessToken";
 
 // Makes an account of valid credentials and signs it in: the email normalized, the password kept only as its hash,
 // a new random id. Returns the token and the user, or null when the email already has an account. The check and the
@@ -19,5 +19,5 @@ export const signUp = async (credentials: Credentials): Promise<SessionResponse 
     const user: User = { id: randomUUID(), email };
     const passwordHash = await hashPassword(credentials.password);
     await usersStore.create({ ...user, passwordHash, createdAt: Date.now() });
-    return { token: await issueToken(user), user };
+    return { token: await issueAccessToken(user), user };
 };
