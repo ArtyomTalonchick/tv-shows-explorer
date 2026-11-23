@@ -43,7 +43,9 @@ const stubServer = (saved: Favorite[] = []) => {
 const searchRequests = (fetchMock: ReturnType<typeof stubServer>) =>
     fetchMock.mock.calls.filter(([url]) => url.startsWith("/api/shows"));
 
-const renderApp = (): void => {
+// Opens the app at `path`, as a direct visit to that address.
+const renderApp = (path = "/"): void => {
+    window.history.replaceState(null, "", path);
     render(
         <Provider>
             <App />
@@ -75,6 +77,15 @@ describe("App", () => {
         expect(screen.queryByRole("region", { name: "Search results" })).not.toBeInTheDocument();
         expect(await screen.findByRole("button", { name: "Favourites 1" })).toBeInTheDocument();
         expect(searchRequests(fetchMock)).toHaveLength(0);
+    });
+
+    it("leads an unknown address to the search page", () => {
+        stubServer();
+
+        renderApp("/nowhere");
+
+        expect(screen.getByRole("heading", { level: 1, name: "Find your next obsession." })).toBeInTheDocument();
+        expect(window.location.pathname).toBe("/");
     });
 
     it("lists the favourites in a drawer, removes one from its bookmark and puts it back on Undo", async () => {

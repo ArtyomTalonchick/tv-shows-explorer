@@ -1,16 +1,21 @@
 import type { FC } from "react";
+import { Navigate, Route, Routes } from "react-router";
 import { Toaster } from "~/lib/ui-kit/Toaster/Toaster";
 import { FavoritesDrawer } from "./FavoritesDrawer/FavoritesDrawer";
 import { SearchPage } from "./SearchPage/SearchPage";
 import { usePresenter } from "./_logic/usePresenter";
 
-// The page, and what floats above it on every screen: the favourites list and the toasts.
+// The page of the address, and what floats above it on every page: the favourites list and the toasts. An unknown
+// address is replaced by the search.
 export const App: FC = () => {
     usePresenter();
 
     return (
         <>
-            <SearchPage />
+            <Routes>
+                <Route path="/" element={<SearchPage />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
             <FavoritesDrawer />
             <Toaster />
         </>
