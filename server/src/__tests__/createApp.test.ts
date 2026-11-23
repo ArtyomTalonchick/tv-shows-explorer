@@ -21,19 +21,19 @@ describe("createApp", () => {
         expect(response.headers.get("Access-Control-Allow-Origin")).toBe(SITE);
     });
 
-    it("allows the methods and headers of the favorites in a preflight", async () => {
-        const response = await createApp().request("/api/favorites/1", {
+    it("allows the methods and headers of the favorites and the accounts in a preflight", async () => {
+        const response = await createApp().request("/api/users", {
             method: "OPTIONS",
             headers: {
                 Origin: SITE,
-                "Access-Control-Request-Method": "PUT",
-                "Access-Control-Request-Headers": "X-Client-Id, Content-Type",
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "Authorization, Content-Type",
             },
         });
 
         expect(response.status).toBe(204);
-        expect(response.headers.get("Access-Control-Allow-Methods")).toBe("GET,PUT,DELETE");
-        expect(response.headers.get("Access-Control-Allow-Headers")).toBe("X-Client-Id,Content-Type");
+        expect(response.headers.get("Access-Control-Allow-Methods")).toBe("GET,POST,PUT,DELETE");
+        expect(response.headers.get("Access-Control-Allow-Headers")).toBe("X-Client-Id,Authorization,Content-Type");
     });
 
     it("does not let another site call the API", async () => {

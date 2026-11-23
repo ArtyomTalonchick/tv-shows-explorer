@@ -15,8 +15,8 @@ export const createApp = (): Hono => {
         "/api/*",
         cors({
             origin: SITE_ORIGIN,
-            allowMethods: ["GET", "PUT", "DELETE"],
-            allowHeaders: ["X-Client-Id", "Content-Type"],
+            allowMethods: ["GET", "POST", "PUT", "DELETE"],
+            allowHeaders: ["X-Client-Id", "Authorization", "Content-Type"],
         }),
     );
     app.route("/api", routes);
