@@ -9,8 +9,9 @@ const jwtSecret = defineSecret("JWT_SECRET");
 
 // The server on Firebase: one Cloud Function, `https://us-central1-tv-shows-explorer.cloudfunctions.net/server`, that
 // answers every path of the app (`…/server/api/shows`). Named `server`, not `api`, so the path does not read
-// `/api/api`. The region is next to the Firestore database (`nam5`, the US); at most 2 instances, so a burst of
-// traffic cannot run up the bill. `getRequestListener` reads the body Firebase has already parsed (`rawBody`).
+// `/api/api`. The site reaches it through Firebase Hosting, which hands `/api/**` to it with the path unchanged
+// (`firebase.json`): the function sees `/api/shows` either way. The region is next to the Firestore database
+// (`nam5`, the US); at most 2 instances, so a burst of traffic cannot run up the bill. `getRequestListener` reads the body Firebase has already parsed (`rawBody`).
 export const server = onRequest(
     { region: "us-central1", maxInstances: 2, secrets: [jwtSecret] },
     getRequestListener(createApp().fetch),

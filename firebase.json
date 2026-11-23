@@ -1,4 +1,13 @@
 {
+    "hosting": {
+        "public": "client/dist",
+        "ignore": ["firebase.json", "**/.*"],
+        "predeploy": ["npm run build"],
+        "rewrites": [
+            { "source": "/api/**", "function": { "functionId": "server", "region": "us-central1" } },
+            { "source": "**", "destination": "/index.html" }
+        ]
+    },
     "functions": [
         {
             "source": "server/dist",

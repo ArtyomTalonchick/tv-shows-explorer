@@ -4,9 +4,8 @@ A small app to search TV shows from the public [TVmaze API](https://www.tvmaze.c
 the results three per page, filter them by genre, and keep the shows you like in your favourites. The app has its
 own server: the client never calls TVmaze itself.
 
-**Live:** https://artyomtalonchick.github.io/tv-shows-explorer/ — its server answers at
-https://us-central1-tv-shows-explorer.cloudfunctions.net/server/api (a Cloud Function on Firebase; the favorites are
-kept in Firestore).
+**Live:** https://tv-shows-explorer.web.app — on Firebase Hosting; its server answers on the same domain at `/api`
+(a Cloud Function on Firebase; the favorites are kept in Firestore).
 
 The app is built step by step on the Simple Architecture approach. The architecture rules written along the way
 are turned into AI rules (see [AI Rules](#ai-rules)).
@@ -51,7 +50,7 @@ In this repository:
 
 An npm workspaces monorepo in TypeScript:
 
-- **Client:** React 19, Chakra UI v3, Zustand, Vite, Vitest with Testing Library.
+- **Client:** React 19, Chakra UI v3, Zustand, Vite, Vitest with Testing Library; served by Firebase Hosting.
 - **Server:** Node, Hono, Vitest; a Cloud Function on Firebase, with the favorites in Firestore.
 - **Tooling:** ESLint and Prettier for the whole repository.
 
@@ -59,13 +58,13 @@ An npm workspaces monorepo in TypeScript:
 
 | Path | What it is |
 |---|---|
-| `client/` | The app (Vite, React); deployed to GitHub Pages |
+| `client/` | The app (Vite, React); deployed to Firebase Hosting |
 | `server/` | The API server (Hono); deployed to Firebase as a Cloud Function |
 | `shared/` | The API types the client and the server share: types only |
 | `design/` | Design tokens, mockups and screenshots of each version |
 | `requirements/` | What each feature does: the source of truth for the code |
-| `.github/workflows/` | CI (lint, format, type check, tests of every package), and the deploy of the client to GitHub Pages and of the server to Firebase; the deploy needs the repository variable `VITE_API_URL` (the server's address) and the secret `FIREBASE_SERVICE_ACCOUNT` |
-| `firebase.json`, `.firebaserc` | The Firebase project and its Cloud Function, built from `server/` |
+| `.github/workflows/` | CI (lint, format, type check, tests of every package), and the deploy of the client and the server to Firebase; the deploy needs the secret `FIREBASE_SERVICE_ACCOUNT` |
+| `firebase.json`, `.firebaserc` | The Firebase project: the Hosting of the client, which hands `/api/**` to the Cloud Function built from `server/` |
 | `.claude/` | Claude Code settings and the gh-tasks rules |
 | `CHANGELOG.md` | Changes per version |
 

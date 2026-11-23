@@ -9,58 +9,17 @@ on:
 
 permissions:
     contents: read
-    pages: write
-    id-token: write
 
 concurrency:
     group: deploy
     cancel-in-progress: false
 
 jobs:
-    build:
-        if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  ref: ${{ github.event.workflow_run.head_sha }}
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 24
-                  cache: npm
-            - run: npm ci
-            # The site calls the server at the repository variable `VITE_API_URL`; without it the build would call
-            # `/api` on GitHub Pages, so the deploy stops here instead.
-            - name: Check VITE_API_URL
-              env:
-                  VITE_API_URL: ${{ vars.VITE_API_URL }}
-              run: |
-                  if [ -z "$VITE_API_URL" ]; then
-                    echo "::error::The repository variable VITE_API_URL is not set"
-                    exit 1
-                  fi
-            - run: npm run build
-              env:
-                  VITE_API_URL: ${{ vars.VITE_API_URL }}
-            - uses: actions/configure-pages@v5
-            - uses: actions/upload-pages-artifact@v3
-              with:
-                  path: client/dist
-
-    deploy:
-        needs: build
-        runs-on: ubuntu-latest
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        steps:
-            - id: deployment
-              uses: actions/deploy-pages@v4
-
-    # The server: the Cloud Function of `firebase.json`, built and deployed by the Firebase CLI. Independent of the
-    # Pages jobs, so a failure of one does not hold back the other. It signs in with the key of a service account
-    # of the Firebase project, the repository secret `FIREBASE_SERVICE_ACCOUNT`.
-    functions:
+    # The site and the server, both on Firebase (`firebase.json`): Hosting serves the client and hands `/api/**` to the
+    # Cloud Function. The Firebase CLI builds both (the `predeploy` of each) and deploys them together, so the site
+    # never calls a server older than itself. It signs in with the key of a service account of the Firebase project,
+    # the repository secret `FIREBASE_SERVICE_ACCOUNT`.
+    firebase:
         if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
         runs-on: ubuntu-latest
         steps:
@@ -75,4 +34,4 @@ jobs:
             - uses: google-github-actions/auth@v2
               with:
                   credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-            - run: npx --yes firebase-tools@15.36.0 deploy --only functions --project tv-shows-explorer --non-interactive --force
+            - run: npx --yes firebase-tools@15.36.0 deploy --only hosting,functions --project tv-shows-explorer --non-interactive --force

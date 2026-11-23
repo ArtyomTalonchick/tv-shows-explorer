@@ -1,8 +1,8 @@
 {
     "name": "TV Shows Explorer",
     "short_name": "TV Shows",
-    "start_url": "/tv-shows-explorer/",
-    "scope": "/tv-shows-explorer/",
+    "start_url": "/",
+    "scope": "/",
     "display": "standalone",
     "theme_color": "#0E0E0F",
     "background_color": "#0E0E0F",
