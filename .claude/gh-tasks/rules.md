@@ -56,6 +56,12 @@ step. A step either moves the site forward by something that can be checked on i
 in use. A commit adds no code that nothing uses yet. Every commit passes its checks (see `## Verify`) on its own. A
 design, `type:ops` or docs task is not split by this rule. (#28)
 
+A commit is small: a few files, read and checked in a minute; the plan names the files of each commit. When the first
+step the site can show would need a large commit (a server feature built of a hash, a store, a token and a route),
+the task is split into logically complete pieces instead, each with its own tests, though a later commit of the same
+task is the first to use them: a module whole, not half of it (a store with its whole API, not only the call the
+next commit needs). The plan says which commits these are and which commit puts them to use. (#61)
+
 These go into the task's commit — its last one, when it has several — not a separate one:
 - The feature file in `requirements/` that the task changes or creates is updated to match the change.
 - A change the user can see gets a line under `## Unreleased` in `CHANGELOG.md`.
