@@ -2,6 +2,7 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import type { Favorite } from "@tv-shows-explorer/shared";
 import { useFavoritesDrawerStore } from "~/App/_stores/useFavoritesDrawerStore";
 import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
+import { useSessionStore } from "~/App/_stores/useSessionStore";
 import { clearSearch } from "~/tasks/search/clearSearch";
 import { App } from "../App";
 import { Provider } from "../Provider/Provider";
@@ -17,12 +18,18 @@ const DARK: Favorite = {
     addedAt: 1763300000000,
 };
 
+const SESSION = { accessToken: "access", refreshToken: "refresh", user: { id: "u1", email: "anna@example.com" } };
+
 const NOTHING_FOUND = { shows: [], genres: [], found: 0, genre: null, total: 0, page: 1, perPage: 3 };
 
-// The app's server: the search finds nothing; the favorites start as `saved` and follow PUT and DELETE of DARK.
+// The app's server: the search finds nothing, a sign-in succeeds; the favorites start as `saved` and follow PUT and
+// DELETE of DARK.
 const stubServer = (saved: Favorite[] = []) => {
     let favorites = saved;
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+        if (url === "/api/session") {
+            return new Response(JSON.stringify(SESSION));
+        }
         if (!url.startsWith("/api/favorites")) {
             return new Response(JSON.stringify(NOTHING_FOUND));
         }
@@ -59,6 +66,7 @@ describe("App", () => {
     beforeEach(() => {
         useFavoritesStore.setState({ favorites: [] });
         useFavoritesDrawerStore.setState({ isOpen: false });
+        useSessionStore.setState({ session: null });
         clearSearch();
     });
 
@@ -109,6 +117,28 @@ describe("App", () => {
 
         expect(screen.getByRole("heading", { level: 1, name: "Sign in" })).toBeInTheDocument();
         expect(window.location.pathname).toBe("/sign-in");
+    });
+
+    it("signs the user in and leads to the search page", async () => {
+        stubServer();
+        renderApp("/sign-in");
+
+        fireEvent.change(screen.getByLabelText("Email"), { target: { value: "anna@example.com" } });
+        fireEvent.change(screen.getByLabelText("Password"), { target: { value: "severance" } });
+        fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+
+        expect(await screen.findByRole("heading", { level: 1, name: "Find your next obsession." })).toBeInTheDocument();
+        expect(window.location.pathname).toBe("/");
+    });
+
+    it.each(["/sign-in", "/sign-up"])("leads a signed-in user from %s to the search page", (path) => {
+        stubServer();
+        useSessionStore.setState({ session: SESSION });
+
+        renderApp(path);
+
+        expect(screen.getByRole("heading", { level: 1, name: "Find your next obsession." })).toBeInTheDocument();
+        expect(window.location.pathname).toBe("/");
     });
 
     it("leads an unknown address to the search page", () => {

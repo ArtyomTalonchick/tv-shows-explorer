@@ -8,16 +8,16 @@ import { SignUpPage } from "./SignUpPage/SignUpPage";
 import { usePresenter } from "./_logic/usePresenter";
 
 // The page of the address, and what floats above it on every page: the favourites list and the toasts. An unknown
-// address is replaced by the search.
+// address is replaced by the search, and so are the sign-in and sign-up pages for a signed-in user.
 export const App: FC = () => {
-    usePresenter();
+    const { isSignedIn } = usePresenter();
 
     return (
         <>
             <Routes>
                 <Route path="/" element={<SearchPage />} />
-                <Route path="/sign-in" element={<SignInPage />} />
-                <Route path="/sign-up" element={<SignUpPage />} />
+                <Route path="/sign-in" element={isSignedIn ? <Navigate to="/" replace /> : <SignInPage />} />
+                <Route path="/sign-up" element={isSignedIn ? <Navigate to="/" replace /> : <SignUpPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
             <FavoritesDrawer />

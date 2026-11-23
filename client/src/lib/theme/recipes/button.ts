@@ -1,6 +1,7 @@
 import { defineRecipe } from "@chakra-ui/react";
 
-// Overrides Chakra's button with .btn of design/library: `solid` (the accent) and `ghost`, size `sm`.
+// Overrides Chakra's button with .btn of design/library: `solid` (the accent) and `ghost`, sizes `md` (.btn) and `sm`
+// (.btn--sm).
 export const buttonRecipe = defineRecipe({
     base: {
         rounded: "full",
@@ -13,6 +14,8 @@ export const buttonRecipe = defineRecipe({
         focusVisibleRing: "none",
         _focusVisible: { outline: "3px solid", outlineColor: "accent.solid", outlineOffset: "3px" },
         _icon: { boxSize: "1.25em" },
+        // .btn.is-loading: a request is on its way; the button keeps its colour, not the look of a disabled one.
+        _loading: { opacity: "1", filter: "none", cursor: "progress" },
     },
     variants: {
         variant: {
@@ -30,6 +33,17 @@ export const buttonRecipe = defineRecipe({
             },
         },
         size: {
+            md: {
+                h: "auto",
+                minW: "auto",
+                px: "6",
+                py: "3",
+                gap: "2",
+                textStyle: "none",
+                fontSize: "md",
+                lineHeight: "tight",
+                _icon: { boxSize: "1.25em" },
+            },
             sm: {
                 h: "auto",
                 minW: "auto",
