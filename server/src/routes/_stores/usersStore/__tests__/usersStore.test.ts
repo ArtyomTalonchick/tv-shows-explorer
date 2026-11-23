@@ -41,6 +41,14 @@ describe("usersStore", () => {
         expect(await usersStore.get("u1")).toEqual(user("u1", "anna@example.com"));
     });
 
+    it("keeps only the fields of a stored user", async () => {
+        const withPassword = { ...user("u1", "anna@example.com"), password: "severance" };
+
+        await usersStore.create(withPassword);
+
+        expect(await usersStore.get("u1")).toEqual(user("u1", "anna@example.com"));
+    });
+
     it("finds a user by its email", async () => {
         await usersStore.create(user("u1", "anna@example.com"));
         await usersStore.create(user("u2", "ben@example.com"));

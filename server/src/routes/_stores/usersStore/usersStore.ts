@@ -12,9 +12,11 @@ export type StoredUser = {
 // The accounts, in Firestore wherever the server runs, as the favorites are; the tests mock it. A document per user,
 // named by its id: `users/{id}`. Reached by the tasks of the `/users` and `/session` routes.
 export const usersStore = {
-    // Adds the user. It does not check the email: sign-up does, before it calls this.
+    // Adds the user. It does not check the email: sign-up does, before it calls this. It writes only the fields of
+    // `StoredUser`, so a field the caller adds by mistake, a password most of all, never reaches the database.
     create: async (user: StoredUser): Promise<void> => {
-        await usersCollection().doc(user.id).set(user);
+        const { id, email, passwordHash, createdAt } = user;
+        await usersCollection().doc(id).set({ id, email, passwordHash, createdAt });
     },
     // The user with this id; null when there is none.
     get: async (id: string): Promise<StoredUser | null> => {
