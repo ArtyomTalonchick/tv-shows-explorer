@@ -30,13 +30,7 @@ export const AuthPage: FC<AuthPageProps> = ({ eyebrow, title, text, children, fo
             px={{ base: "4", md: "6" }}
         >
             <Backdrop />
-            <Box
-                position="absolute"
-                top={{ base: "6", md: "8" }}
-                insetInline="0"
-                px={{ base: "4", md: "12" }}
-                zIndex="3"
-            >
+            <Box position="absolute" top="6" insetInline="0" px={{ base: "4", md: "12" }} zIndex="3">
                 <Link asChild aria-label="tv/explorer — back to start" rounded="sm" focusRingColor="accent.solid">
                     <RouterLink to="/">
                         <Logo />
