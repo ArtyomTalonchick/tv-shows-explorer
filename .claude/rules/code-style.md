@@ -125,6 +125,9 @@ followed by hand. A new preference the owner states during a task is added here 
   folder that holds `__tests__/` relatively (`../useShowsRequest`), anything else through `~/`. (#8)
 - A route handler is a folder named by its method and path (`getFavorites`, `putFavoritesById`); the path itself is
   written only in the table of its level (`favorites.ts`). (#27)
+- Everything the client and the server share lives in `shared/`, in a folder per subject (`credentials/`,
+  `favorites/`, `session/`, `shows/`), one thing per file; `shared/src/index.ts` re-exports them. Not a flat heap of
+  files in `src/`. (#61)
 
 ## Tools
 
