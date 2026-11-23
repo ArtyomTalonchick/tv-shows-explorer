@@ -71,8 +71,9 @@ What the user sees (`design/v0.2/`): (#28)
 - Removing a show that is not there is not an error and changes nothing.
 - The list belongs to the browser, not to a person: another browser or device has its own, and clearing the
   browser's data starts an empty one.
-- The favorites survive a restart, a sleep and a deploy of the server: on Firebase they are kept in Firestore. Run
-  anywhere else — local development, tests — the server keeps them in memory and loses them on a restart. (#34)
+- The favorites survive a restart, a sleep and a deploy of the server: they are kept in Firestore. The local server
+  uses the same Firestore as the deployed one, and does not start without the credentials to reach it; the tests
+  mock the store and reach no Firestore. (#34, #66)
 
 ## Decisions
 
@@ -106,7 +107,11 @@ What the user sees (`design/v0.2/`): (#28)
 - A document per show, `clients/{clientId}/favorites/{showId}`: adding, removing and checking a show touch one
   document, and the list is one read of the browser's collection. The order is kept by `addedAt`, as before. (#34)
 - The server uses Firestore when Firebase has set `FIREBASE_CONFIG`, and memory otherwise, so local development
-  and the tests need no setup. (#34)
+  and the tests need no setup. (#34) Replaced by Firestore everywhere in #66.
+- The server uses Firestore everywhere it runs, local development included, and the tests mock the store: one
+  implementation of the store, and local development runs the real one. The cost is a one-time setup
+  (`gcloud auth application-default login`, `GOOGLE_CLOUD_PROJECT` in `server/.env`), and local development changes
+  the real data; there is no second database or emulator for it. (#66)
 - A toast stays pressable over the open drawer, so Undo of a removal from the drawer works there; keyboard focus
   stays in the drawer, so Undo is not reached by Tab while it is open. (#28)
 - A change answers only what it changed: `PUT` the one `Favorite`, `DELETE` `204 No Content` (the standard answer

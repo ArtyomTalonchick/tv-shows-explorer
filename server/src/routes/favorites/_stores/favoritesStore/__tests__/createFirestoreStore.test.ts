@@ -74,8 +74,4 @@ describe("createFirestoreStore", () => {
         expect(await store.get("c1", 3)).toBeNull();
         expect(await store.list("c3")).toEqual([]);
     });
-
-    it("refuses to clear the favorites of real browsers", async () => {
-        await expect(store.clear()).rejects.toThrow();
-    });
 });

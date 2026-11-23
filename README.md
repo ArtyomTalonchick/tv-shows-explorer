@@ -71,8 +71,16 @@ An npm workspaces monorepo in TypeScript:
 
 ## Scripts
 
-Locally the server keeps the favorites in memory: it uses Firestore only on Firebase, so no key or setup is
-needed.
+Locally the server keeps the favorites in the same Firestore as the deployed function, so **local development
+changes the real data**. Set it up once, with the [Google Cloud CLI](https://cloud.google.com/sdk/docs/install):
+
+```sh
+gcloud auth application-default login   # the Google credentials the Firebase Admin SDK reads
+cp server/.env.example server/.env      # GOOGLE_CLOUD_PROJECT, the Firebase project id
+```
+
+Without them the server stops at the start and says what to run. The tests mock the store: they need no
+credentials and no network.
 
 ```sh
 npm install           # installs all three packages

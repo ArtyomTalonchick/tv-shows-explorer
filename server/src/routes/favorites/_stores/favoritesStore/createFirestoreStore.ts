@@ -4,9 +4,9 @@ import type { Favorite } from "@tv-shows-explorer/shared";
 import type { CollectionReference } from "firebase-admin/firestore";
 import type { FavoritesStore } from "./types";
 
-// The favorites kept in Firestore, a document per show: `clients/{clientId}/favorites/{showId}`. Inside Cloud
-// Functions the Admin SDK finds its project and credentials on its own, so the code holds no key. Firebase starts
-// on the first call, not on import.
+// The favorites kept in Firestore, a document per show: `clients/{clientId}/favorites/{showId}`. The Admin SDK finds
+// its project and credentials on its own: inside Cloud Functions from Firebase, locally from Application Default
+// Credentials and `GOOGLE_CLOUD_PROJECT`, so the code holds no key. Firebase starts on the first call, not on import.
 export const createFirestoreStore = (): FavoritesStore => {
     const favoritesOf = (clientId: string): CollectionReference => {
         if (getApps().length === 0) {
@@ -29,10 +29,6 @@ export const createFirestoreStore = (): FavoritesStore => {
         },
         remove: async (clientId, id) => {
             await favoritesOf(clientId).doc(String(id)).delete();
-        },
-        // Never forgets the favorites of real browsers: only the memory store is cleared, in tests.
-        clear: async () => {
-            throw new Error("The Firestore favorites store is never cleared");
         },
     };
 };

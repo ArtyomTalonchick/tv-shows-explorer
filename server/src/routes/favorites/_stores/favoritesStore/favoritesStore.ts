@@ -1,10 +1,7 @@
 import { createFirestoreStore } from "./createFirestoreStore";
-import { createMemoryStore } from "./createMemoryStore";
 import type { FavoritesStore } from "./types";
 
-// The favorites of each browser, by its client id; reached only by the tasks of the favorites routes:
-// `listFavorites`, `addFavorite` and `removeFavorite`. In Firestore when the server runs on Firebase, which sets
-// `FIREBASE_CONFIG`; in memory otherwise (local development, tests), with no setup.
-export const favoritesStore: FavoritesStore = process.env.FIREBASE_CONFIG
-    ? createFirestoreStore()
-    : createMemoryStore();
+// The favorites of each browser, by its client id, in Firestore wherever the server runs, local development
+// included; reached only by the tasks of the favorites routes: `listFavorites`, `addFavorite` and `removeFavorite`.
+// The tests mock it.
+export const favoritesStore: FavoritesStore = createFirestoreStore();

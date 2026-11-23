@@ -11,6 +11,4 @@ export type FavoritesStore = {
     put: (clientId: string, favorite: Favorite) => Promise<void>;
     // A show that is not there changes nothing.
     remove: (clientId: string, id: number) => Promise<void>;
-    // Forgets every browser's favorites: for tests.
-    clear: () => Promise<void>;
 };
