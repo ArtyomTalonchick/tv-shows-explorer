@@ -107,6 +107,9 @@ followed by hand. A new preference the owner states during a task is added here 
   holds logic of the data itself (`addFavorite` keeps the list ordered by `addedAt`; `forgetSearch` knows what «no
   search» is). Everything else a task or a plain function writes with `useXStore.setState(…)`: no setter that only
   repeats `set({ x })`. (#45)
+- A function's name and its return type say the same thing: `issueTokens` returns `SessionTokens`. When callers
+  need more than that, a second function adds it under its own name and type (`startSession` returns
+  `SessionResponse`, the tokens and the user), rather than the first one returning more than its name says. (#69)
 
 ## Styles
 
@@ -128,6 +131,8 @@ followed by hand. A new preference the owner states during a task is added here 
 - Everything the client and the server share lives in `shared/`, in a folder per subject (`credentials/`,
   `favorites/`, `session/`, `shows/`), one thing per file; `shared/src/index.ts` re-exports them. Not a flat heap of
   files in `src/`. (#61)
+- The app's tasks folder is grouped by subject too, a subject inside a wider one where it belongs to it:
+  `tasks/session/startSession`, `tasks/session/jwt/verifyToken`, not `tasks/jwt/` next to `tasks/startSession`. (#69)
 
 ## Tools
 
