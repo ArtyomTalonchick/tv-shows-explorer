@@ -6,6 +6,6 @@ export { isValidEmail } from "./credentials/isValidEmail";
 export { PASSWORD_MIN_LENGTH, isValidPassword } from "./credentials/isValidPassword";
 export { normalizeEmail } from "./credentials/normalizeEmail";
 export type { AddFavoriteBody, Favorite } from "./favorites/favorites";
-export type { SessionResponse, SessionTokens, User } from "./session/session";
+export type { RefreshBody, SessionResponse, SessionTokens, User } from "./session/session";
 export type { Show } from "./shows/show";
 export type { GenreCount, ShowsPage, ShowsQuery } from "./shows/shows";

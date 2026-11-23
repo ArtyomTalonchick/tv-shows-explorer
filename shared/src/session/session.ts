@@ -18,3 +18,8 @@ export type SessionTokens = {
 export type SessionResponse = SessionTokens & {
     user: User;
 };
+
+// The body of `POST /api/session/refresh`: the refresh token to exchange for a new `SessionResponse`.
+export type RefreshBody = {
+    refreshToken: string;
+};
