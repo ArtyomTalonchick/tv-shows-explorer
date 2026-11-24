@@ -1,5 +1,5 @@
 import { useSessionStore } from "~/stores/useSessionStore";
-import { signOut } from "./_tasks/signOut";
+import { signOut } from "~/tasks/session/signOut";
 
 type UsePresenterResult = {
     // The signed-in user's email: the trigger's name, and in full in the panel.
