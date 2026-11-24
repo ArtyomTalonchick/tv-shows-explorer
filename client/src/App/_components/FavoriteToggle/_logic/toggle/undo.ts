@@ -1,6 +1,6 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
 import { addFavorite } from "../_tasks/addFavorite";
-import { showFavoriteToast } from "./showFavoriteToast";
+import { showFavoriteToast } from "../showFavoriteToast";
 
 // Undo in the toast of a removal: puts the removed show back in its old place, and says so; a failed request says
 // that too.

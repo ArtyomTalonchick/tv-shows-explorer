@@ -1,7 +1,7 @@
 import type { Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { toggleFavorite } from "../_tasks/toggleFavorite";
-import { showFavoriteToast } from "./showFavoriteToast";
+import { showFavoriteToast } from "../showFavoriteToast";
 import { undo } from "./undo";
 
 // A press on the bookmark of one show. It changes at once, and so do the counter and the list: the task changes the
