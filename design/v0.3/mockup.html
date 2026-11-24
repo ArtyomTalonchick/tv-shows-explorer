@@ -102,7 +102,6 @@
   ];
   const PER_PAGE = 3;
   const EMAIL = "anna@example.com";
-  const PHONE = matchMedia("(max-width: 760px)").matches;
   const byName = (name) => SHOWS.find((s) => s.name === name);
   const icon = (id) => `<svg class="icon"><use href="#${id}"/></svg>`;
 
@@ -118,9 +117,9 @@
     : `<button class="fav-button" aria-haspopup="dialog">${icon("bookmark")}<span class="fav-button__label">Favourites</span>
         <span class="fav-button__count ${n === 0 ? "fav-button__count--zero" : ""}">${n}</span></button>`;
   const userMenu = (open) => `
-    <div class="user-menu ${PHONE ? "user-menu--compact" : ""}">
-      <button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="${open}" ${PHONE ? `aria-label="${EMAIL}"` : ""}>
-        <span class="user-menu__avatar" aria-hidden="true">${EMAIL[0]}</span><span class="user-menu__email">${EMAIL}</span></button>
+    <div class="user-menu">
+      <button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="${open}" aria-label="${EMAIL}">
+        <span class="user-menu__avatar" aria-hidden="true">${EMAIL[0]}</span></button>
       ${open ? `<div class="user-menu__panel" role="menu"><div class="user-menu__head"><div class="eyebrow">Signed in as</div>
         <span class="user-menu__head-email">${EMAIL}</span></div>
         <button class="user-menu__item" role="menuitem">${icon("log-out")}Sign out</button></div>` : ""}
@@ -250,12 +249,12 @@
   const SAVED = ["Dark", "Breaking Bad", "Severance"];
   const SCREENS = [
     ["start-guest", "Start, a guest — the favourites button without a counter and «Sign in» in the top-right corner", start(null)],
-    ["start-user", "Start, signed in — the favourites button with its counter and the user: the initial and the email (only the initial on a phone)", start(SAVED)],
+    ["start-user", "Start, signed in — the favourites button with its counter and the user: the initial, on every screen", start(SAVED)],
     ["results-guest", "Results, a guest — every bookmark is empty; the search works as before", results(null)],
     ["guest-bookmark", "A guest presses the bookmark of Dark — it stays empty, nothing is sent; a toast says why for 4 s and its «Sign in» leads to sign-in. The guest stays on the results", results(null, { overlay: guestToast(byName("Dark")) })],
     ["guest-favourites", "A guest presses Favourites — the drawer opens as for a user, with no counter and no list: what favourites need, «Sign in» and the way to sign up", results(null, { overlay: guestDrawer() })],
     ["results-user", "Results, signed in — the bookmarks of v0.2, the counter of the user's own list", results(SAVED)],
-    ["user-menu", "User menu — a press on the user opens the full email and «Sign out»; signing out makes the page a guest's at once, with no request. Escape and a press outside close it", results(SAVED, { menuOpen: true })],
+    ["user-menu", "User menu — a press on the initial opens the full email and «Sign out»; the panel grows to keep a long email on one line; signing out makes the page a guest's at once, with no request. Escape and a press outside close it", results(SAVED, { menuOpen: true })],
     ["sign-in", "Sign in — from «Sign in» in the header, the guest toast or the guest drawer. The button checks the fields before the request; success leads back to the page the user came from", signIn()],
     ["sign-in-loading", "Sign in, a request on its way — the fields and the eye are disabled, the button shows a spinner and takes no presses", signIn({ email: EMAIL, password: "severance", loading: true })],
     ["sign-in-wrong", "Sign in, wrong email or password — one message for both, so the form does not tell which emails have an account; the password stays for a fix", signIn({ email: EMAIL, password: "severance", alert: "Wrong email or password." })],

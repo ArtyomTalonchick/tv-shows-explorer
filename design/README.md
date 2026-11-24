@@ -107,7 +107,7 @@ component there. A component goes into the code when the first implementation ta
 | TextField | `.field`, `__label`, `__control`, `__toggle`, `__hint`, `__error`, `.field--invalid` | empty, hover, focus, filled, invalid, disabled; a password with the eye button |
 | FormAlert | `.form-alert`, `__text` | wrong email or password, no answer |
 | AuthCard | `.auth-card`, `__title`, `__text`, `__form`, `__footer` | — |
-| UserMenu | `.user-menu`, `__trigger`, `__avatar`, `__email`, `__panel`, `__head`, `__item`, `.user-menu--compact` | closed, hover, focus, long email, compact, open |
+| UserMenu | `.user-menu`, `__trigger`, `__avatar`, `__panel`, `__head`, `__item` | closed, hover, focus, open; open with a long email, which widens the panel |
 
 Rules:
 

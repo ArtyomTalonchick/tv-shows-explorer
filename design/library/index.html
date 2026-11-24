@@ -35,7 +35,7 @@
   .on-poster { padding: var(--spacing-3); border-radius: var(--radii-md); background: center / cover url("https://static.tvmaze.com/uploads/images/medium_portrait/504/1262352.jpg"); }
   .drawer-demo { position: relative; height: 34rem; overflow: hidden; border: 1px solid var(--colors-border); border-radius: var(--radii-lg); }
   .drawer-demo .drawer-layer { position: absolute; }
-  .menu-demo { height: 15rem; padding-left: var(--spacing-16); }
+  .menu-demo .cell { width: min(var(--sizes-menuMax), 100%); height: 15rem; align-content: start; justify-items: end; }
   .cell--form { width: 100%; max-width: var(--sizes-form); justify-items: stretch; }
   @media (max-width: 760px) {
     .page { padding: var(--spacing-10) var(--spacing-4); }
@@ -296,19 +296,21 @@
 
   <section class="group">
     <h2>UserMenu</h2>
-    <p>.user-menu · __trigger, __avatar, __email, __panel, __head, __item · .user-menu--compact — the signed-in user in the header</p>
+    <p>.user-menu · __trigger, __avatar, __panel, __head, __item — the signed-in user in the header: the initial on every screen, the email in the panel</p>
     <div class="row">
-      <div class="cell"><small>closed</small><div class="user-menu"><button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="false"><span class="user-menu__avatar" aria-hidden="true">a</span><span class="user-menu__email">anna@example.com</span></button></div></div>
-      <div class="cell"><small>hover</small><div class="user-menu"><button class="user-menu__trigger is-hover" aria-haspopup="menu" aria-expanded="false"><span class="user-menu__avatar" aria-hidden="true">a</span><span class="user-menu__email">anna@example.com</span></button></div></div>
-      <div class="cell"><small>focus</small><div class="user-menu"><button class="user-menu__trigger is-focus" aria-haspopup="menu" aria-expanded="false"><span class="user-menu__avatar" aria-hidden="true">a</span><span class="user-menu__email">anna@example.com</span></button></div></div>
-      <div class="cell"><small>long email</small><div class="user-menu"><button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="false"><span class="user-menu__avatar" aria-hidden="true">m</span><span class="user-menu__email">maximilian.longname@example.com</span></button></div></div>
-      <div class="cell"><small>compact, a phone</small><div class="user-menu user-menu--compact"><button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="false" aria-label="anna@example.com"><span class="user-menu__avatar" aria-hidden="true">a</span><span class="user-menu__email">anna@example.com</span></button></div></div>
+      <div class="cell"><small>closed</small><div class="user-menu"><button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="false" aria-label="anna@example.com"><span class="user-menu__avatar" aria-hidden="true">a</span></button></div></div>
+      <div class="cell"><small>hover</small><div class="user-menu"><button class="user-menu__trigger is-hover" aria-haspopup="menu" aria-expanded="false" aria-label="anna@example.com"><span class="user-menu__avatar" aria-hidden="true">a</span></button></div></div>
+      <div class="cell"><small>focus</small><div class="user-menu"><button class="user-menu__trigger is-focus" aria-haspopup="menu" aria-expanded="false" aria-label="anna@example.com"><span class="user-menu__avatar" aria-hidden="true">a</span></button></div></div>
     </div>
     <div class="row menu-demo">
       <div class="cell"><small>open · Sign out hovered</small>
-        <div class="user-menu"><button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="true"><span class="user-menu__avatar" aria-hidden="true">a</span><span class="user-menu__email">anna@example.com</span></button>
+        <div class="user-menu"><button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="true" aria-label="anna@example.com"><span class="user-menu__avatar" aria-hidden="true">a</span></button>
           <div class="user-menu__panel" role="menu"><div class="user-menu__head"><div class="eyebrow">Signed in as</div><span class="user-menu__head-email">anna@example.com</span></div>
             <button class="user-menu__item is-hover" role="menuitem"><svg class="icon"><use href="#log-out"/></svg>Sign out</button></div></div></div>
+      <div class="cell"><small>open · a long email widens the panel</small>
+        <div class="user-menu"><button class="user-menu__trigger" aria-haspopup="menu" aria-expanded="true" aria-label="maximilian.longname@example.com"><span class="user-menu__avatar" aria-hidden="true">m</span></button>
+          <div class="user-menu__panel" role="menu"><div class="user-menu__head"><div class="eyebrow">Signed in as</div><span class="user-menu__head-email">maximilian.longname@example.com</span></div>
+            <button class="user-menu__item" role="menuitem"><svg class="icon"><use href="#log-out"/></svg>Sign out</button></div></div></div>
     </div>
   </section>
 
