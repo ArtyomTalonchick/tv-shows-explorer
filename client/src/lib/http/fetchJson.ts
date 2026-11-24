@@ -1,7 +1,7 @@
 import { HttpError } from "./HttpError";
 
 // The options of a request, with the body as a value: it is sent as JSON.
-type JsonRequestInit = Omit<RequestInit, "body"> & { body?: unknown };
+export type JsonRequestInit = Omit<RequestInit, "body"> & { body?: unknown };
 
 // Sends a request to `url` and parses the answer as JSON; a 204 answer has no body and resolves `undefined`, so its
 // caller asks for `fetchJson<void>`. A `body` goes as JSON, with its `Content-Type` next to the caller's headers.

@@ -44,12 +44,11 @@ describe("sendFavoritesRequest", () => {
         const { signal } = new AbortController();
 
         await expect(sendFavoritesRequest({ method: "GET", signal })).resolves.toEqual([DARK]);
-        expect(fetchMock).toHaveBeenCalledWith("/api/favorites", {
-            method: "GET",
-            headers: { "X-Client-Id": getClientId() },
-            body: undefined,
-            signal,
-        });
+        const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+        expect(url).toBe("/api/favorites");
+        expect(init.method).toBe("GET");
+        expect(init.signal).toBe(signal);
+        expect(new Headers(init.headers).get("X-Client-Id")).toBe(getClientId());
     });
 
     it("sends the show's id and a JSON body", async () => {

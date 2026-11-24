@@ -1,6 +1,6 @@
 import type { SessionResponse } from "@tv-shows-explorer/shared";
 import { useSessionStore } from "~/stores/useSessionStore";
-import { restoreSession } from "../restoreSession";
+import { refreshSession } from "../refreshSession";
 
 const KEPT: SessionResponse = {
     accessToken: "old-access",
@@ -12,7 +12,7 @@ const FRESH: SessionResponse = { ...KEPT, accessToken: "new-access", refreshToke
 
 const answer = (status: number, body: unknown): Response => new Response(JSON.stringify(body), { status });
 
-describe("restoreSession", () => {
+describe("refreshSession", () => {
     beforeEach(() => {
         useSessionStore.setState({ session: KEPT });
     });
@@ -25,7 +25,7 @@ describe("restoreSession", () => {
         const fetchMock = vi.fn(async () => answer(200, FRESH));
         vi.stubGlobal("fetch", fetchMock);
 
-        await restoreSession(new AbortController().signal);
+        await refreshSession(new AbortController().signal);
 
         const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
         expect(url).toBe("/api/session/refresh");
@@ -39,7 +39,7 @@ describe("restoreSession", () => {
         const fetchMock = vi.fn();
         vi.stubGlobal("fetch", fetchMock);
 
-        await restoreSession(new AbortController().signal);
+        await refreshSession(new AbortController().signal);
 
         expect(fetchMock).not.toHaveBeenCalled();
         expect(useSessionStore.getState().session).toBeNull();
@@ -48,7 +48,7 @@ describe("restoreSession", () => {
     it.each([401, 400])("makes the user a guest when the server refuses the token with %i", async (status) => {
         vi.stubGlobal("fetch", async () => answer(status, { error: "refused" }));
 
-        await restoreSession(new AbortController().signal);
+        await refreshSession(new AbortController().signal);
 
         expect(useSessionStore.getState().session).toBeNull();
     });
@@ -59,8 +59,8 @@ describe("restoreSession", () => {
             vi.fn().mockRejectedValueOnce(new TypeError("offline")).mockResolvedValue(answer(500, {})),
         );
 
-        await restoreSession(new AbortController().signal);
-        await restoreSession(new AbortController().signal);
+        await refreshSession(new AbortController().signal);
+        await refreshSession(new AbortController().signal);
 
         expect(useSessionStore.getState().session).toEqual(KEPT);
     });
@@ -74,7 +74,7 @@ describe("restoreSession", () => {
             return answer(status, body);
         });
 
-        await restoreSession(new AbortController().signal);
+        await refreshSession(new AbortController().signal);
 
         expect(useSessionStore.getState().session).toEqual(now);
     });

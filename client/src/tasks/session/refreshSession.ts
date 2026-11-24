@@ -1,14 +1,15 @@
 import type { RefreshBody, SessionResponse } from "@tv-shows-explorer/shared";
-import { useSessionStore } from "~/stores/useSessionStore";
 import { HttpError } from "~/lib/http/HttpError";
 import { fetchJson } from "~/lib/http/fetchJson";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { API_URL } from "~/tasks/constants";
 
-// Exchanges the kept refresh token for a new session, so a user who comes back stays signed in for another 30 days.
-// A token the server refuses (401, 400) makes the user a guest; with no answer (a network error, 5xx, `signal`
-// aborts) the session stays as it was. Never rejects. An answer that comes after a sign-out or another sign-in is
-// dropped: the store no longer holds the token it was asked for.
-export const restoreSession = async (signal: AbortSignal): Promise<void> => {
+// Exchanges the kept refresh token for a new session: on start, so a user who comes back stays signed in for another
+// 30 days, and when the access token has run out (`fetchAsUser`). A token the server refuses (401, 400) makes the user
+// a guest; with no answer (a network error, 5xx, `signal` aborts) the session stays as it was. Never rejects. An
+// answer that comes after a sign-out or another sign-in is dropped: the store no longer holds the token it was asked
+// for.
+export const refreshSession = async (signal?: AbortSignal): Promise<void> => {
     const refreshToken = useSessionStore.getState().session?.refreshToken;
     if (refreshToken === undefined) {
         return;
