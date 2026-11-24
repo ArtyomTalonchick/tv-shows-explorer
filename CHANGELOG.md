@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   sign out, or «Sign in» for a guest; a reload keeps the user signed in.
 - Favourites belong to the signed-in user: the same list on every device and after signing in again. A guest has
   none, and signing out empties the list. The favourites kept by a browser before are not moved.
+- A guest's bookmark and favourites ask to sign in: the bookmark shows a toast with «Sign in», and the favourites
+  drawer leads to signing in or up. A guest's favourites button has no counter.
 
 ## 0.2.2 — 2026-11-21
 

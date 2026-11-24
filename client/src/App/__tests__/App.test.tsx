@@ -169,6 +169,21 @@ describe("App", () => {
         expect(window.location.pathname).toBe("/sign-in");
     });
 
+    it("asks a guest to sign in from the favourites drawer, and closes it on the way to the sign-in page", async () => {
+        stubServer();
+        renderApp();
+
+        fireEvent.click(screen.getByRole("button", { name: /^Favourites$/ }));
+        const drawer = await screen.findByRole("dialog", { name: "Favourites" });
+        expect(within(drawer).getByRole("heading", { name: "Sign in to keep favourites" })).toBeInTheDocument();
+        expect(within(drawer).getByRole("link", { name: "Sign up" })).toHaveAttribute("href", "/sign-up");
+
+        fireEvent.click(within(drawer).getByRole("link", { name: "Sign in" }));
+
+        expect(await screen.findByRole("heading", { level: 1, name: "Sign in" })).toBeInTheDocument();
+        expect(useFavoritesDrawerStore.getState().isOpen).toBe(false);
+    });
+
     it("shows a signed-in user in the header, and signing out makes the page a guest's", async () => {
         stubServer();
         useSessionStore.setState({ session: SESSION });

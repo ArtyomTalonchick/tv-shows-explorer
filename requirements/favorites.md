@@ -32,7 +32,8 @@ What the user sees (`design/v0.2/`): (#28)
 8. The client loads the user's list when the app starts and right after a sign-in or a sign-up; a guest's list is
    empty and is not asked for. Sign out empties it at once, as does a refused session (`auth.md`). (#63) Both
    screens show the **Favourites** button with the number of favorites, 0 too: in the hero's top-right corner,
-   opposite the logo, and at the end of the search bar (on a phone, on the first row with the logo).
+   opposite the logo, and at the end of the search bar (on a phone, on the first row with the logo). A guest's
+   button has no number. (#64)
 9. Every show card has a bookmark — a bookmark, not a star: the star marks the rating. It is filled in the accent
    while the show is a favorite; on a phone it sits at the right end of the row. A press adds or removes the show.
 10. The bookmark, the counter and the list change at once, on the press, and the request goes in the background; the
@@ -45,6 +46,12 @@ What the user sees (`design/v0.2/`): (#28)
     bookmark of a row removes the show: the row leaves and the toast offers Undo. The backdrop, × and Escape close
     the drawer; a press on a toast does not.
 12. Two quick presses on one bookmark are both kept: a failure of the first one does not undo the second. (#41)
+13. A guest is asked to sign in (`design/v0.3/`): (#64)
+    - a press on a bookmark sends nothing and leaves it empty; a toast says «Sign in to keep **Dark** in your
+      favourites», with a «Sign in» link to `/sign-in`;
+    - the drawer opens as for a user, with no number in its title and no list: «Sign in to keep favourites», «Your
+      list is kept with your account, on every device.», a «Sign in» button and «No account yet? Sign up». Both
+      links close the drawer.
 
 ## States
 
@@ -65,7 +72,7 @@ What the user sees (`design/v0.2/`): (#28)
 | Added, removed | A toast with the show's name; a removal offers Undo |
 | A change failed | The bookmark, the counter and the list go back; «Couldn’t add **Dark** to favourites» (or remove) in a toast (#41) |
 | The list did not load | «Couldn’t load your favourites» in a toast with Retry; the counter shows 0 meanwhile |
-| A guest | The counter shows 0 and no bookmark is filled; a press on a bookmark fails as a change does (#63, until #64) |
+| A guest | No counter on the button or in the drawer's title, and no bookmark is filled; a press on a bookmark sends nothing and asks to sign in in a toast; the drawer asks to sign in (#64) |
 
 ## Edge cases
 
@@ -100,7 +107,16 @@ What the user sees (`design/v0.2/`): (#28)
 - The list belongs to the user of the access token, the one of the other API routes, not to the browser. The old
   lists of the browsers are not moved to users: they are dropped. (#63)
 - Until #64 a guest's press on a bookmark is sent and refused with `401`, so it rolls back with the toast of a
-  failed change; #64 asks the guest to sign in instead. (#63)
+  failed change; #64 asks the guest to sign in instead. (#63) Replaced in #64: a guest's press sends nothing.
+- The guest check is in the task `toggleFavorite`, which answers `{ isGuest, request }`: code on the UI side does
+  not read the app's data to decide whether to call a task. (#64)
+- Whether the show is saved is read from the store at the press (the store's `findFavorite`), not from the render,
+  for the toast and Undo: a render can be stale between two quick presses. (#64)
+- The search survives the trip to sign-in: its stores outlive the search page, so after signing in the user sees
+  the same results. A reload on `/sign-in` loses it: accepted, as nothing was lost that a search does not bring
+  back. (#64)
+- The ui-kit drawer knows no count: its title is markup its caller gives, and the favourites put their number there
+  themselves. (#64)
 - Code and files say «favorite», the American spelling, as it is shorter to write. (#27)
 - The bookmark changes when the server answers, not at once: the store changes by the answer, so the bookmarks,
   the counter and the drawer always show one list, and a failed request has nothing to roll back. A change of the
