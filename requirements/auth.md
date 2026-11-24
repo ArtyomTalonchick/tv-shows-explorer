@@ -3,7 +3,7 @@
 ## Purpose
 
 A visitor gets an account with an email and a password, so their data can belong to them instead of to one browser.
-This file is the server side; the pages of the client come in #62. (#61)
+Behaviour 1–8 are the server side, 9–14 the pages and the header of the client. (#61, #62)
 
 A session is a pair of tokens: a short access token that travels with every request, and a long refresh token that
 travels only on sign-in and on its exchange for a new pair, so it is harder to steal. (#69)
@@ -34,6 +34,20 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
    checked in constant time. Neither the password nor its hash is ever answered or logged. (#61)
 8. The accounts are kept in Firestore, a document per user, `users/{id}`, the id a random UUID; the tests mock the
    store. (#61)
+9. **The sign-in page**, `/sign-in`, and **the sign-up page**, `/sign-up`, are a card over the backdrop of the
+   start screen, with the logo that leads back to the search and a line that leads to the other page. (#62)
+10. **The forms** check their fields before any request, by the shared rule: sign-up a field as it loses focus,
+    sign-in on submit. «Enter an email like name@example.com», «The password needs at least 8 characters» on
+    sign-up, «Enter your password» on sign-in. While the request is on its way the fields are disabled and the button
+    shows a spinner. Signed up or signed in, the user lands on the search. (#62)
+11. **The header** of the start screen and of the search bar shows a guest «Sign in», which leads to `/sign-in`, and
+    a signed-in user the avatar with the first letter of the email; it opens the full email and «Sign out». (#62)
+12. **Sign out** drops the session at once, with no request: the page is a guest's. (#62)
+13. **After a reload** the user is shown signed in at once, from the session the browser keeps
+    (`tv-shows-explorer:session` in `localStorage`); the app then exchanges the refresh token once
+    (`POST /api/session/refresh`) and keeps the new pair. A refused token (`401`, `400`) makes the user a
+    guest. (#62)
+14. **A signed-in user** who opens `/sign-in` or `/sign-up` is taken to the search. (#62)
 
 ## States
 
@@ -53,6 +67,15 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
 | Refresh with a body that is not JSON with a string `refreshToken` | `400` |
 | The server has no `JWT_SECRET` | `500` on every sign-up, sign-in, refresh and `GET /api/session` |
 
+| State in the app | What the user sees |
+|---|---|
+| A guest | «Sign in» in the header |
+| Signed in | The avatar with the initial in the header; its menu holds the email and «Sign out» |
+| A field breaks the rule | Its error under the field, no request |
+| Sign-up with a taken email | «This email already has an account. Sign in» under the email, until it changes |
+| Sign-in with a wrong email or password | «Wrong email or password.» over the form |
+| The form gets no answer | «Couldn’t reach the server. Check your connection and try again.» over the form |
+
 ## Edge cases
 
 - Fields other than `email` and `password` in the body are ignored; nothing but the four fields of an account
@@ -63,6 +86,10 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
 - A refresh token stays valid for its 30 days after a sign-out on the client, after its exchange for a new pair, and
   after any change of the account: the server keeps no list of tokens and cannot take one back (see Decisions). (#69)
 - An active user stays signed in: each refresh gives a refresh token for another 30 days. (#69)
+- A reload with no answer to the refresh (offline, `5xx`) keeps the user signed in with the old pair, with no
+  toast: the next reload, or the refresh on a `401` of #63, exchanges it. (#62)
+- An answer to the refresh that comes after a sign-out or another sign-in is dropped, so it never brings the old
+  session back. (#62)
 - The secret differs between the local server (`server/.env`) and production (a Firebase secret), so a token made
   locally does not open production.
 
@@ -94,5 +121,9 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
   and the rest of the API still works. (#61)
 - A body is read as text and checked by hand (`parseCredentials`), as the favorites body is, not with a schema
   library: shared schemas are #31. (#61)
+- Sign out keeps the favourites as they are: until #63 they belong to the browser (`X-Client-Id`), not to the
+  user. Favourites per user, the `Authorization` header on requests and a refresh on a `401` come with #63. (#62)
+- The forms are built on react-hook-form: the touched state, the errors and the submit state of a form are its
+  job, not hand-written state. (#62)
 - The token check is the project's own middleware on `verify` of `hono/jwt`, not Hono's `jwt()` middleware: that
   one answers a failure as plain text, and every other error of the API is JSON `{ error }`. (#61)

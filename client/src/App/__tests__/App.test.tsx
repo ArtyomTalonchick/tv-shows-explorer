@@ -22,12 +22,12 @@ const SESSION = { accessToken: "access", refreshToken: "refresh", user: { id: "u
 
 const NOTHING_FOUND = { shows: [], genres: [], found: 0, genre: null, total: 0, page: 1, perPage: 3 };
 
-// The app's server: the search finds nothing, a sign-in and a sign-up succeed; the favorites start as `saved` and
-// follow PUT and DELETE of DARK.
+// The app's server: the search finds nothing, a sign-in, a sign-up and a refresh succeed; the favorites start as
+// `saved` and follow PUT and DELETE of DARK.
 const stubServer = (saved: Favorite[] = []) => {
     let favorites = saved;
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
-        if (url === "/api/session" || url === "/api/users") {
+        if (["/api/session", "/api/users", "/api/session/refresh"].includes(url)) {
             return new Response(JSON.stringify(SESSION));
         }
         if (!url.startsWith("/api/favorites")) {

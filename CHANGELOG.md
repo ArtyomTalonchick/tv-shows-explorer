@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   opens it directly.
 - The sign-in and sign-up pages have their own addresses, `/sign-in` and `/sign-up`; an unknown address leads to
   the search.
+- Accounts: sign up and sign in with an email and a password. The header shows the signed-in user, with a menu to
+  sign out, or «Sign in» for a guest; a reload keeps the user signed in.
 
 ## 0.2.2 — 2026-11-21
 
