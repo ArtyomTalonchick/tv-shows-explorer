@@ -1,5 +1,5 @@
 import type { SessionResponse } from "@tv-shows-explorer/shared";
-import { useSessionStore } from "~/stores/useSessionStore";
+import { keepSession } from "~/tasks/session/keepSession";
 import { signUp } from "../signUp";
 
 const SESSION: SessionResponse = {
@@ -8,14 +8,15 @@ const SESSION: SessionResponse = {
     user: { id: "u1", email: "anna@example.com" },
 };
 
+vi.mock("~/tasks/session/keepSession", () => {
+    return { keepSession: vi.fn() };
+});
+
 const CREDENTIALS = { email: "anna@example.com", password: "severance" };
 
 describe("signUp", () => {
-    beforeEach(() => {
-        useSessionStore.setState({ session: null });
-    });
-
     afterEach(() => {
+        vi.resetAllMocks();
         vi.unstubAllGlobals();
     });
 
@@ -29,14 +30,14 @@ describe("signUp", () => {
         expect(url).toBe("/api/users");
         expect(init.method).toBe("POST");
         expect(init.body).toBe(JSON.stringify(CREDENTIALS));
-        expect(useSessionStore.getState().session).toEqual(SESSION);
+        expect(keepSession).toHaveBeenCalledExactlyOnceWith(SESSION);
     });
 
     it("tells a taken email from a failure", async () => {
         vi.stubGlobal("fetch", async () => new Response(JSON.stringify({ error: "taken" }), { status: 409 }));
 
         expect(await signUp(CREDENTIALS)).toBe("email-taken");
-        expect(useSessionStore.getState().session).toBeNull();
+        expect(keepSession).not.toHaveBeenCalled();
     });
 
     it.each([
@@ -51,6 +52,6 @@ describe("signUp", () => {
         vi.stubGlobal("fetch", fetchMock);
 
         expect(await signUp(CREDENTIALS)).toBe("failed");
-        expect(useSessionStore.getState().session).toBeNull();
+        expect(keepSession).not.toHaveBeenCalled();
     });
 });

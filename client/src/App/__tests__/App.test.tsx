@@ -120,8 +120,8 @@ describe("App", () => {
         expect(window.location.pathname).toBe("/sign-in");
     });
 
-    it("signs the user in and leads to the search page", async () => {
-        stubServer();
+    it("signs the user in, loads their favourites and leads to the search page", async () => {
+        stubServer([DARK]);
         renderApp("/sign-in");
 
         fireEvent.change(screen.getByLabelText("Email"), { target: { value: "anna@example.com" } });
@@ -130,6 +130,7 @@ describe("App", () => {
 
         expect(await screen.findByRole("heading", { level: 1, name: "Find your next obsession." })).toBeInTheDocument();
         expect(window.location.pathname).toBe("/");
+        expect(screen.getByRole("button", { name: "Favourites 1" })).toBeInTheDocument();
     });
 
     it("signs the user up and leads to the search page", async () => {

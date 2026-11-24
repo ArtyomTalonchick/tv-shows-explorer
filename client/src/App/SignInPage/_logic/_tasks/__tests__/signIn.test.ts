@@ -1,5 +1,5 @@
 import type { SessionResponse } from "@tv-shows-explorer/shared";
-import { useSessionStore } from "~/stores/useSessionStore";
+import { keepSession } from "~/tasks/session/keepSession";
 import { signIn } from "../signIn";
 
 const SESSION: SessionResponse = {
@@ -8,14 +8,15 @@ const SESSION: SessionResponse = {
     user: { id: "u1", email: "anna@example.com" },
 };
 
+vi.mock("~/tasks/session/keepSession", () => {
+    return { keepSession: vi.fn() };
+});
+
 const CREDENTIALS = { email: "anna@example.com", password: "severance" };
 
 describe("signIn", () => {
-    beforeEach(() => {
-        useSessionStore.setState({ session: null });
-    });
-
     afterEach(() => {
+        vi.resetAllMocks();
         vi.unstubAllGlobals();
     });
 
@@ -29,14 +30,14 @@ describe("signIn", () => {
         expect(url).toBe("/api/session");
         expect(init.method).toBe("POST");
         expect(init.body).toBe(JSON.stringify(CREDENTIALS));
-        expect(useSessionStore.getState().session).toEqual(SESSION);
+        expect(keepSession).toHaveBeenCalledExactlyOnceWith(SESSION);
     });
 
     it("tells a refusal of the email and the password from a failure", async () => {
         vi.stubGlobal("fetch", async () => new Response(JSON.stringify({ error: "wrong" }), { status: 401 }));
 
         expect(await signIn(CREDENTIALS)).toBe("wrong-credentials");
-        expect(useSessionStore.getState().session).toBeNull();
+        expect(keepSession).not.toHaveBeenCalled();
     });
 
     it.each([
@@ -51,6 +52,6 @@ describe("signIn", () => {
         vi.stubGlobal("fetch", fetchMock);
 
         expect(await signIn(CREDENTIALS)).toBe("failed");
-        expect(useSessionStore.getState().session).toBeNull();
+        expect(keepSession).not.toHaveBeenCalled();
     });
 });

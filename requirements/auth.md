@@ -42,11 +42,12 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
     shows a spinner. Signed up or signed in, the user lands on the search. (#62)
 11. **The header** of the start screen and of the search bar shows a guest «Sign in», which leads to `/sign-in`, and
     a signed-in user the avatar with the first letter of the email; it opens the full email and «Sign out». (#62)
-12. **Sign out** drops the session at once, with no request: the page is a guest's. (#62)
+12. **Sign out** drops the session and the user's favourites at once, with no request: the page is a guest's.
+    (#62, #63)
 13. **After a reload** the user is shown signed in at once, from the session the browser keeps
     (`tv-shows-explorer:session` in `localStorage`); the app then exchanges the refresh token once
-    (`POST /api/session/refresh`) and keeps the new pair. A refused token (`401`, `400`) makes the user a
-    guest. (#62)
+    (`POST /api/session/refresh`) and keeps the new pair. A refused token (`401`, `400`) signs the user out, as
+    Sign out does. (#62, #63)
 14. **A signed-in user** who opens `/sign-in` or `/sign-up` is taken to the search. (#62)
 
 ## States
@@ -122,7 +123,7 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
 - A body is read as text and checked by hand (`parseCredentials`), as the favorites body is, not with a schema
   library: shared schemas are #31. (#61)
 - Sign out keeps the favourites as they are: until #63 they belong to the browser (`X-Client-Id`), not to the
-  user. Favourites per user, the `Authorization` header on requests and a refresh on a `401` come with #63. (#62)
+  user. (#62) Replaced in #63: the favourites belong to the user, and Sign out drops them with the session.
 - The forms are built on react-hook-form: the touched state, the errors and the submit state of a form are its
   job, not hand-written state. (#62)
 - The token check is the project's own middleware on `verify` of `hono/jwt`, not Hono's `jwt()` middleware: that

@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the search.
 - Accounts: sign up and sign in with an email and a password. The header shows the signed-in user, with a menu to
   sign out, or «Sign in» for a guest; a reload keeps the user signed in.
+- Favourites belong to the signed-in user: the same list on every device and after signing in again. A guest has
+  none, and signing out empties the list. The favourites kept by a browser before are not moved.
 
 ## 0.2.2 — 2026-11-21
 

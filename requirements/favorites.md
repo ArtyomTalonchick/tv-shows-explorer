@@ -8,9 +8,10 @@ The user keeps the shows they want to come back to in one list.
 
 All the favorites logic is on the server; the client shows the list and sends the user's clicks. (#27)
 
-1. Each browser has its own list. On its first start the client makes a client id (`crypto.randomUUID()`), keeps it,
-   and sends it in the `X-Client-Id` header of every `/api/favorites` request. There are no accounts.
-2. `GET /api/favorites` answers the browser's list (`Favorite[]`), the newest first.
+1. Each user has their own list, the same on every device and after signing out and in again. Every
+   `/api/favorites` request carries the user's access token (`Authorization: Bearer`, `auth.md`); a guest has no
+   list and the routes answer them `401`. (#63)
+2. `GET /api/favorites` answers the user's list (`Favorite[]`), the newest first.
 3. `PUT /api/favorites/:id` adds the show with this TVmaze id and answers that one `Favorite`; a show already there
    is answered as it is. (#40) The server takes the show from
    the answers of the searches it keeps (`search.md`); a show it has not seen is asked of TVmaze
@@ -28,9 +29,10 @@ All the favorites logic is on the server; the client shows the list and sends th
 
 What the user sees (`design/v0.2/`): (#28)
 
-8. The client loads the list when the app starts. Both screens show the **Favourites** button with the number of
-   favorites, 0 too: in the hero's top-right corner, opposite the logo, and at the end of the search bar (on a phone,
-   on the first row with the logo).
+8. The client loads the user's list when the app starts and right after a sign-in or a sign-up; a guest's list is
+   empty and is not asked for. Sign out empties it at once, as does a refused session (`auth.md`). (#63) Both
+   screens show the **Favourites** button with the number of favorites, 0 too: in the hero's top-right corner,
+   opposite the logo, and at the end of the search bar (on a phone, on the first row with the logo).
 9. Every show card has a bookmark — a bookmark, not a star: the star marks the rating. It is filled in the accent
    while the show is a favorite; on a phone it sits at the right end of the row. A press adds or removes the show.
 10. The bookmark, the counter and the list change at once, on the press, and the request goes in the background; the
@@ -49,8 +51,8 @@ What the user sees (`design/v0.2/`): (#28)
 | State | What the server answers |
 |---|---|
 | No favorites | `GET` answers `[]`; `DELETE` still answers 204 |
-| Favorites | `GET` answers the browser's whole list, the newest first; `PUT` the one `Favorite`; `DELETE` 204 (#40) |
-| No `X-Client-Id`, or not a UUID | 400, nothing changes |
+| Favorites | `GET` answers the user's whole list, the newest first; `PUT` the one `Favorite`; `DELETE` 204 (#40) |
+| No access token, or not a valid one (a guest) | 401, nothing changes (#63) |
 | A wrong id (not a whole number from 1) or body | 400, nothing changes |
 | TVmaze has no show with the id | 404, nothing changes |
 | TVmaze does not answer | 502, nothing changes |
@@ -63,14 +65,17 @@ What the user sees (`design/v0.2/`): (#28)
 | Added, removed | A toast with the show's name; a removal offers Undo |
 | A change failed | The bookmark, the counter and the list go back; «Couldn’t add **Dark** to favourites» (or remove) in a toast (#41) |
 | The list did not load | «Couldn’t load your favourites» in a toast with Retry; the counter shows 0 meanwhile |
+| A guest | The counter shows 0 and no bookmark is filled; a press on a bookmark fails as a change does (#63, until #64) |
 
 ## Edge cases
 
 - Adding a show that is already there is not an error and changes nothing: neither its place nor its data, and
   TVmaze is not asked.
 - Removing a show that is not there is not an error and changes nothing.
-- The list belongs to the browser, not to a person: another browser or device has its own, and clearing the
-  browser's data starts an empty one.
+- The list belongs to the user, not to the browser: another device shows the same list once the user signs in
+  there. (#63)
+- A load of the list that fails right after a sign-in says nothing: the sign-in succeeded, and the list stays
+  empty until the next start, which loads it with its own toast and Retry. (#63)
 - The favorites survive a restart, a sleep and a deploy of the server: they are kept in Firestore. The local server
   uses the same Firestore as the deployed one, and does not start without the credentials to reach it; the tests
   mock the store and reach no Firestore. (#34, #66)
@@ -91,7 +96,11 @@ What the user sees (`design/v0.2/`): (#28)
   in the search answer would go stale on every click. The search stays independent of the favorites. (#27)
 - Each browser has its own list, named by a client id it makes and sends in a header; not one list for everyone,
   and no accounts yet. A header, not a cookie: the client and the server live on different hosts, where browsers
-  block third-party cookies. (#27)
+  block third-party cookies. (#27) Replaced by a list per user in #63.
+- The list belongs to the user of the access token, the one of the other API routes, not to the browser. The old
+  lists of the browsers are not moved to users: they are dropped. (#63)
+- Until #64 a guest's press on a bookmark is sent and refused with `401`, so it rolls back with the toast of a
+  failed change; #64 asks the guest to sign in instead. (#63)
 - Code and files say «favorite», the American spelling, as it is shorter to write. (#27)
 - The bookmark changes when the server answers, not at once: the store changes by the answer, so the bookmarks,
   the counter and the drawer always show one list, and a failed request has nothing to roll back. A change of the
@@ -106,6 +115,7 @@ What the user sees (`design/v0.2/`): (#28)
   free Postgres expires, and MongoDB Atlas would have been a second account and a secret. (#34)
 - A document per show, `clients/{clientId}/favorites/{showId}`: adding, removing and checking a show touch one
   document, and the list is one read of the browser's collection. The order is kept by `addedAt`, as before. (#34)
+  Since #63 under the user: `users/{userId}/favorites/{showId}`, next to the account (`auth.md`).
 - The server uses Firestore when Firebase has set `FIREBASE_CONFIG`, and memory otherwise, so local development
   and the tests need no setup. (#34) Replaced by Firestore everywhere in #66.
 - The server uses Firestore everywhere it runs, local development included, and the tests mock the store: one
