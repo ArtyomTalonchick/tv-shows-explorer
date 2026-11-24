@@ -9,3 +9,8 @@ export type TvmazeShow = {
     image: { medium: string; original: string } | null;
     url: string;
 };
+
+// What the routes of a signed-in user get: the user id `requireUser` read from the access token's `sub`.
+export type UserEnv = {
+    Variables: { userId: string };
+};

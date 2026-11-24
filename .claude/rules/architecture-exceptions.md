@@ -49,3 +49,14 @@ plugin's rules keep a store file to the store and its own API, with no subscript
 logic (core `placement.md`), so the reviewer may report Stateful logic and plain functions, One thing per file and
 Placement on it. They give the hook no other place either; the project keeps it next to the store until the plugin
 settles the case.
+
+## A middleware two route units share lies in the app's tasks folder
+
+ArtyomTalonchick/claude-simple-architecture#77 · since #63
+
+`server/src/tasks/session/requireUser.ts` is the Hono middleware that checks the access token, answers 401 and passes
+`userId` on; the `/session` and `/favorites` route units use it, and its env type `UserEnv` lies in
+`server/src/tasks/types.ts`. The plugin's rules keep a one-user middleware in its unit's logic folder (core
+`levels.md`) and give a shared one no place: a task has nothing from the UI framework and leaves what follows to its
+caller (core `tasks.md`), so the reviewer may report Tasks on it. The project keeps it in the tasks folder, next to
+`tasks/parseCredentials`, until the plugin settles the case.
