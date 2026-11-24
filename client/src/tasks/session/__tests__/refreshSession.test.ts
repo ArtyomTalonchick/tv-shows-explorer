@@ -1,4 +1,5 @@
-import type { SessionResponse } from "@tv-shows-explorer/shared";
+import type { Favorite, SessionResponse } from "@tv-shows-explorer/shared";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { refreshSession } from "../refreshSession";
 
@@ -10,11 +11,23 @@ const KEPT: SessionResponse = {
 
 const FRESH: SessionResponse = { ...KEPT, accessToken: "new-access", refreshToken: "new-refresh" };
 
+const DARK: Favorite = {
+    id: 17861,
+    name: "Dark",
+    genres: ["Drama"],
+    premiered: "2017-12-01",
+    ended: "2020-06-27",
+    image: null,
+    url: "https://www.tvmaze.com/shows/17861/dark",
+    addedAt: 1763300000000,
+};
+
 const answer = (status: number, body: unknown): Response => new Response(JSON.stringify(body), { status });
 
 describe("refreshSession", () => {
     beforeEach(() => {
         useSessionStore.setState({ session: KEPT });
+        useFavoritesStore.setState({ favorites: [DARK] });
     });
 
     afterEach(() => {
@@ -45,12 +58,13 @@ describe("refreshSession", () => {
         expect(useSessionStore.getState().session).toBeNull();
     });
 
-    it.each([401, 400])("makes the user a guest when the server refuses the token with %i", async (status) => {
+    it.each([401, 400])("signs the user out when the server refuses the token with %i", async (status) => {
         vi.stubGlobal("fetch", async () => answer(status, { error: "refused" }));
 
         await refreshSession(new AbortController().signal);
 
         expect(useSessionStore.getState().session).toBeNull();
+        expect(useFavoritesStore.getState().favorites).toEqual([]);
     });
 
     it("keeps the session when there is no answer or the server fails", async () => {
@@ -63,6 +77,7 @@ describe("refreshSession", () => {
         await refreshSession(new AbortController().signal);
 
         expect(useSessionStore.getState().session).toEqual(KEPT);
+        expect(useFavoritesStore.getState().favorites).toEqual([DARK]);
     });
 
     it.each([
