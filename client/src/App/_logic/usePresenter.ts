@@ -1,4 +1,4 @@
-import { useSessionStore } from "~/App/_stores/useSessionStore";
+import { useIsSignedIn } from "~/App/_stores/useSessionStore";
 import { useLoadFavoritesOnStart } from "./useLoadFavoritesOnStart";
 
 type UsePresenterResult = {
@@ -9,7 +9,7 @@ type UsePresenterResult = {
 // The app on start: it loads the favorites, and it knows whether the user is signed in.
 export const usePresenter = (): UsePresenterResult => {
     useLoadFavoritesOnStart();
-    const isSignedIn = useSessionStore(({ session }) => session !== null);
+    const isSignedIn = useIsSignedIn();
 
     return { isSignedIn };
 };

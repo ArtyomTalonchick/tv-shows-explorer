@@ -10,3 +10,6 @@ type SessionState = {
 export const useSessionStore = create<SessionState>()(
     persist((): SessionState => ({ session: null }), { name: "tv-shows-explorer:session" }),
 );
+
+// Whether a user is signed in: the store's own reading of its data, for every Presenter that asks it.
+export const useIsSignedIn = (): boolean => useSessionStore(({ session }) => session !== null);

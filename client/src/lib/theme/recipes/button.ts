@@ -1,7 +1,7 @@
 import { defineRecipe } from "@chakra-ui/react";
 
-// Overrides Chakra's button with .btn of design/library: `solid` (the accent) and `ghost`, sizes `md` (.btn) and `sm`
-// (.btn--sm).
+// Overrides Chakra's button with .btn of design/library: `solid` (the accent), `ghost` and `glass`, sizes `md`
+// (.btn) and `sm` (.btn--sm).
 export const buttonRecipe = defineRecipe({
     base: {
         rounded: "full",
@@ -31,6 +31,18 @@ export const buttonRecipe = defineRecipe({
                 _hover: { bg: "border" },
                 _active: { bg: "bg.subtle" },
             },
+            // .btn--glass: over the hero and in the search bar, where the page shows through it.
+            glass: {
+                borderWidth: "1px",
+                borderColor: "border",
+                bg: "bg.glass",
+                color: "fg",
+                fontWeight: "semibold",
+                backdropFilter: "blur({blurs.glass})",
+                transitionProperty: "background, border-color",
+                _hover: { borderColor: "fg.subtle", bg: "bg.muted" },
+                _active: { bg: "bg.subtle" },
+            },
         },
         size: {
             md: {
@@ -57,5 +69,7 @@ export const buttonRecipe = defineRecipe({
             },
         },
     },
+    // .btn--glass is .btn--sm with a taller line: the size sets the line height after the variant, so it is set here.
+    compoundVariants: [{ variant: "glass", size: "sm", css: { lineHeight: "{spacing.6}" } }],
     defaultVariants: { size: "sm" },
 });

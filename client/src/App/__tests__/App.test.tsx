@@ -153,6 +153,32 @@ describe("App", () => {
         expect(window.location.pathname).toBe("/");
     });
 
+    it("shows a guest «Sign in» in the header, which leads to the sign-in page", () => {
+        stubServer();
+        renderApp();
+
+        expect(screen.queryByRole("button", { name: "anna@example.com" })).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole("link", { name: "Sign in" }));
+
+        expect(screen.getByRole("heading", { level: 1, name: "Sign in" })).toBeInTheDocument();
+        expect(window.location.pathname).toBe("/sign-in");
+    });
+
+    it("shows a signed-in user in the header, and signing out makes the page a guest's", async () => {
+        stubServer();
+        useSessionStore.setState({ session: SESSION });
+        renderApp();
+
+        expect(screen.queryByRole("link", { name: "Sign in" })).not.toBeInTheDocument();
+
+        fireEvent.click(screen.getByRole("button", { name: "anna@example.com" }));
+        fireEvent.click(await screen.findByRole("menuitem", { name: "Sign out" }));
+
+        expect(await screen.findByRole("link", { name: "Sign in" })).toBeInTheDocument();
+        expect(screen.queryByRole("button", { name: "anna@example.com" })).not.toBeInTheDocument();
+    });
+
     it("leads an unknown address to the search page", () => {
         stubServer();
 
