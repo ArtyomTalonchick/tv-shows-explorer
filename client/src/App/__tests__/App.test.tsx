@@ -76,6 +76,7 @@ describe("App", () => {
 
     it("starts with the search field and the favourites button, and sends no search", async () => {
         const fetchMock = stubServer([DARK]);
+        useSessionStore.setState({ session: SESSION });
 
         renderApp();
 
@@ -153,11 +154,13 @@ describe("App", () => {
         expect(window.location.pathname).toBe("/");
     });
 
-    it("shows a guest «Sign in» in the header, which leads to the sign-in page", () => {
-        stubServer();
+    it("shows a guest «Sign in», which leads to the sign-in page, and no favourites, without asking for them", () => {
+        const fetchMock = stubServer([DARK]);
         renderApp();
 
         expect(screen.queryByRole("button", { name: "anna@example.com" })).not.toBeInTheDocument();
+        expect(screen.getByRole("button", { name: "Favourites 0" })).toBeInTheDocument();
+        expect(fetchMock.mock.calls.filter(([url]) => url.startsWith("/api/favorites"))).toHaveLength(0);
 
         fireEvent.click(screen.getByRole("link", { name: "Sign in" }));
 
@@ -190,6 +193,7 @@ describe("App", () => {
 
     it("lists the favourites in a drawer, removes one from its bookmark and puts it back on Undo", async () => {
         stubServer([DARK]);
+        useSessionStore.setState({ session: SESSION });
         renderApp();
 
         fireEvent.click(await screen.findByRole("button", { name: "Favourites 1" }));
