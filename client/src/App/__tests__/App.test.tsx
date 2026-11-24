@@ -155,12 +155,12 @@ describe("App", () => {
         expect(window.location.pathname).toBe("/");
     });
 
-    it("shows a guest «Sign in», which leads to the sign-in page, and no favourites, without asking for them", () => {
+    it("shows a guest «Sign in», which leads to the sign-in page, and favourites with no counter, without asking for them", () => {
         const fetchMock = stubServer([DARK]);
         renderApp();
 
         expect(screen.queryByRole("button", { name: "anna@example.com" })).not.toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Favourites 0" })).toBeInTheDocument();
+        expect(screen.getByRole("button", { name: /^Favourites$/ })).toBeInTheDocument();
         expect(fetchMock.mock.calls.filter(([url]) => url.startsWith("/api/favorites"))).toHaveLength(0);
 
         fireEvent.click(screen.getByRole("link", { name: "Sign in" }));

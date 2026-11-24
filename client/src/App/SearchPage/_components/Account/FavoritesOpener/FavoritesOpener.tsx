@@ -1,17 +1,14 @@
-import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
+import { chakra } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "~/lib/ui-kit/Icon/Icon";
 import { usePresenter } from "./_logic/usePresenter";
-
-const COUNT_STYLES = {
-    zero: { bg: "bg.muted", color: "fg.muted" },
-    some: { bg: "accent.solid", color: "accent.contrast" },
-} satisfies Record<"zero" | "some", HTMLChakraProps<"span">>;
+import { FavoritesCount } from "./FavoritesCount/FavoritesCount";
 
 // .fav-button of design/library, in the hero and in the search bar: a round glass button with a bookmark,
-// «Favourites» and the number of them. It opens the favourites list in a drawer.
+// «Favourites» and the number of them, which a guest does not have (.fav-button--guest). It opens the favourites list
+// in a drawer. The line is as tall as the counter, so the button is as tall without it.
 export const FavoritesOpener: FC = () => {
-    const { count, countTone, open } = usePresenter();
+    const { open } = usePresenter();
 
     return (
         <chakra.button
@@ -23,8 +20,7 @@ export const FavoritesOpener: FC = () => {
             gap="2"
             flex="none"
             py="2"
-            pl="4"
-            pr="2"
+            px="4"
             borderWidth="1px"
             borderColor="border"
             rounded="full"
@@ -33,7 +29,7 @@ export const FavoritesOpener: FC = () => {
             backdropFilter="blur({blurs.glass})"
             fontSize="sm"
             fontWeight="semibold"
-            lineHeight="tight"
+            lineHeight="{spacing.6}"
             whiteSpace="nowrap"
             cursor="pointer"
             transitionProperty="background, border-color"
@@ -46,19 +42,7 @@ export const FavoritesOpener: FC = () => {
         >
             <Icon name="bookmark" boxSize="1.25em" />
             Favourites
-            <chakra.span
-                display="grid"
-                placeItems="center"
-                minW="6"
-                h="6"
-                px="2"
-                rounded="full"
-                fontSize="xs"
-                fontWeight="extrabold"
-                {...COUNT_STYLES[countTone]}
-            >
-                {count}
-            </chakra.span>
+            <FavoritesCount />
         </chakra.button>
     );
 };
