@@ -1,5 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { sendFavoritesRequest } from "~/tasks/favorites/sendFavoritesRequest";
 
 // Loads the browser's favorites into the store. Rejects as `sendFavoritesRequest` does, and when `signal` aborts; the

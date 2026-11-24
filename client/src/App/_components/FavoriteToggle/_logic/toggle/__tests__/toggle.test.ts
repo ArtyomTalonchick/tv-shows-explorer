@@ -1,6 +1,6 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
 import { toaster } from "~/lib/toast/toaster";
-import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { toggle } from "../toggle";
 
 const DARK: Favorite = {

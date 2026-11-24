@@ -1,5 +1,5 @@
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
-import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { sendFavoritesRequest } from "~/tasks/favorites/sendFavoritesRequest";
 import { toFavorite } from "./toFavorite";
 

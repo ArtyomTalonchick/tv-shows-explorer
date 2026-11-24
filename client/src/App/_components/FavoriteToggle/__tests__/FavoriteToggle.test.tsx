@@ -2,7 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { fireEvent, render, screen } from "@testing-library/react";
 import type { Favorite } from "@tv-shows-explorer/shared";
 import { system } from "~/lib/theme/system";
-import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { FavoriteToggle } from "../FavoriteToggle";
 
 const DARK: Favorite = {

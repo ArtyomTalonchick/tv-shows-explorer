@@ -1,5 +1,5 @@
 import type { Show } from "@tv-shows-explorer/shared";
-import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { toggle } from "./toggle/toggle";
 
 export type FavoriteToggleProps = {

@@ -1,5 +1,5 @@
 import { useFavoritesDrawerStore } from "~/App/_stores/useFavoritesDrawerStore";
-import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 
 type UsePresenterResult = {
     // The number of favourites; 0 is shown too, in a muted badge.
