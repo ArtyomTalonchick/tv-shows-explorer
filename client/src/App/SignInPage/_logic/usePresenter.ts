@@ -1,6 +1,7 @@
 import { isValidEmail, type Credentials } from "@tv-shows-explorer/shared";
 import type { SubmitEvent } from "react";
 import { useController, useForm } from "react-hook-form";
+import { EMAIL_FORMAT_ERROR, SERVER_FAILED_ALERT } from "~/App/constants";
 import type { FieldProps } from "~/lib/ui-kit/Field/Field";
 import type { PasswordFieldProps } from "~/lib/ui-kit/PasswordField/PasswordField";
 import { signIn, type SignInResult } from "./_tasks/signIn";
@@ -8,7 +9,7 @@ import { signIn, type SignInResult } from "./_tasks/signIn";
 // The form alert after a sign-in that did not sign the user in; a signed-in user leaves the page.
 const ALERTS: Record<Exclude<SignInResult, "signed-in">, string> = {
     "wrong-credentials": "Wrong email or password.",
-    failed: "Couldn’t reach the server. Check your connection and try again.",
+    failed: SERVER_FAILED_ALERT,
 };
 
 type UsePresenterResult = {
@@ -32,7 +33,7 @@ export const usePresenter = (): UsePresenterResult => {
     const email = useController({
         control,
         name: "email",
-        rules: { validate: (value) => isValidEmail(value) || "Enter an email like name@example.com" },
+        rules: { validate: (value) => isValidEmail(value) || EMAIL_FORMAT_ERROR },
     });
     const password = useController({
         control,

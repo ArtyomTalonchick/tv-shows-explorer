@@ -22,12 +22,12 @@ const SESSION = { accessToken: "access", refreshToken: "refresh", user: { id: "u
 
 const NOTHING_FOUND = { shows: [], genres: [], found: 0, genre: null, total: 0, page: 1, perPage: 3 };
 
-// The app's server: the search finds nothing, a sign-in succeeds; the favorites start as `saved` and follow PUT and
-// DELETE of DARK.
+// The app's server: the search finds nothing, a sign-in and a sign-up succeed; the favorites start as `saved` and
+// follow PUT and DELETE of DARK.
 const stubServer = (saved: Favorite[] = []) => {
     let favorites = saved;
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
-        if (url === "/api/session") {
+        if (url === "/api/session" || url === "/api/users") {
             return new Response(JSON.stringify(SESSION));
         }
         if (!url.startsWith("/api/favorites")) {
@@ -126,6 +126,18 @@ describe("App", () => {
         fireEvent.change(screen.getByLabelText("Email"), { target: { value: "anna@example.com" } });
         fireEvent.change(screen.getByLabelText("Password"), { target: { value: "severance" } });
         fireEvent.click(screen.getByRole("button", { name: "Sign in" }));
+
+        expect(await screen.findByRole("heading", { level: 1, name: "Find your next obsession." })).toBeInTheDocument();
+        expect(window.location.pathname).toBe("/");
+    });
+
+    it("signs the user up and leads to the search page", async () => {
+        stubServer();
+        renderApp("/sign-up");
+
+        fireEvent.change(screen.getByLabelText("Email"), { target: { value: "anna@example.com" } });
+        fireEvent.change(screen.getByLabelText("Password"), { target: { value: "severance" } });
+        fireEvent.click(screen.getByRole("button", { name: "Create account" }));
 
         expect(await screen.findByRole("heading", { level: 1, name: "Find your next obsession." })).toBeInTheDocument();
         expect(window.location.pathname).toBe("/");
