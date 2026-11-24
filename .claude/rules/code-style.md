@@ -110,6 +110,8 @@ followed by hand. A new preference the owner states during a task is added here 
 - A function's name and its return type say the same thing: `issueTokens` returns `SessionTokens`. When callers
   need more than that, a second function adds it under its own name and type (`startSession` returns
   `SessionResponse`, the tokens and the user), rather than the first one returning more than its name says. (#69)
+- Markup comes from a component, never from a plain function or constant that returns JSX. A component whose whole
+  markup depends on a case returns early — `if (…) { return …; } return …;` — not `return x ? <A /> : <B />`. (#62)
 
 ## Styles
 
@@ -140,6 +142,8 @@ followed by hand. A new preference the owner states during a task is added here 
   rather than an animation library for one transition. (#8)
 - A new library is chosen as the most modern and simple of the established ones, not the oldest: Hono on web
   standards rather than Express for the server. (#24)
+- A form is built on react-hook-form: its values, touched fields, errors and submit state are the library's, not
+  hand-written state. (#62)
 - A tool's config lists every key, even one equal to its default (`"tasks": "_tasks"` in
   `.claude/simple-architecture/config.json`), so the whole setting is read in one place. (#37)
 - An env file (`.env`, `.env.production`, …) never goes to git, even when what it holds is public: `.gitignore` keeps
