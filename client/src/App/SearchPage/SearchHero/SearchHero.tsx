@@ -1,8 +1,9 @@
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Account } from "~/App/SearchPage/_components/Account/Account";
 import { Backdrop } from "~/App/_components/Backdrop/Backdrop";
 import { Logo } from "~/App/_components/Logo/Logo";
+import { TopBar } from "~/App/_components/TopBar/TopBar";
 import { SearchHeroInput } from "./SearchHeroInput/SearchHeroInput";
 
 // The start screen: the full-viewport hero with the search field, the logo and the account block above it.
@@ -21,18 +22,10 @@ export const SearchHero: FC = () => {
             px="6"
         >
             <Backdrop />
-            <Flex
-                position="absolute"
-                top={{ base: "6", md: "8" }}
-                insetInline="0"
-                px={{ base: "4", md: "12" }}
-                zIndex="3"
-                alignItems="center"
-                justifyContent="space-between"
-            >
+            <TopBar>
                 <Logo />
                 <Account />
-            </Flex>
+            </TopBar>
             <Box position="relative" zIndex="2" maxW="hero" display="grid" justifyItems="center">
                 <Text textStyle="eyebrow">TVmaze · 80 000+ shows</Text>
                 <Heading as="h1" textStyle="display" my="6">
