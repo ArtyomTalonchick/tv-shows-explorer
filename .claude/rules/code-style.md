@@ -63,6 +63,25 @@ followed by hand. A new preference the owner states during a task is added here 
   caller can change one, and before the attributes the component relies on, so a caller cannot replace them. `ref` is
   declared by hand: Chakra's prop types leave it out. (#18)
 - One component per screen and per state (loading, list, empty, error); the parent only chooses which to render. (#8)
+- A View that shows one child of several by a key its Presenter chose reads it from a table of components above the
+  View, checked with `satisfies Record<Key, FC>`, not a chain of `key === "…" &&`. The key's type is a named type
+  exported from the Presenter's file; `UsePresenterResult` stays local: (#64)
+
+  ```tsx
+  // FavoritesDrawer.tsx
+  const CONTENTS = {
+    guest: FavoritesGuest,
+    empty: FavoritesEmpty,
+    list: FavoritesList,
+  } satisfies Record<FavoritesContent, FC>;
+  // View: const Content = CONTENTS[content]; … <Content />
+  ```
+
+- A part with logic of its own — a badge that reads the store, decides whether it shows and picks its tone — is a
+  child component with its own Presenter (`FavoritesOpener/FavoritesCount`, `FavoritesDrawer/FavoritesTitle`), not
+  values the parent reads and hands down. It decides itself whether it shows, and returns `null` (or its plain
+  form) when not; the parent renders it with no condition. (#64)
+
 - A Presenter hands a child its props ready, typed by the child's props type, and the View spreads them; the View
   does not take values apart only to put them back together: (#9)
 
@@ -95,6 +114,9 @@ followed by hand. A new preference the owner states during a task is added here 
 - A handler that calls a task and shows what follows on the screen (toasts, Undo) is a plain function in its own
   file in `_logic/` (`toggle/toggle.ts`, with its part `toggle/undo.ts`), with its own test; the Presenter only reads the store and calls it.
   A hook that only hands the Presenter what it returns is not written. (#51)
+- What such a handler decides by — whether the show is saved, for the toast and Undo — is read from the store at the
+  press (`useFavoritesStore.getState().findFavorite(id)`), not from a value of the render: a render can be stale
+  between two quick presses. (#64)
 - A result that can succeed or fail is a flat object with a flag and a nullable field, not a union checked with
   `in`: `{ data: T | null; failed: boolean }`, read as `if (shown.failed)` and `shown?.data ?? []`. (#16)
 - The simplest code that does the job. A rare case that the next load puts right (two presses within a fraction of a
@@ -106,7 +128,8 @@ followed by hand. A new preference the owner states during a task is added here 
 - A Zustand store keeps an action only when a Presenter calls it through the store hook (`setIsOpen`), or when it
   holds logic of the data itself (`addFavorite` keeps the list ordered by `addedAt`; `forgetSearch` knows what «no
   search» is). Everything else a task or a plain function writes with `useXStore.setState(…)`: no setter that only
-  repeats `set({ x })`. (#45)
+  repeats `set({ x })`. (#45) A read of the store's data by id is such an action too (`findFavorite(id)`), not a
+  `find` repeated at each caller. (#64)
 - A function's name and its return type say the same thing: `issueTokens` returns `SessionTokens`. When callers
   need more than that, a second function adds it under its own name and type (`startSession` returns
   `SessionResponse`, the tokens and the user), rather than the first one returning more than its name says. (#69)
