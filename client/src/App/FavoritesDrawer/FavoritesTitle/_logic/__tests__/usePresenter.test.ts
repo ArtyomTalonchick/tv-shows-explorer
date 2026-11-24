@@ -1,7 +1,14 @@
 import { renderHook } from "@testing-library/react";
-import type { Favorite } from "@tv-shows-explorer/shared";
+import type { Favorite, SessionResponse } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { usePresenter } from "../usePresenter";
+
+const SESSION: SessionResponse = {
+    accessToken: "access",
+    refreshToken: "refresh",
+    user: { id: "u1", email: "anna@example.com" },
+};
 
 const DARK: Favorite = {
     id: 17861,
@@ -16,13 +23,15 @@ const DARK: Favorite = {
 
 describe("FavoritesTitle usePresenter", () => {
     it.each([
-        ["0 for an empty list", [], { count: 0 }],
-        ["the number of favourites", [DARK], { count: 1 }],
-    ])("gives %s", (_, favorites, expected) => {
+        ["a guest no count", null, [], { hasCount: false }],
+        ["a user 0 for an empty list", SESSION, [], { hasCount: true, count: 0 }],
+        ["a user the number of favourites", SESSION, [DARK], { hasCount: true, count: 1 }],
+    ])("gives %s", (_, session, favorites, expected) => {
+        useSessionStore.setState({ session });
         useFavoritesStore.setState({ favorites });
 
         const { result } = renderHook(() => usePresenter());
 
-        expect(result.current).toEqual(expected);
+        expect(result.current).toMatchObject(expected);
     });
 });
