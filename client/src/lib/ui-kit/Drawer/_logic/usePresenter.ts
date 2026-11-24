@@ -10,9 +10,8 @@ export type DrawerProps = {
     onClose: () => void;
     // The small line above the title, e.g. «Your list».
     eyebrow: string;
-    title: string;
-    // Shown after the title in a lighter colour.
-    count: number;
+    // The caller's own markup inside the title's type, e.g. a name with a count after it.
+    title: ReactNode;
     // The label of × for screen readers, e.g. «Close favourites».
     closeLabel: string;
     children: ReactNode;

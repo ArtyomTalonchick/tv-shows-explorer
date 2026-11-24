@@ -2,6 +2,7 @@ import type { FC } from "react";
 import { Drawer } from "~/lib/ui-kit/Drawer/Drawer";
 import { FavoritesEmpty } from "./FavoritesEmpty/FavoritesEmpty";
 import { FavoritesList } from "./FavoritesList/FavoritesList";
+import { FavoritesTitle } from "./FavoritesTitle/FavoritesTitle";
 import { usePresenter } from "./_logic/usePresenter";
 
 // The favourites list in a drawer from the right, opened by the favourites button of either screen: the shows, the
@@ -9,5 +10,9 @@ import { usePresenter } from "./_logic/usePresenter";
 export const FavoritesDrawer: FC = () => {
     const { drawer, hasFavorites } = usePresenter();
 
-    return <Drawer {...drawer}>{hasFavorites ? <FavoritesList /> : <FavoritesEmpty />}</Drawer>;
+    return (
+        <Drawer {...drawer} title={<FavoritesTitle />}>
+            {hasFavorites ? <FavoritesList /> : <FavoritesEmpty />}
+        </Drawer>
+    );
 };
