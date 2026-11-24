@@ -1,7 +1,6 @@
 import type { AddFavoriteBody } from "@tv-shows-explorer/shared";
 import { API_URL } from "~/tasks/constants";
 import { fetchAsUser } from "~/tasks/session/fetchAsUser/fetchAsUser";
-import { getClientId } from "./getClientId";
 
 type FavoritesRequest = {
     method: "GET" | "PUT" | "DELETE";
@@ -11,11 +10,11 @@ type FavoritesRequest = {
     signal?: AbortSignal;
 };
 
-// Sends a request of `/api/favorites` as the signed-in user (`fetchAsUser`) and as this browser, and returns the
-// answer: the whole list (`Favorite[]`) to `GET`, the added `Favorite` to `PUT`, nothing to `DELETE`. The caller keeps
-// it. Rejects on a network error or a non-2xx answer, a 401 included when the session cannot be refreshed.
+// Sends a request of `/api/favorites` as the signed-in user (`fetchAsUser`) and returns the answer: the whole list
+// (`Favorite[]`) to `GET`, the added `Favorite` to `PUT`, nothing to `DELETE`. The caller keeps it. Rejects on a
+// network error or a non-2xx answer, a 401 included when the session cannot be refreshed.
 export const sendFavoritesRequest = async <T>({ method, id, body, signal }: FavoritesRequest): Promise<T> => {
     const url = id === undefined ? `${API_URL}/favorites` : `${API_URL}/favorites/${id}`;
 
-    return await fetchAsUser<T>(url, { method, headers: { "X-Client-Id": getClientId() }, body, signal });
+    return await fetchAsUser<T>(url, { method, body, signal });
 };

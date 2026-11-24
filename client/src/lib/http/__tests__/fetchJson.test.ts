@@ -21,7 +21,7 @@ describe("fetchJson", () => {
     it("sends the method and the headers it is given", async () => {
         const fetchMock = respond([]);
         vi.stubGlobal("fetch", fetchMock);
-        const init = { method: "DELETE", headers: { "X-Client-Id": "id" } };
+        const init = { method: "DELETE", headers: { "X-Request-Id": "id" } };
 
         await fetchJson("https://example.com/items/1", init);
 
@@ -34,7 +34,7 @@ describe("fetchJson", () => {
 
         await fetchJson("https://example.com/items/1", {
             method: "PUT",
-            headers: { "X-Client-Id": "id" },
+            headers: { "X-Request-Id": "id" },
             body: { name: "Dark" },
         });
 
@@ -43,7 +43,7 @@ describe("fetchJson", () => {
         expect(init.method).toBe("PUT");
         expect(init.body).toBe('{"name":"Dark"}');
         expect(headers.get("Content-Type")).toBe("application/json");
-        expect(headers.get("X-Client-Id")).toBe("id");
+        expect(headers.get("X-Request-Id")).toBe("id");
     });
 
     it("resolves undefined to a 204 answer, which has no body", async () => {

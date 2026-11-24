@@ -1,5 +1,4 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
-import { getClientId } from "../getClientId";
 import { sendFavoritesRequest } from "../sendFavoritesRequest";
 
 const DARK: Favorite = {
@@ -16,29 +15,12 @@ const DARK: Favorite = {
 const respond = (body: unknown, status = 200) =>
     vi.fn().mockResolvedValue(new Response(JSON.stringify(body), { status }));
 
-describe("getClientId", () => {
-    beforeEach(() => {
-        localStorage.clear();
-    });
-
-    it("makes a UUID once and keeps it", () => {
-        const first = getClientId();
-
-        expect(first).toMatch(/^[0-9a-f-]{36}$/);
-        expect(getClientId()).toBe(first);
-    });
-});
-
 describe("sendFavoritesRequest", () => {
-    beforeEach(() => {
-        localStorage.clear();
-    });
-
     afterEach(() => {
         vi.unstubAllGlobals();
     });
 
-    it("asks for the list as this browser and returns the answer", async () => {
+    it("asks for the list and returns the answer", async () => {
         const fetchMock = respond([DARK]);
         vi.stubGlobal("fetch", fetchMock);
         const { signal } = new AbortController();
@@ -48,7 +30,6 @@ describe("sendFavoritesRequest", () => {
         expect(url).toBe("/api/favorites");
         expect(init.method).toBe("GET");
         expect(init.signal).toBe(signal);
-        expect(new Headers(init.headers).get("X-Client-Id")).toBe(getClientId());
     });
 
     it("sends the show's id and a JSON body", async () => {
@@ -63,7 +44,6 @@ describe("sendFavoritesRequest", () => {
         expect(url).toBe("/api/favorites/17861");
         expect(init.method).toBe("PUT");
         expect(init.body).toBe('{"addedAt":1763300000000}');
-        expect(headers.get("X-Client-Id")).toBe(getClientId());
         expect(headers.get("Content-Type")).toBe("application/json");
     });
 
