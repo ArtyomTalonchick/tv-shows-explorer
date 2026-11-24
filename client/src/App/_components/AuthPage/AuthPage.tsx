@@ -70,14 +70,7 @@ export const AuthPage: FC<AuthPageProps> = ({ eyebrow, title, text, children, fo
                 {children}
                 <Text color="fg.muted" fontSize="sm" textAlign="center">
                     {footer.text}{" "}
-                    <Link
-                        asChild
-                        color="accent.fg"
-                        fontWeight="semibold"
-                        textDecoration="none"
-                        rounded="sm"
-                        _hover={{ textDecoration: "underline", textUnderlineOffset: "3px" }}
-                    >
+                    <Link asChild variant="accent">
                         <RouterLink to={footer.to}>{footer.link}</RouterLink>
                     </Link>
                 </Text>

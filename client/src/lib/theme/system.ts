@@ -2,6 +2,7 @@ import { createSystem, defaultConfig, defineConfig } from "@chakra-ui/react";
 import tokens from "../../../../design/tokens.json";
 import { buttonRecipe } from "./recipes/button";
 import { iconRecipe } from "./recipes/icon";
+import { linkRecipe } from "./recipes/link";
 import { skeletonRecipe } from "./recipes/skeleton";
 import { spinnerRecipe } from "./recipes/spinner";
 import { textStyles } from "./textStyles";
@@ -19,6 +20,7 @@ const config = defineConfig({
         recipes: {
             button: buttonRecipe,
             icon: iconRecipe,
+            link: linkRecipe,
             skeleton: skeletonRecipe,
             spinner: spinnerRecipe,
         },
