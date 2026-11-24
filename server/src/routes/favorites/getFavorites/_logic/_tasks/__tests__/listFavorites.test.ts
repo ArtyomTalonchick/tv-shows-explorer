@@ -25,13 +25,13 @@ describe("listFavorites", () => {
     it("lists the newest first, whatever the order they were stored in", async () => {
         vi.mocked(favoritesStore.list).mockResolvedValue([favorite(1, 100), favorite(3, 300), favorite(2, 200)]);
 
-        expect((await listFavorites("c1")).map(({ id }) => id)).toEqual([3, 2, 1]);
+        expect((await listFavorites("u1")).map(({ id }) => id)).toEqual([3, 2, 1]);
     });
 
-    it("asks the store for the given browser's favorites", async () => {
+    it("asks the store for the given user's favorites", async () => {
         vi.mocked(favoritesStore.list).mockResolvedValue([]);
 
-        expect(await listFavorites("c2")).toEqual([]);
-        expect(favoritesStore.list).toHaveBeenCalledWith("c2");
+        expect(await listFavorites("u2")).toEqual([]);
+        expect(favoritesStore.list).toHaveBeenCalledWith("u2");
     });
 });

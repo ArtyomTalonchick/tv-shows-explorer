@@ -1,3 +1,4 @@
+import { sign } from "hono/jwt";
 import type { Favorite, Show } from "@tv-shows-explorer/shared";
 import { favoritesStore } from "~/routes/favorites/_stores/favoritesStore/favoritesStore";
 import { searchCache } from "~/routes/_stores/searchCache";
@@ -29,10 +30,21 @@ const favorite = (id: number, addedAt: number): Favorite => ({
     addedAt,
 });
 
-const CLIENT = "0b8f3d6e-6a51-4c2e-9f4b-3f1e2d7c9a10";
+const SECRET = "test-secret";
+const ANNA = "u1";
+const BEN = "u2";
 
-const request = async (method: string, path: string, body?: string, clientId: string | null = CLIENT) => {
-    const headers: Record<string, string> = clientId === null ? {} : { "X-Client-Id": clientId };
+// A token of this server, without `iat`: a test sets the clock back, and a token issued "later" would be refused.
+const tokenOf = async (userId: string, typ = "access", secret = SECRET): Promise<string> => {
+    return await sign({ sub: userId, typ, exp: Math.floor(Date.now() / 1000) + 60 }, secret, "HS256");
+};
+
+const bearerOf = async (userId: string): Promise<string> => `Bearer ${await tokenOf(userId)}`;
+
+// A request of Anna unless another `Authorization` header is given; null sends none.
+const request = async (method: string, path: string, body?: string, authorization?: string | null) => {
+    const header = authorization === undefined ? await bearerOf(ANNA) : authorization;
+    const headers: Record<string, string> = header === null ? {} : { Authorization: header };
     const response = await favorites.request(path, { method, body, headers });
     const text = await response.text();
     return { status: response.status, body: text === "" ? null : (JSON.parse(text) as unknown) };
@@ -47,6 +59,7 @@ const storeUntouched = (): void => {
 
 describe("/", () => {
     beforeEach(() => {
+        vi.stubEnv("JWT_SECRET", SECRET);
         searchCache.set("show", { shows: [show(1), show(2), show(3)], savedAt: 0 });
         vi.mocked(favoritesStore.list).mockResolvedValue([]);
         vi.mocked(favoritesStore.get).mockResolvedValue(null);
@@ -55,17 +68,32 @@ describe("/", () => {
     afterEach(() => {
         vi.resetAllMocks();
         vi.unstubAllGlobals();
+        vi.unstubAllEnvs();
         vi.useRealTimers();
         searchCache.clear();
     });
 
-    it("lists the browser's favorites the newest first, reading its id in any case", async () => {
+    it("lists the user's favorites the newest first", async () => {
         vi.mocked(favoritesStore.list).mockResolvedValue([favorite(1, 100), favorite(2, 200)]);
 
-        const listed = await request("GET", "/", undefined, CLIENT.toUpperCase());
+        const listed = await request("GET", "/");
 
         expect(listed).toEqual({ status: 200, body: [favorite(2, 200), favorite(1, 100)] });
-        expect(favoritesStore.list).toHaveBeenCalledWith(CLIENT);
+        expect(favoritesStore.list).toHaveBeenCalledWith(ANNA);
+    });
+
+    it("keeps a list of its own for each user", async () => {
+        vi.mocked(favoritesStore.list).mockImplementation(async (userId) => {
+            return userId === ANNA ? [favorite(1, 100)] : [favorite(2, 200)];
+        });
+
+        const annas = await request("GET", "/");
+        const bens = await request("GET", "/", undefined, await bearerOf(BEN));
+        await request("DELETE", "/2", undefined, await bearerOf(BEN));
+
+        expect(annas.body).toEqual([favorite(1, 100)]);
+        expect(bens.body).toEqual([favorite(2, 200)]);
+        expect(favoritesStore.remove).toHaveBeenCalledExactlyOnceWith(BEN, 2);
     });
 
     it("adds a show now and answers only the one added", async () => {
@@ -75,14 +103,14 @@ describe("/", () => {
         const added = await request("PUT", "/2");
 
         expect(added).toEqual({ status: 200, body: favorite(2, 2000) });
-        expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(CLIENT, favorite(2, 2000));
+        expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(ANNA, favorite(2, 2000));
     });
 
     it("puts a show back with the addedAt of the body, for Undo", async () => {
         const undone = await request("PUT", "/2", '{ "addedAt": 200 }');
 
         expect(undone).toEqual({ status: 200, body: favorite(2, 200) });
-        expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(CLIENT, favorite(2, 200));
+        expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(ANNA, favorite(2, 200));
     });
 
     it("is not an error to add a show twice: answers the saved one and changes nothing", async () => {
@@ -98,7 +126,7 @@ describe("/", () => {
         const removed = await request("DELETE", "/2");
 
         expect(removed).toEqual({ status: 204, body: null });
-        expect(favoritesStore.remove).toHaveBeenCalledExactlyOnceWith(CLIENT, 2);
+        expect(favoritesStore.remove).toHaveBeenCalledExactlyOnceWith(ANNA, 2);
     });
 
     it("answers 400 to a wrong id or body, and changes nothing", async () => {
@@ -109,14 +137,19 @@ describe("/", () => {
         storeUntouched();
     });
 
-    it.each([null, "", "not-a-uuid", `${CLIENT}0`])(
-        "answers 400 to the client id %j, and changes nothing",
-        async (id) => {
-            expect((await request("GET", "/", undefined, id)).status).toBe(400);
-            expect((await request("PUT", "/1", undefined, id)).status).toBe(400);
-            storeUntouched();
-        },
-    );
+    it.each([
+        ["no token", async () => null],
+        ["a token of another secret", async () => `Bearer ${await tokenOf(ANNA, "access", "other-secret")}`],
+        ["a refresh token", async () => `Bearer ${await tokenOf(ANNA, "refresh")}`],
+        ["a token without Bearer", async () => await tokenOf(ANNA)],
+    ])("answers 401 to a guest with %s, and changes nothing", async (_case, authorization) => {
+        const header = await authorization();
+
+        expect((await request("GET", "/", undefined, header)).status).toBe(401);
+        expect((await request("PUT", "/1", undefined, header)).status).toBe(401);
+        expect((await request("DELETE", "/1", undefined, header)).status).toBe(401);
+        storeUntouched();
+    });
 
     it("answers 404 to a show TVmaze does not have, and 502 when TVmaze fails", async () => {
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 404 })));

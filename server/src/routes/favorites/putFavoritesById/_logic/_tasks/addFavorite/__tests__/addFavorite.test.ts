@@ -43,7 +43,7 @@ const favorite = (id: number, addedAt: number): Favorite => ({
 const respond = (body: unknown, status = 200) =>
     vi.fn().mockImplementation(async () => new Response(JSON.stringify(body), { status }));
 
-const CLIENT = "c1";
+const USER = "u1";
 const signal = new AbortController().signal;
 
 describe("addFavorite", () => {
@@ -62,27 +62,27 @@ describe("addFavorite", () => {
         vi.stubGlobal("fetch", fetchMock);
         searchCache.set("dark", { shows: [show(1), show(2)], savedAt: 0 });
 
-        const added = await addFavorite(CLIENT, 2, 100, signal);
+        const added = await addFavorite(USER, 2, 100, signal);
 
         expect(fetchMock).not.toHaveBeenCalled();
         expect(added).toEqual(favorite(2, 100));
-        expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(CLIENT, favorite(2, 100));
+        expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(USER, favorite(2, 100));
     });
 
     it("asks TVmaze for a show the cache does not hold", async () => {
         const fetchMock = respond(tvmazeShow(7));
         vi.stubGlobal("fetch", fetchMock);
 
-        await addFavorite(CLIENT, 7, 100, signal);
+        await addFavorite(USER, 7, 100, signal);
 
         expect(fetchMock).toHaveBeenCalledWith("https://api.tvmaze.com/shows/7", { signal });
-        expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(CLIENT, favorite(7, 100));
+        expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(USER, favorite(7, 100));
     });
 
     it("rejects with the status when TVmaze has no such show, and adds nothing", async () => {
         vi.stubGlobal("fetch", respond({ name: "Not Found" }, 404));
 
-        await expect(addFavorite(CLIENT, 7, 100, signal)).rejects.toMatchObject({ status: 404 });
+        await expect(addFavorite(USER, 7, 100, signal)).rejects.toMatchObject({ status: 404 });
         expect(favoritesStore.put).not.toHaveBeenCalled();
     });
 
@@ -91,9 +91,9 @@ describe("addFavorite", () => {
         vi.stubGlobal("fetch", fetchMock);
         vi.mocked(favoritesStore.get).mockResolvedValue(favorite(7, 100));
 
-        const again = await addFavorite(CLIENT, 7, 200, signal);
+        const again = await addFavorite(USER, 7, 200, signal);
 
-        expect(favoritesStore.get).toHaveBeenCalledWith(CLIENT, 7);
+        expect(favoritesStore.get).toHaveBeenCalledWith(USER, 7);
         expect(fetchMock).not.toHaveBeenCalled();
         expect(favoritesStore.put).not.toHaveBeenCalled();
         expect(again).toEqual(favorite(7, 100));

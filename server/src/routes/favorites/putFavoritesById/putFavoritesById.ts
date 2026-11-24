@@ -8,14 +8,14 @@ import { addFavorite } from "./_logic/_tasks/addFavorite/addFavorite";
 // already there changes nothing and is answered as it is. 404 when TVmaze has no such show, 502 when it does not
 // answer.
 export const putFavoritesById: Handler<FavoriteEnv, "/:id"> = async (context) => {
-    const { clientId, showId } = context.var;
+    const { userId, showId } = context.var;
     const addedAt = parseAddedAt(await context.req.text(), Date.now());
     if (addedAt === null) {
         return context.json({ error: "Expected a JSON body with an optional addedAt from 1" }, 400);
     }
 
     try {
-        return context.json(await addFavorite(clientId, showId, addedAt, context.req.raw.signal));
+        return context.json(await addFavorite(userId, showId, addedAt, context.req.raw.signal));
     } catch (error) {
         if (error instanceof HttpError && error.status === 404) {
             return context.json({ error: "TVmaze has no such show" }, 404);

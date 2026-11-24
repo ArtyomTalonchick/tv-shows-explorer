@@ -10,9 +10,9 @@ describe("removeFavorite", () => {
         vi.resetAllMocks();
     });
 
-    it("removes the show from the list of the given browser", async () => {
-        await removeFavorite("c1", 1);
+    it("removes the show from the list of the given user", async () => {
+        await removeFavorite("u1", 1);
 
-        expect(favoritesStore.remove).toHaveBeenCalledExactlyOnceWith("c1", 1);
+        expect(favoritesStore.remove).toHaveBeenCalledExactlyOnceWith("u1", 1);
     });
 });

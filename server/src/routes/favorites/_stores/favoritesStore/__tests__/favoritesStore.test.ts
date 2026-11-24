@@ -47,29 +47,29 @@ describe("favoritesStore", () => {
     it("starts Firebase on the first call, not on import, and only once", async () => {
         expect(initializeApp).not.toHaveBeenCalled();
 
-        await favoritesStore.list("c1");
-        await favoritesStore.list("c1");
+        await favoritesStore.list("u1");
+        await favoritesStore.list("u1");
 
         expect(initializeApp).toHaveBeenCalledTimes(1);
     });
 
-    it("keeps a document per show under the browser's client id", async () => {
-        await favoritesStore.put("c1", favorite(7));
+    it("keeps a document per show under the user's id", async () => {
+        await favoritesStore.put("u1", favorite(7));
 
-        expect([...documents.entries()]).toEqual([["clients/c1/favorites/7", favorite(7)]]);
+        expect([...documents.entries()]).toEqual([["users/u1/favorites/7", favorite(7)]]);
     });
 
-    it("lists, finds and removes the favorites of the given browser only", async () => {
-        await favoritesStore.put("c1", favorite(1));
-        await favoritesStore.put("c1", favorite(2));
-        await favoritesStore.put("c2", favorite(3));
+    it("lists, finds and removes the favorites of the given user only", async () => {
+        await favoritesStore.put("u1", favorite(1));
+        await favoritesStore.put("u1", favorite(2));
+        await favoritesStore.put("u2", favorite(3));
 
-        await favoritesStore.remove("c1", 1);
-        await favoritesStore.remove("c1", 5);
+        await favoritesStore.remove("u1", 1);
+        await favoritesStore.remove("u1", 5);
 
-        expect(await favoritesStore.list("c1")).toEqual([favorite(2)]);
-        expect(await favoritesStore.get("c1", 2)).toEqual(favorite(2));
-        expect(await favoritesStore.get("c1", 3)).toBeNull();
-        expect(await favoritesStore.list("c3")).toEqual([]);
+        expect(await favoritesStore.list("u1")).toEqual([favorite(2)]);
+        expect(await favoritesStore.get("u1", 2)).toEqual(favorite(2));
+        expect(await favoritesStore.get("u1", 3)).toBeNull();
+        expect(await favoritesStore.list("u3")).toEqual([]);
     });
 });
