@@ -1,7 +1,6 @@
 import type { Favorite, SessionResponse, Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
-import { addFavorite } from "../addFavorite";
 import { toggleFavorite } from "../toggleFavorite";
 
 const DARK_SHOW: Show = {
@@ -135,18 +134,5 @@ describe("toggleFavorite", () => {
         second.respond(removed());
         await remove;
         expect(favorites()).toEqual([]);
-    });
-
-    it("puts a removed show back in its old place on Undo", async () => {
-        const fetchMock = vi.fn().mockResolvedValue(ok(DARK));
-        vi.stubGlobal("fetch", fetchMock);
-
-        await addFavorite(DARK, DARK.addedAt);
-
-        expect(favorites()).toEqual([DARK]);
-        expect(fetchMock).toHaveBeenCalledWith(
-            "/api/favorites/17861",
-            expect.objectContaining({ method: "PUT", body: '{"addedAt":1763300000000}' }),
-        );
     });
 });

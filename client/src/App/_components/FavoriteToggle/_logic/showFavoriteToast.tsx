@@ -5,8 +5,6 @@ type FavoriteToast = {
     // What happened to the show: a change the server made, one it did not, or none, as a guest has no favourites.
     change: "added" | "removed" | "notAdded" | "notRemoved" | "signInFirst";
     name: string;
-    // Puts a removed show back.
-    onUndo?: () => void;
 };
 
 type ToastLook = Pick<ShowToastOptions, "icon" | "tone" | "urgent" | "link"> & {
@@ -31,11 +29,10 @@ const LOOKS = {
     },
 } satisfies Record<FavoriteToast["change"], ToastLook>;
 
-// The toast after a press on a bookmark, with the show's name in bold; a removal offers Undo, and a guest's press
-// the way to sign in.
-export const showFavoriteToast = ({ change, name, onUndo }: FavoriteToast): void => {
+// The toast after a press on a bookmark, with the show's name in bold; a guest's press offers the way to sign
+// in.
+export const showFavoriteToast = ({ change, name }: FavoriteToast): void => {
     const { text, ...look } = LOOKS[change];
-    const action = onUndo ? { label: "Undo", onClick: onUndo } : undefined;
 
-    showToast({ ...look, text: text(<b>{name}</b>), action });
+    showToast({ ...look, text: text(<b>{name}</b>) });
 };

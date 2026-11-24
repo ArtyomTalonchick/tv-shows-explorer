@@ -50,20 +50,14 @@ describe("toggle", () => {
         expect(toaster.create).toHaveBeenCalledTimes(1);
     });
 
-    it("removes a show at once, and offers Undo that puts it back in its old place", async () => {
+    it("removes a show at once, and says so with no Undo", async () => {
         useFavoritesStore.setState({ favorites: [DARK] });
-        const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 204 }));
-        vi.stubGlobal("fetch", fetchMock);
+        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 204 })));
 
         await toggle(DARK);
 
         expect(useFavoritesStore.getState().favorites).toEqual([]);
-        expect(lastToast()).toMatchObject({ meta: { icon: "bookmark", tone: "muted" }, action: { label: "Undo" } });
-
-        fetchMock.mockResolvedValue(new Response(JSON.stringify(DARK)));
-        lastToast()?.action?.onClick();
-
-        expect(useFavoritesStore.getState().favorites).toEqual([DARK]);
+        expect(lastToast()).toMatchObject({ meta: { icon: "bookmark", tone: "muted" }, action: undefined });
     });
 
     it("says so when the request fails, once the bookmark is back", async () => {

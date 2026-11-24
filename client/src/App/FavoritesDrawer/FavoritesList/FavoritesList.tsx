@@ -3,7 +3,7 @@ import type { FC } from "react";
 import { FavoriteRow } from "./FavoriteRow/FavoriteRow";
 import { usePresenter } from "./_logic/usePresenter";
 
-// .fav-list of design/library: a row per favourite. The bookmark of a row removes the show, and the toast offers Undo.
+// .fav-list of design/library: a row per favourite. The bookmark of a row removes the show.
 export const FavoritesList: FC = () => {
     const { favorites } = usePresenter();
 

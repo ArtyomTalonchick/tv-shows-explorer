@@ -1,6 +1,6 @@
 import type { Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
-import { toggle } from "./toggle/toggle";
+import { toggle } from "./toggle";
 
 export type FavoriteToggleProps = {
     // The show the bookmark adds to the favourites or removes from them.

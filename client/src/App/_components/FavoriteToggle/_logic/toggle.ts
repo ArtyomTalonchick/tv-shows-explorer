@@ -1,8 +1,7 @@
 import type { Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
-import { toggleFavorite } from "../_tasks/toggleFavorite";
-import { showFavoriteToast } from "../showFavoriteToast";
-import { undo } from "./undo";
+import { toggleFavorite } from "./_tasks/toggleFavorite";
+import { showFavoriteToast } from "./showFavoriteToast";
 
 // A press on the bookmark of one show. It changes at once, and so do the counter and the list: the task changes the
 // store before its request, and puts it back if the request fails. The toast says what was done at once, and what
@@ -15,11 +14,7 @@ export const toggle = async (show: Omit<Show, "rating">): Promise<void> => {
         showFavoriteToast({ change: "signInFirst", name: show.name });
         return;
     }
-    if (saved === null) {
-        showFavoriteToast({ change: "added", name: show.name });
-    } else {
-        showFavoriteToast({ change: "removed", name: show.name, onUndo: () => void undo(saved) });
-    }
+    showFavoriteToast({ change: saved === null ? "added" : "removed", name: show.name });
     try {
         await request;
     } catch {

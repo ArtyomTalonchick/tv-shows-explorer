@@ -207,7 +207,7 @@ describe("App", () => {
         expect(window.location.pathname).toBe("/");
     });
 
-    it("lists the favourites in a drawer, removes one from its bookmark and puts it back on Undo", async () => {
+    it("lists the favourites in a drawer and removes one from its bookmark", async () => {
         stubServer([DARK]);
         useSessionStore.setState({ session: SESSION });
         renderApp();
@@ -220,11 +220,7 @@ describe("App", () => {
 
         expect(await within(drawer).findByText("No favourites yet")).toBeInTheDocument();
         expect(await screen.findByText(/Removed/)).toHaveTextContent("Removed Dark from favourites");
-
-        fireEvent.click(screen.getByRole("button", { name: "Undo" }));
-
-        expect(await within(drawer).findByText("Dark")).toBeInTheDocument();
-        expect(screen.getByRole("dialog", { name: "Favourites 1" })).toBe(drawer);
+        expect(screen.queryByRole("button", { name: "Undo" })).not.toBeInTheDocument();
     });
 
     it("opens the results screen on a tap with its field focused, without focusing the hero field", async () => {
