@@ -41,4 +41,9 @@ describe("useFavoritesStore", () => {
 
         expect(ids()).toEqual([1]);
     });
+
+    it("finds a favorite by its id, and answers null for a show that is not one", () => {
+        expect(useFavoritesStore.getState().findFavorite(1)).toEqual(favorite(1, 100));
+        expect(useFavoritesStore.getState().findFavorite(9)).toBeNull();
+    });
 });

@@ -1,5 +1,6 @@
-import type { Favorite, Show } from "@tv-shows-explorer/shared";
+import type { Favorite, SessionResponse, Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { addFavorite } from "../addFavorite";
 import { toggleFavorite } from "../toggleFavorite";
 
@@ -25,6 +26,12 @@ const DARK: Favorite = {
     addedAt: 1763300000000,
 };
 
+const SESSION: SessionResponse = {
+    accessToken: "access",
+    refreshToken: "refresh",
+    user: { id: "u1", email: "anna@example.com" },
+};
+
 // A response the test sends when it says so.
 const deferred = () => {
     const callbacks: { respond: (response: Response) => void } = { respond: () => {} };
@@ -43,6 +50,7 @@ const favorites = () => useFavoritesStore.getState().favorites;
 describe("toggleFavorite", () => {
     beforeEach(() => {
         useFavoritesStore.setState({ favorites: [] });
+        useSessionStore.setState({ session: SESSION });
         vi.spyOn(Date, "now").mockReturnValue(1763300000000);
     });
 
@@ -55,7 +63,7 @@ describe("toggleFavorite", () => {
         const answer = deferred();
         vi.stubGlobal("fetch", vi.fn().mockReturnValue(answer.promise));
 
-        const toggle = toggleFavorite(DARK_SHOW);
+        const { request: toggle } = toggleFavorite(DARK_SHOW);
 
         expect(favorites()).toEqual([DARK]);
         answer.respond(ok(DARK));
@@ -63,10 +71,23 @@ describe("toggleFavorite", () => {
         expect(favorites()).toEqual([DARK]);
     });
 
+    it("changes nothing and sends nothing for a guest", async () => {
+        useSessionStore.setState({ session: null });
+        const fetchMock = vi.fn();
+        vi.stubGlobal("fetch", fetchMock);
+
+        const toggling = toggleFavorite(DARK_SHOW);
+
+        expect(toggling.isGuest).toBe(true);
+        await toggling.request;
+        expect(favorites()).toEqual([]);
+        expect(fetchMock).not.toHaveBeenCalled();
+    });
+
     it("takes the show out again when adding fails, and rejects", async () => {
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue(failed()));
 
-        await expect(toggleFavorite(DARK_SHOW)).rejects.toThrow();
+        await expect(toggleFavorite(DARK_SHOW).request).rejects.toThrow();
 
         expect(favorites()).toEqual([]);
     });
@@ -77,7 +98,7 @@ describe("toggleFavorite", () => {
         const answer = deferred();
         vi.stubGlobal("fetch", vi.fn().mockReturnValue(answer.promise));
 
-        const toggle = toggleFavorite(DARK);
+        const { request: toggle } = toggleFavorite(DARK);
 
         expect(favorites()).toEqual([older]);
         answer.respond(failed());
@@ -90,8 +111,8 @@ describe("toggleFavorite", () => {
         const second = deferred();
         vi.stubGlobal("fetch", vi.fn().mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise));
 
-        const add = toggleFavorite(DARK_SHOW);
-        const remove = toggleFavorite(DARK_SHOW);
+        const { request: add } = toggleFavorite(DARK_SHOW);
+        const { request: remove } = toggleFavorite(DARK_SHOW);
         first.respond(failed());
         second.respond(removed());
 
@@ -105,8 +126,8 @@ describe("toggleFavorite", () => {
         const second = deferred();
         vi.stubGlobal("fetch", vi.fn().mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise));
 
-        const add = toggleFavorite(DARK_SHOW);
-        const remove = toggleFavorite(DARK_SHOW);
+        const { request: add } = toggleFavorite(DARK_SHOW);
+        const { request: remove } = toggleFavorite(DARK_SHOW);
         first.respond(ok(DARK));
         await add;
 

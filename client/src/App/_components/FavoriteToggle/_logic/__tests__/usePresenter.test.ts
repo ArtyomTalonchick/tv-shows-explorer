@@ -1,7 +1,8 @@
 import { act, renderHook } from "@testing-library/react";
-import type { Favorite } from "@tv-shows-explorer/shared";
+import type { Favorite, SessionResponse } from "@tv-shows-explorer/shared";
 import { toaster } from "~/lib/toast/toaster";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { usePresenter } from "../usePresenter";
 
 const DARK: Favorite = {
@@ -15,9 +16,16 @@ const DARK: Favorite = {
     addedAt: 1763300000000,
 };
 
+const SESSION: SessionResponse = {
+    accessToken: "access",
+    refreshToken: "refresh",
+    user: { id: "u1", email: "anna@example.com" },
+};
+
 describe("FavoriteToggle usePresenter", () => {
     beforeEach(() => {
         useFavoritesStore.setState({ favorites: [] });
+        useSessionStore.setState({ session: SESSION });
         vi.spyOn(toaster, "create").mockReturnValue("toast");
         vi.stubGlobal(
             "fetch",

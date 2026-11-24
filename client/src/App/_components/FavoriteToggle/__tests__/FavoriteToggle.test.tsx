@@ -1,8 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { fireEvent, render, screen } from "@testing-library/react";
-import type { Favorite } from "@tv-shows-explorer/shared";
+import type { Favorite, SessionResponse } from "@tv-shows-explorer/shared";
 import { system } from "~/lib/theme/system";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { FavoriteToggle } from "../FavoriteToggle";
 
 const DARK: Favorite = {
@@ -16,6 +17,12 @@ const DARK: Favorite = {
     addedAt: 1763300000000,
 };
 
+const SESSION: SessionResponse = {
+    accessToken: "access",
+    refreshToken: "refresh",
+    user: { id: "u1", email: "anna@example.com" },
+};
+
 const renderToggle = () =>
     render(
         <ChakraProvider value={system}>
@@ -26,6 +33,7 @@ const renderToggle = () =>
 describe("FavoriteToggle", () => {
     beforeEach(() => {
         useFavoritesStore.setState({ favorites: [] });
+        useSessionStore.setState({ session: SESSION });
     });
 
     afterEach(() => {

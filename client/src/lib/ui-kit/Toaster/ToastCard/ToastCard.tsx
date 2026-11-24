@@ -1,8 +1,10 @@
 import { chakra, Toast, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
+import { Link as RouterLink } from "react-router";
 import { Icon } from "~/lib/ui-kit/Icon/Icon";
 import type { ToastMeta } from "~/lib/toast/showToast";
 import { usePresenter, type ToastCardProps } from "./_logic/usePresenter";
+import { ToastAction } from "./ToastAction/ToastAction";
 
 export type { ToastCardProps } from "./_logic/usePresenter";
 
@@ -11,9 +13,10 @@ const TONE_STYLES = {
     muted: { color: "fg.muted" },
 } satisfies Record<ToastMeta["tone"], HTMLChakraProps<"span">>;
 
-// .toast of design/library: an icon, one line of text and an optional action, such as Undo.
+// .toast of design/library: an icon, one line of text and an optional action, such as Undo, or a link to a page,
+// such as «Sign in».
 export const ToastCard: FC<ToastCardProps> = (props) => {
-    const { text, icon, tone, actionLabel } = usePresenter(props);
+    const { text, icon, tone, actionLabel, link } = usePresenter(props);
 
     return (
         <Toast.Root
@@ -40,25 +43,11 @@ export const ToastCard: FC<ToastCardProps> = (props) => {
             <Toast.Description minW="0" fontSize="sm" opacity="1" css={{ "& b": { fontWeight: "bold" } }}>
                 {text}
             </Toast.Description>
-            {actionLabel && (
-                <Toast.ActionTrigger
-                    flex="none"
-                    ml="2"
-                    h="auto"
-                    px="2"
-                    py="1"
-                    border="0"
-                    rounded="sm"
-                    bg="transparent"
-                    color="accent.fg"
-                    fontSize="sm"
-                    fontWeight="bold"
-                    cursor="pointer"
-                    transition="background {durations.fast} {easings.standard}"
-                    _hover={{ bg: "border" }}
-                >
-                    {actionLabel}
-                </Toast.ActionTrigger>
+            {actionLabel && <ToastAction>{actionLabel}</ToastAction>}
+            {link && (
+                <ToastAction asChild>
+                    <RouterLink to={link.to}>{link.label}</RouterLink>
+                </ToastAction>
             )}
         </Toast.Root>
     );

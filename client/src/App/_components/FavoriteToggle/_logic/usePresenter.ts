@@ -20,12 +20,12 @@ type UsePresenterResult = {
 };
 
 export const usePresenter = ({ show, variant = "poster" }: FavoriteToggleProps): UsePresenterResult => {
-    const saved = useFavoritesStore((state) => state.favorites.find((favorite) => favorite.id === show.id) ?? null);
+    const saved = useFavoritesStore((state) => state.findFavorite(show.id));
 
     return {
         pressed: saved !== null,
         label: saved === null ? `Add ${show.name} to favourites` : `Remove ${show.name} from favourites`,
         variant,
-        handleClick: () => void toggle(show, saved),
+        handleClick: () => void toggle(show),
     };
 };
