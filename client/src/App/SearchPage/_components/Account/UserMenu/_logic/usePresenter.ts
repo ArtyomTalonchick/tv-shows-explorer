@@ -1,4 +1,4 @@
-import { useSessionStore } from "~/App/_stores/useSessionStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { signOut } from "./_tasks/signOut";
 
 type UsePresenterResult = {

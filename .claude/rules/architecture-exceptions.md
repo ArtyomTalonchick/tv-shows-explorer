@@ -41,7 +41,7 @@ the shared package, with its tests, until the plugin settles the case.
 
 ArtyomTalonchick/claude-simple-architecture#75 · since #62
 
-`client/src/App/_stores/useSessionStore.ts` exports `useIsSignedIn` next to the store, the store's own reading of
+`client/src/stores/useSessionStore.ts` exports `useIsSignedIn` next to the store, the store's own reading of
 whether a user is signed in; the Presenters of the root unit and of `SearchPage/_components/Account` call it. The
 plugin's rules keep a store file to the store and its own API, with no subscription to show the data (core
 `stateful-logic-and-functions.md`), and a Zustand store file to `create(...)` and nothing else (zustand

@@ -1,5 +1,5 @@
 import type { RefreshBody, SessionResponse } from "@tv-shows-explorer/shared";
-import { useSessionStore } from "~/App/_stores/useSessionStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { HttpError } from "~/lib/http/HttpError";
 import { fetchJson } from "~/lib/http/fetchJson";
 import { API_URL } from "~/tasks/constants";

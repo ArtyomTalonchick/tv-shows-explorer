@@ -1,4 +1,4 @@
-import { useIsSignedIn } from "~/App/_stores/useSessionStore";
+import { useIsSignedIn } from "~/stores/useSessionStore";
 
 type UsePresenterResult = {
     // A signed-in user gets their menu next to the favourites; a guest gets the link to the sign-in page.

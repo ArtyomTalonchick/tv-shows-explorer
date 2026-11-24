@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import type { Favorite } from "@tv-shows-explorer/shared";
 import { useFavoritesDrawerStore } from "~/App/_stores/useFavoritesDrawerStore";
 import { useFavoritesStore } from "~/App/_stores/useFavoritesStore";
-import { useSessionStore } from "~/App/_stores/useSessionStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { clearSearch } from "~/tasks/search/clearSearch";
 import { App } from "../App";
 import { Provider } from "../Provider/Provider";

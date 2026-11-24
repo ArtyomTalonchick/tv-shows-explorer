@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import type { SessionResponse } from "@tv-shows-explorer/shared";
-import { useSessionStore } from "~/App/_stores/useSessionStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { Provider } from "~/App/Provider/Provider";
 import { SignInPage } from "../SignInPage";
 

@@ -1,4 +1,4 @@
-import { useIsSignedIn } from "~/App/_stores/useSessionStore";
+import { useIsSignedIn } from "~/stores/useSessionStore";
 import { useLoadFavoritesOnStart } from "./useLoadFavoritesOnStart";
 import { useRestoreSessionOnStart } from "./useRestoreSessionOnStart";
 

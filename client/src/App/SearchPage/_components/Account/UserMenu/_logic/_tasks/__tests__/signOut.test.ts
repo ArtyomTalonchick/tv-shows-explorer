@@ -1,5 +1,5 @@
 import type { SessionResponse } from "@tv-shows-explorer/shared";
-import { useSessionStore } from "~/App/_stores/useSessionStore";
+import { useSessionStore } from "~/stores/useSessionStore";
 import { signOut } from "../signOut";
 
 const SESSION: SessionResponse = {
