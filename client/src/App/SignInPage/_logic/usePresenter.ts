@@ -1,9 +1,11 @@
 import { isValidEmail, type Credentials } from "@tv-shows-explorer/shared";
 import type { SubmitEvent } from "react";
 import { useController, useForm } from "react-hook-form";
+import { useLocation } from "react-router";
 import { EMAIL_FORMAT_ERROR, SERVER_FAILED_ALERT } from "~/App/constants";
 import type { FieldProps } from "~/lib/ui-kit/Field/Field";
 import type { PasswordFieldProps } from "~/lib/ui-kit/PasswordField/PasswordField";
+import { toPendingFavorite } from "~/tasks/favorites/toPendingFavorite";
 import { signIn, type SignInResult } from "./_tasks/signIn";
 
 // The form alert after a sign-in that did not sign the user in; a signed-in user leaves the page.
@@ -41,9 +43,11 @@ export const usePresenter = (): UsePresenterResult => {
         rules: { validate: (value) => value !== "" || "Enter your password" },
     });
     const isLoading = formState.isSubmitting;
+    // The show a guest bookmarked, when they came by the «Sign in» of its toast.
+    const pending = toPendingFavorite(useLocation().state);
 
     const submit = async (credentials: Credentials): Promise<void> => {
-        const result = await signIn(credentials);
+        const result = await signIn(credentials, pending);
         if (result !== "signed-in") {
             setError("root", { message: ALERTS[result] });
         }

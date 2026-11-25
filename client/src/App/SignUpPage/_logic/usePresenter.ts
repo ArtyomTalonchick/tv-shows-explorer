@@ -1,9 +1,11 @@
 import { PASSWORD_MIN_LENGTH, isValidEmail, isValidPassword, type Credentials } from "@tv-shows-explorer/shared";
 import type { SubmitEvent } from "react";
 import { useController, useForm } from "react-hook-form";
+import { useLocation } from "react-router";
 import { EMAIL_FORMAT_ERROR, SERVER_FAILED_ALERT } from "~/App/constants";
 import type { FieldProps } from "~/lib/ui-kit/Field/Field";
 import type { PasswordFieldProps } from "~/lib/ui-kit/PasswordField/PasswordField";
+import { toPendingFavorite } from "~/tasks/favorites/toPendingFavorite";
 import type { EmailErrorProps } from "../EmailError/EmailError";
 import { signUp } from "./_tasks/signUp";
 
@@ -42,10 +44,12 @@ export const usePresenter = (): UsePresenterResult => {
         },
     });
     const isLoading = formState.isSubmitting;
+    // The show a guest bookmarked, when they came by the «Sign in» of its toast and then the sign-in page.
+    const pending = toPendingFavorite(useLocation().state);
     const emailFieldError = email.fieldState.error;
 
     const submit = async (credentials: Credentials): Promise<void> => {
-        const result = await signUp(credentials);
+        const result = await signUp(credentials, pending);
         if (result === "email-taken") {
             setError("email", { type: "taken" });
         }

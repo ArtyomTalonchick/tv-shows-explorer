@@ -13,15 +13,15 @@ export const toggle = async (show: Omit<Show, "rating">, place: FavoriteTogglePl
     const saved = useFavoritesStore.getState().findFavorite(show.id);
     const { isGuest, request } = toggleFavorite(show);
     if (isGuest) {
-        showFavoriteToast({ change: "signInFirst", name: show.name });
+        showFavoriteToast({ change: "signInFirst", show });
         return;
     }
     if (place === "card") {
-        showFavoriteToast({ change: saved === null ? "added" : "removed", name: show.name });
+        showFavoriteToast({ change: saved === null ? "added" : "removed", show });
     }
     try {
         await request;
     } catch {
-        showFavoriteToast({ change: saved === null ? "notAdded" : "notRemoved", name: show.name });
+        showFavoriteToast({ change: saved === null ? "notAdded" : "notRemoved", show });
     }
 };

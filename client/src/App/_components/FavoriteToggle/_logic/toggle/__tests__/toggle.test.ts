@@ -102,7 +102,7 @@ describe("toggle", () => {
         expect(lastToast()).toMatchObject({
             type: "info",
             action: undefined,
-            meta: { icon: "bookmark", tone: "muted", link: { label: "Sign in", to: "/sign-in" } },
+            meta: { icon: "bookmark", tone: "muted", link: { label: "Sign in", to: "/sign-in", state: DARK } },
         });
     });
 });

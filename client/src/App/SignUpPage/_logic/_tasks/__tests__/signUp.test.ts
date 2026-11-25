@@ -24,19 +24,19 @@ describe("signUp", () => {
         const fetchMock = vi.fn(async () => new Response(JSON.stringify(SESSION), { status: 201 }));
         vi.stubGlobal("fetch", fetchMock);
 
-        expect(await signUp(CREDENTIALS)).toBe("signed-up");
+        expect(await signUp(CREDENTIALS, null)).toBe("signed-up");
 
         const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
         expect(url).toBe("/api/users");
         expect(init.method).toBe("POST");
         expect(init.body).toBe(JSON.stringify(CREDENTIALS));
-        expect(keepSession).toHaveBeenCalledExactlyOnceWith(SESSION);
+        expect(keepSession).toHaveBeenCalledExactlyOnceWith(SESSION, null);
     });
 
     it("tells a taken email from a failure", async () => {
         vi.stubGlobal("fetch", async () => new Response(JSON.stringify({ error: "taken" }), { status: 409 }));
 
-        expect(await signUp(CREDENTIALS)).toBe("email-taken");
+        expect(await signUp(CREDENTIALS, null)).toBe("email-taken");
         expect(keepSession).not.toHaveBeenCalled();
     });
 
@@ -51,7 +51,7 @@ describe("signUp", () => {
     ])("fails on %s and keeps the guest", async (_, fetchMock) => {
         vi.stubGlobal("fetch", fetchMock);
 
-        expect(await signUp(CREDENTIALS)).toBe("failed");
+        expect(await signUp(CREDENTIALS, null)).toBe("failed");
         expect(keepSession).not.toHaveBeenCalled();
     });
 });
