@@ -46,7 +46,9 @@ export const ToastCard: FC<ToastCardProps> = (props) => {
             {actionLabel && <ToastAction>{actionLabel}</ToastAction>}
             {link && (
                 <ToastAction asChild>
-                    <RouterLink to={link.to}>{link.label}</RouterLink>
+                    <RouterLink to={link.to} state={link.state}>
+                        {link.label}
+                    </RouterLink>
                 </ToastAction>
             )}
         </Toast.Root>

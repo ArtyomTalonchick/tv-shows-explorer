@@ -2,8 +2,9 @@ import type { ReactNode } from "react";
 import type { IconName } from "~/lib/ui-kit/Icon/Icon";
 import { toaster } from "./toaster";
 
-// A link at the end of the toast, to a page of the app: a press opens the page and closes the toast.
-export type ToastLink = { label: string; to: string };
+// A link at the end of the toast, to a page of the app: a press opens the page and closes the toast. `state` goes
+// into the history entry of the page, for the page to read.
+export type ToastLink = { label: string; to: string; state?: unknown };
 
 export type ToastMeta = {
     icon: IconName;
