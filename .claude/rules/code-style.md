@@ -130,8 +130,12 @@ followed by hand. A new preference the owner states during a task is added here 
   search» is). Everything else a task or a plain function writes with `useXStore.setState(…)`: no setter that only
   repeats `set({ x })`. (#45) A read of the store's data by id is such an action too (`findFavorite(id)`), not a
   `find` repeated at each caller. (#64) A removal by id is such an action too (`forget(id)`), not a `setState` with a
-  `filter` at the caller. A small store's actions are named without its subject: `remember`, `forget(id)`, `clear`,
-  `find(id)` in `useRemovedFavoritesStore`, not `rememberRemovedFavorite`. (#56)
+  `filter` at the caller. An action names its subject in one word, not the store's whole name: `rememberRemoved`,
+  `forgetRemoved(id)`, `clearRemoved`, `findRemoved(id)` for the removed rows in `useFavoritesStore`, not
+  `rememberRemovedFavorite`. (#56, #67)
+- The data of one subject lives in one store, not a store per piece: the favourites, the rows removed in the open list
+  and the show a guest asked to add are fields of `useFavoritesStore`. Only UI state that has nothing to do with the
+  data (whether the drawer is open) has a store of its own. (#67)
 - One prop that says where a component sits (`place: "card" | "list"`) replaces a look variant plus a behaviour
   flag: the component derives both its styles and what it does from it. No unclear flags such as `inList` or
   `announce`. (#56)

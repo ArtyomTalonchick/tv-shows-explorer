@@ -1,5 +1,5 @@
 import { useFavoritesDrawerStore } from "~/App/_stores/useFavoritesDrawerStore";
-import { useRemovedFavoritesStore } from "~/App/_stores/useRemovedFavoritesStore";
+import { useFavoritesStore } from "~/stores/useFavoritesStore";
 
 type UsePresenterResult = {
     // Opens the list without the rows removed in it last time.
@@ -8,7 +8,7 @@ type UsePresenterResult = {
 
 export const usePresenter = (): UsePresenterResult => {
     const setIsOpen = useFavoritesDrawerStore((state) => state.setIsOpen);
-    const clearRemoved = useRemovedFavoritesStore((state) => state.clear);
+    const clearRemoved = useFavoritesStore((state) => state.clearRemoved);
 
     return {
         open: () => {

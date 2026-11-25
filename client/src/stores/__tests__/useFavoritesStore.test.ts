@@ -13,10 +13,36 @@ const favorite = (id: number, addedAt: number): Favorite => ({
 });
 
 const ids = (): number[] => useFavoritesStore.getState().favorites.map(({ id }) => id);
+const removed = (): Favorite[] => useFavoritesStore.getState().removed;
 
 describe("useFavoritesStore", () => {
     beforeEach(() => {
-        useFavoritesStore.setState({ favorites: [favorite(3, 300), favorite(1, 100)] });
+        useFavoritesStore.setState({ favorites: [favorite(3, 300), favorite(1, 100)], removed: [favorite(1, 100)] });
+    });
+
+    it("finds a removed favorite by its id, and answers null for a show not removed", () => {
+        expect(useFavoritesStore.getState().findRemoved(1)).toEqual(favorite(1, 100));
+        expect(useFavoritesStore.getState().findRemoved(9)).toBeNull();
+    });
+
+    it("remembers a removed favorite, replacing the one with its id", () => {
+        useFavoritesStore.getState().rememberRemoved(favorite(2, 200));
+        useFavoritesStore.getState().rememberRemoved(favorite(1, 150));
+
+        expect(removed()).toEqual([favorite(2, 200), favorite(1, 150)]);
+    });
+
+    it("forgets a removed favorite by its id, and changes nothing for a missing one", () => {
+        useFavoritesStore.getState().forgetRemoved(9);
+        useFavoritesStore.getState().forgetRemoved(1);
+
+        expect(removed()).toEqual([]);
+    });
+
+    it("clears the removed favorites", () => {
+        useFavoritesStore.getState().clearRemoved();
+
+        expect(removed()).toEqual([]);
     });
 
     it.each([

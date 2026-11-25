@@ -1,7 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import type { Favorite, SessionResponse } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
-import { useRemovedFavoritesStore } from "~/App/_stores/useRemovedFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { usePresenter } from "../usePresenter";
 
@@ -30,8 +29,7 @@ describe("FavoritesDrawer usePresenter", () => {
         ["the list while it keeps the row of the last show removed in it", SESSION, [], [DARK], "list"],
     ])("shows %s", (_, session, favorites, removed, content) => {
         useSessionStore.setState({ session });
-        useFavoritesStore.setState({ favorites });
-        useRemovedFavoritesStore.setState({ removed });
+        useFavoritesStore.setState({ favorites, removed });
 
         const { result } = renderHook(() => usePresenter());
 

@@ -1,6 +1,5 @@
 import type { Favorite, SessionResponse, Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
-import { useRemovedFavoritesStore } from "~/App/_stores/useRemovedFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { toggleFavorite } from "../toggleFavorite";
 
@@ -50,8 +49,7 @@ const isSaved = () => useFavoritesStore.getState().findFavorite(DARK.id) !== nul
 
 describe("toggleFavorite", () => {
     beforeEach(() => {
-        useFavoritesStore.setState({ favorites: [] });
-        useRemovedFavoritesStore.setState({ removed: [] });
+        useFavoritesStore.setState({ favorites: [], removed: [] });
         useSessionStore.setState({ session: SESSION });
         vi.spyOn(Date, "now").mockReturnValue(1763300000000);
     });
@@ -103,11 +101,11 @@ describe("toggleFavorite", () => {
         const { request: toggle } = toggleFavorite(DARK);
 
         expect(favorites()).toEqual([older]);
-        expect(useRemovedFavoritesStore.getState().removed).toEqual([DARK]);
+        expect(useFavoritesStore.getState().removed).toEqual([DARK]);
         answer.respond(failed());
         await expect(toggle).rejects.toThrow();
         expect(favorites()).toEqual([DARK, older]);
-        expect(useRemovedFavoritesStore.getState().removed).toEqual([]);
+        expect(useFavoritesStore.getState().removed).toEqual([]);
     });
 
     it("keeps the second of two quick presses when the first one fails", async () => {
@@ -156,8 +154,7 @@ describe("toggleFavorite", () => {
     it("puts a removed show back in its place with its old addedAt", async () => {
         const older = { ...DARK, id: 1, addedAt: 1 };
         const newer = { ...DARK, id: 2, addedAt: 1763400000000 };
-        useFavoritesStore.setState({ favorites: [newer, older] });
-        useRemovedFavoritesStore.setState({ removed: [{ ...DARK, addedAt: 1000 }] });
+        useFavoritesStore.setState({ favorites: [newer, older], removed: [{ ...DARK, addedAt: 1000 }] });
         const fetchMock = vi.fn().mockResolvedValue(ok(DARK));
         vi.stubGlobal("fetch", fetchMock);
 

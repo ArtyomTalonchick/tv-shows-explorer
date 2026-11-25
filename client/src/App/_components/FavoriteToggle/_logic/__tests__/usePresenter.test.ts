@@ -2,7 +2,6 @@ import { act, renderHook } from "@testing-library/react";
 import type { Favorite, SessionResponse } from "@tv-shows-explorer/shared";
 import { toaster } from "~/lib/toast/toaster";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
-import { useRemovedFavoritesStore } from "~/App/_stores/useRemovedFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { usePresenter } from "../usePresenter";
 
@@ -25,8 +24,7 @@ const SESSION: SessionResponse = {
 
 describe("FavoriteToggle usePresenter", () => {
     beforeEach(() => {
-        useFavoritesStore.setState({ favorites: [] });
-        useRemovedFavoritesStore.setState({ removed: [] });
+        useFavoritesStore.setState({ favorites: [], removed: [] });
         useSessionStore.setState({ session: SESSION });
         vi.spyOn(toaster, "create").mockReturnValue("toast");
         vi.stubGlobal(
@@ -65,7 +63,7 @@ describe("FavoriteToggle usePresenter", () => {
 
         expect(result.current.pressed).toBe(false);
         expect(useFavoritesStore.getState().favorites).toEqual([]);
-        expect(useRemovedFavoritesStore.getState().removed).toEqual([DARK]);
+        expect(useFavoritesStore.getState().removed).toEqual([DARK]);
         expect(toaster.create).not.toHaveBeenCalled();
     });
 
