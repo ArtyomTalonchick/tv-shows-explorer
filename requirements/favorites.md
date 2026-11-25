@@ -51,9 +51,10 @@ What the user sees (`design/v0.2/`): (#28)
 13. A guest is asked to sign in (`design/v0.3/`): (#64)
     - a press on a bookmark sends nothing and leaves it empty; a toast says «Sign in to keep **Dark** in your
       favourites», with a «Sign in» link to `/sign-in`;
-    - once the guest signs in or signs up, the show they pressed last is added on its own, after their list loads,
-      with no toast; one already in their list changes nothing. A guest who comes back to the search without
-      signing in, or reloads the page, adds nothing later; (#67)
+    - once the guest follows that «Sign in» and signs in, or goes on to «Sign up» and signs up, the show is added on
+      its own, after their list loads, with no toast; one already in their list changes nothing. A sign-in reached
+      any other way — the header, the drawer, a typed address — adds nothing, and so does a guest who leaves the
+      sign-in pages without signing in; (#67)
     - the drawer opens as for a user, with no number in its title and no list: «Sign in to keep favourites», «Your
       list is kept with your account, on every device.», a «Sign in» button and «No account yet? Sign up». Both
       links close the drawer.
@@ -167,8 +168,8 @@ What the user sees (`design/v0.2/`): (#28)
 - Undo is dropped: a removed show is put back by pressing its bookmark again, on a card or in the list's row. (#56)
 - The removed rows of the open list are kept in a store of their own, `App/_stores/useRemovedFavoritesStore`, not as a
   flag on the favorites: the favorites store, the bookmarks and the counters stay as they were. (#56) Since #67 they
-  are a field of the favorites store, `removed`, next to `favorites` and `pending`: the data of the favourites lives in
-  one store, and only the drawer's open state has a store of its own.
+  are a field of the favorites store, `removed`, next to `favorites`: the data of the favourites lives in one store,
+  and only the drawer's open state has a store of its own.
 - The removed rows are dropped when the list opens, not when it closes: on close they would vanish during the
   drawer's slide-out. (#56)
 - A removal inside the list has no toast on success: the row itself says so. A failure still has one. (#56)
@@ -178,14 +179,15 @@ What the user sees (`design/v0.2/`): (#28)
   send a body. (#56)
 - Accepted: a show removed from a card and added again before the list opens goes back to its old place, not to the
   top, as its removed favourite is still remembered. (#56)
-- The show a guest bookmarked waits in memory, as `pending` of the favorites store, not in the address or
-  `sessionStorage`: the trip to the sign-in and sign-up pages stays inside the app, and a reload loses it as it loses
-  the search (#64). Only the last pressed show is kept. (#67)
+- The show a guest bookmarked travels in the history state of the toast's «Sign in» link, and the footer link
+  between the sign-in and the sign-up pages carries it on: not in a store, the address or `sessionStorage`. So only
+  that link adds a show, the one of its toast, and leaving the sign-in pages forgets it with no code to forget it. A
+  reload of the sign-in page keeps it, as the browser keeps the state of a history entry. The state is checked before
+  use (`toPendingFavorite`): history holds whatever it is given. (#67)
 - No toast says the show was added after a sign-in: it is simply in the list. (#67)
 - The show is added after the user's list loads, not at the sign-in: the load would replace the list and drop it,
   and only the loaded list tells whether it is saved already. A load that fails right after the sign-in drops the
   show too: rare, and the guest presses the bookmark again. (#67)
-- The search forgets the show when it opens: a guest who comes back without signing in adds nothing later. A guest
-  who presses a bookmark and then signs in from the header, not from the toast, still gets the show added: they
-  asked for it and signed in. The sign-in takes the show before it keeps the session, as the search it then opens
-  forgets it. (#67)
+- A guest who presses a bookmark and then signs in from the header, not from the toast, gets nothing added: only the
+  toast's link says which show they meant. Kept in a store, the show was added on any later sign-in, even one long
+  after the press. (#67)

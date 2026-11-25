@@ -18,7 +18,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A show removed inside the favourites list keeps its row, dimmed and marked «Removed», until the list opens again;
   its bookmark puts it back in its old place. The toast of a removed favourite no longer offers Undo: the bookmark
   is pressed again.
-- A show a guest bookmarked is added to their favourites once they sign in or sign up, with no second press.
+- A show a guest bookmarked is added to their favourites once they sign in or sign up from its toast's «Sign in»,
+  with no second press.
 
 ## 0.2.2 — 2026-11-21
 
