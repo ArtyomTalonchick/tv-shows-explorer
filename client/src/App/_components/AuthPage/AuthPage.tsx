@@ -1,23 +1,18 @@
 import { Box, Heading, Link, Text } from "@chakra-ui/react";
-import type { FC, ReactNode } from "react";
+import type { FC } from "react";
 import { Link as RouterLink } from "react-router";
 import { Backdrop } from "~/App/_components/Backdrop/Backdrop";
 import { Logo } from "~/App/_components/Logo/Logo";
 import { TopBar } from "~/App/_components/TopBar/TopBar";
+import { usePresenter, type AuthPageProps } from "./_logic/usePresenter";
 
-type AuthPageProps = {
-    eyebrow: string;
-    title: string;
-    text: string;
-    // The form of the page.
-    children?: ReactNode;
-    // The line under the card that leads to the other page: «No account yet? Sign up».
-    footer: { text: string; link: string; to: string };
-};
+export type { AuthPageProps } from "./_logic/usePresenter";
 
 // The sign-in and sign-up pages of design/v0.3: the logo that leads back to the search, and .auth-card in the middle
 // of the page over the backdrop of the start screen.
-export const AuthPage: FC<AuthPageProps> = ({ eyebrow, title, text, children, footer }) => {
+export const AuthPage: FC<AuthPageProps> = (props) => {
+    const { eyebrow, title, text, children, footer } = usePresenter(props);
+
     return (
         <Box
             as="main"
@@ -72,7 +67,9 @@ export const AuthPage: FC<AuthPageProps> = ({ eyebrow, title, text, children, fo
                 <Text color="fg.muted" fontSize="sm" textAlign="center">
                     {footer.text}{" "}
                     <Link asChild variant="accent">
-                        <RouterLink to={footer.to}>{footer.link}</RouterLink>
+                        <RouterLink to={footer.to} state={footer.state}>
+                            {footer.link}
+                        </RouterLink>
                     </Link>
                 </Text>
             </Box>
