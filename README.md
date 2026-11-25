@@ -1,11 +1,11 @@
 # TV Shows Explorer
 
 A small app to search TV shows from the public [TVmaze API](https://www.tvmaze.com/api): type a query, browse
-the results three per page, filter them by genre, and keep the shows you like in your favourites. The app has its
-own server: the client never calls TVmaze itself.
+the results three per page, filter them by genre, sign up, and keep the shows you like in your favourites. The app
+has its own server: the client never calls TVmaze itself.
 
 **Live:** https://tv-shows-explorer.web.app — on Firebase Hosting; its server answers on the same domain at `/api`
-(a Cloud Function on Firebase; the favorites are kept in Firestore).
+(a Cloud Function on Firebase; the users and their favourites are kept in Firestore).
 
 The app is built step by step on the Simple Architecture approach. The architecture rules written along the way
 are turned into AI rules (see [AI Rules](#ai-rules)).
@@ -20,11 +20,20 @@ are turned into AI rules (see [AI Rules](#ai-rules)).
   that genre; the filter can be reset. The server does the filtering.
 - **Cache.** The server keeps the answer of TVmaze for 5 minutes: the same search — with any genre or page — is
   answered without asking TVmaze again.
-- **Favourites.** A bookmark on every show card adds the show to the favourites or removes it. A toast says what
-  was done, with Undo after a removal. The Favourites button on both screens shows how many there are and opens
-  their list. The change shows at once and is undone if the server fails.
-- **A list per browser, no accounts.** All the favourites logic is on the server. The list is kept in a database
-  (Firestore), so it survives a restart of the server.
+- **Accounts.** A visitor signs up and signs in with an email and a password, on pages of their own
+  (`/sign-up`, `/sign-in`); the header shows the user and Sign out. The session is a short access token and a
+  30-day refresh token, and it survives a reload. What the app does not do:
+  - the email is not verified;
+  - there is no password reset: a lost password means a new account;
+  - a token cannot be revoked before it expires, not even by Sign out.
+- **Favourites.** A bookmark on every show card adds the show to the favourites of the signed-in user or removes
+  it, and a toast says what was done. The Favourites button on both screens shows how many there are and opens
+  their list; a show removed there stays in its row, dimmed, and can be put back while the list is open. The change
+  shows at once and is undone if the server fails. A guest who bookmarks a show is asked to sign in, and the show
+  is added once they do.
+- **Stored on the server.** The accounts and the favourites logic are on the server; the users and their
+  favourites are kept in Firestore, in local development too, so a list is the same on every device and survives
+  a restart of the server.
 - **Installable.** The app has its own icon and can be installed on a phone or a desktop.
 
 What each feature does is described in [`requirements/`](requirements/README.md).
@@ -50,8 +59,10 @@ In this repository:
 
 An npm workspaces monorepo in TypeScript:
 
-- **Client:** React 19, Chakra UI v3, Zustand, Vite, Vitest with Testing Library; served by Firebase Hosting.
-- **Server:** Node, Hono, Vitest; a Cloud Function on Firebase, with the favorites in Firestore.
+- **Client:** React 19, React Router, Chakra UI v3, Zustand, react-hook-form, Vite, Vitest with Testing Library;
+  served by Firebase Hosting.
+- **Server:** Node, Hono (JWT from `hono/jwt`), Firebase Admin SDK, Vitest; a Cloud Function on Firebase, with the
+  users and their favourites in Firestore.
 - **Tooling:** ESLint and Prettier for the whole repository.
 
 ## Repository layout
@@ -60,7 +71,7 @@ An npm workspaces monorepo in TypeScript:
 |---|---|
 | `client/` | The app (Vite, React); deployed to Firebase Hosting |
 | `server/` | The API server (Hono); deployed to Firebase as a Cloud Function |
-| `shared/` | The API types the client and the server share: types only |
+| `shared/` | The API types the client and the server share, and the rule of valid credentials both check by |
 | `design/` | Design tokens, mockups and screenshots of each version |
 | `requirements/` | What each feature does: the source of truth for the code |
 | `.github/workflows/` | CI (lint, format, type check, tests of every package), and the deploy of the client and the server to Firebase; the deploy needs the secret `FIREBASE_SERVICE_ACCOUNT` |
@@ -70,15 +81,16 @@ An npm workspaces monorepo in TypeScript:
 
 ## Scripts
 
-Locally the server keeps the favorites in the same Firestore as the deployed function, so **local development
-changes the real data**. Set it up once, with the [Google Cloud CLI](https://cloud.google.com/sdk/docs/install):
+Locally the server keeps the users and the favourites in the same Firestore as the deployed function, so **local
+development changes the real data**. Set it up once, with the [Google Cloud CLI](https://cloud.google.com/sdk/docs/install):
 
 ```sh
 gcloud auth application-default login   # the Google credentials the Firebase Admin SDK reads
-cp server/.env.example server/.env      # GOOGLE_CLOUD_PROJECT, the Firebase project id
+cp server/.env.example server/.env      # GOOGLE_CLOUD_PROJECT, and JWT_SECRET to fill in
 ```
 
-Without them the server stops at the start and says what to run. The tests mock the store: they need no
+Without the credentials the server stops at the start and says what to run; without `JWT_SECRET` sign-up and
+sign-in answer `500`. The tests mock the store: they need no
 credentials and no network.
 
 ```sh

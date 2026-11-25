@@ -3,7 +3,7 @@
 ## Purpose
 
 A visitor gets an account with an email and a password, so their data can belong to them instead of to one browser.
-Behaviour 1–8 are the server side, 9–14 the pages and the header of the client. (#61, #62)
+Behaviour 1–8 are the server side, 9–15 the pages and the header of the client. (#61, #62)
 
 A session is a pair of tokens: a short access token that travels with every request, and a long refresh token that
 travels only on sign-in and on its exchange for a new pair, so it is harder to steal. (#69)
@@ -49,6 +49,9 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
     (`POST /api/session/refresh`) and keeps the new pair. A refused token (`401`, `400`) signs the user out, as
     Sign out does. (#62, #63)
 14. **A signed-in user** who opens `/sign-in` or `/sign-up` is taken to the search. (#62)
+15. **A request of the user** answered `401` — the access token has run out — exchanges the refresh token once and
+    is sent again with the new access token. A refresh that brings no new token leaves the `401` to the request;
+    a refused one signs the user out, as in 13. (#63)
 
 ## States
 
@@ -88,7 +91,7 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
   after any change of the account: the server keeps no list of tokens and cannot take one back (see Decisions). (#69)
 - An active user stays signed in: each refresh gives a refresh token for another 30 days. (#69)
 - A reload with no answer to the refresh (offline, `5xx`) keeps the user signed in with the old pair, with no
-  toast: the next reload, or the refresh on a `401` of #63, exchanges it. (#62)
+  toast: the next reload, or the next request answered `401` (15), exchanges it. (#62, #63)
 - An answer to the refresh that comes after a sign-out or another sign-in is dropped, so it never brings the old
   session back. (#62)
 - The secret differs between the local server (`server/.env`) and production (a Firebase secret), so a token made
@@ -107,7 +110,7 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
   simplest code (#41); no transaction. (#61)
 - An unknown email and a wrong password give one `401` with one message, so the answer does not tell which emails
   have accounts. The answer time still may: an unknown email skips the `scrypt` check. Accepted; no dummy hash. (#61)
-- A pair of tokens instead of the one 7-day token of #61: the access token travels with every request, so it lives
+- A pair of tokens: the access token travels with every request, so it lives
   1 minute; the refresh token travels only on sign-in and on refresh, so it is harder to steal, and lives 30 days.
   1 minute is the owner's choice: a refresh a minute costs nothing at this scale. (#69)
 - Nothing of the tokens is stored on the server, and no cookie holds them: the client keeps both, the simplest
@@ -122,8 +125,11 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
   and the rest of the API still works. (#61)
 - A body is read as text and checked by hand (`parseCredentials`), as the favorites body is, not with a schema
   library: shared schemas are #31. (#61)
-- Sign out keeps the favourites as they are: until #63 they belong to the browser (`X-Client-Id`), not to the
-  user. (#62) Replaced in #63: the favourites belong to the user, and Sign out drops them with the session.
+- Sign out drops the favourites with the session: they belong to the user, not to the browser. (#62, #63)
+- The email is not verified: the app sends no mail, so it needs no mail service and no second step after sign-up.
+  An email with a typo makes an account all the same, and anyone can sign up with an email that is not theirs. (#61)
+- There is no password reset, as it needs a mail to the email: a lost password means a new account, and the
+  favourites of the old one stay behind it. (#61)
 - The forms are built on react-hook-form: the touched state, the errors and the submit state of a form are its
   job, not hand-written state. (#62)
 - The token check is the project's own middleware on `verify` of `hono/jwt`, not Hono's `jwt()` middleware: that

@@ -15,8 +15,11 @@ TV Shows Explorer searches TV shows with the public [TVmaze API](https://www.tvm
 - **List and pagination.** Results are shown as cards, three per page; the user switches between pages.
 - **Genre filter.** The unique genres of the current results are shown as chips above the list. A chip keeps
   only the shows of that genre; the filter can be reset to all results.
-- **Favorites.** The user keeps shows in a list on the server, one list per browser, named by an id the browser
-  makes; there are no accounts. (#27)
+- **Accounts.** A visitor signs up and signs in with an email and a password; the session is a pair of tokens the
+  browser keeps. The email is not verified, there is no password reset, and a token cannot be revoked before it
+  expires. (#61, #62, #69)
+- **Favorites.** A signed-in user keeps shows in a list on the server, the same on every device; a guest who
+  bookmarks a show or opens the list is asked to sign in. (#27, #63, #64)
 - **Installable.** The app has an icon and installs on a phone or a desktop from its web manifest. It does not
   work offline: there is no service worker, so without a network it neither opens nor searches. (#11)
 
@@ -48,7 +51,10 @@ Every file has these sections:
 | **Behaviour** | What the user does and what the app does in reply, step by step |
 | **States** | Every state the user can see: empty, loading, results, error… |
 | **Edge cases** | Unusual input or data and what happens then |
-| **Decisions** | Questions that came up and how they were decided, with the issue number |
+| **Decisions** | The decisions in force and their reasons, with the issue numbers |
+
+A file says only what holds now, with no history: a decision a later task changes is rewritten in place, with the
+numbers of both issues, not kept with «Replaced in #N». History lives only in `CHANGELOG.md`.
 
 Template:
 

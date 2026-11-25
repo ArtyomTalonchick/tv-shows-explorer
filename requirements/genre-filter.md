@@ -55,11 +55,10 @@ the mood for.
 - Chips are sorted by their number of shows, then alphabetically, and show their counts, as in the v0.1 mockup.
   (#10)
 - With no genres in the results the chip row is hidden. (#10)
-- The filter works on the client, on the results TVmaze returned; the genre is kept together with the results it
-  was chosen in, so a new search shows all its shows. (#10)
-- The filter moved to the server: the client sends the genre with the query, and the server answers the shows of
+- The filter works on the server: the client sends the genre with the query, and the server answers the shows of
   the genre with the genres and counts of all the found shows. The genre is kept together with the query it was
-  chosen for and dropped when the query changes, so typing the old query back does not bring it back. (#25)
+  chosen for and dropped when the query changes, so a new search shows all its shows, and typing the old query
+  back does not bring the genre back. (#10, #25)
 - The chosen chip is filled at once; the content follows the answer. (#25)
 - A genre that fails to load brings back the genre and the page of the results on screen, not the error state: the
   shown results are still right for their genre. The toast does not name the genre: a press on the selected chip
