@@ -13,7 +13,7 @@ const TONE_STYLES = {
     muted: { color: "fg.muted" },
 } satisfies Record<ToastMeta["tone"], HTMLChakraProps<"span">>;
 
-// .toast of design/library: an icon, one line of text and an optional action, such as Undo, or a link to a page,
+// .toast of design/library: an icon, one line of text and an optional action, such as Retry, or a link to a page,
 // such as «Sign in».
 export const ToastCard: FC<ToastCardProps> = (props) => {
     const { text, icon, tone, actionLabel, link } = usePresenter(props);

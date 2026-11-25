@@ -7,7 +7,7 @@ describe("parseAddedAt", () => {
         expect(parseAddedAt(text, NOW)).toBe(NOW);
     });
 
-    it("keeps the given time, for Undo", () => {
+    it("keeps the given time, for a show put back", () => {
         expect(parseAddedAt('{ "addedAt": 1700000000000 }', NOW)).toBe(1_700_000_000_000);
     });
 

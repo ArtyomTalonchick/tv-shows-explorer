@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { getToastGroup } from "~/lib/toast/getToastGroup";
 
-// What stays pressable outside the open drawer: the toasts, with their Undo.
+// What stays pressable outside the open drawer: the toasts, with their links and buttons.
 const PERSISTENT_ELEMENTS = [getToastGroup];
 
 export type DrawerProps = {

@@ -15,7 +15,7 @@ export type ToastMeta = {
 
 export type ShowToastOptions = Omit<ToastMeta, "link"> & {
     text: ReactNode;
-    // A button at the end of the toast, e.g. Undo or Retry; a press also closes the toast.
+    // A button at the end of the toast, e.g. Retry; a press also closes the toast.
     action?: { label: string; onClick: () => void };
     // A link in place of the action, e.g. «Sign in».
     link?: ToastLink;

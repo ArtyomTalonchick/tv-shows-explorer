@@ -106,10 +106,10 @@ describe("/", () => {
         expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(ANNA, favorite(2, 2000));
     });
 
-    it("puts a show back with the addedAt of the body, for Undo", async () => {
-        const undone = await request("PUT", "/2", '{ "addedAt": 200 }');
+    it("puts a show back with the addedAt of the body, in its old place", async () => {
+        const putBack = await request("PUT", "/2", '{ "addedAt": 200 }');
 
-        expect(undone).toEqual({ status: 200, body: favorite(2, 200) });
+        expect(putBack).toEqual({ status: 200, body: favorite(2, 200) });
         expect(favoritesStore.put).toHaveBeenCalledExactlyOnceWith(ANNA, favorite(2, 200));
     });
 
