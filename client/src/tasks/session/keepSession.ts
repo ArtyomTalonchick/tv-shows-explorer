@@ -8,7 +8,7 @@ import { loadFavorites } from "~/tasks/favorites/loadFavorites";
 // the show they bookmarked as a guest (`addPendingFavorite`): after the load, which would otherwise replace it. Never
 // rejects: a load or an add that fails says nothing, and the show is not added.
 export const keepSession = async (session: SessionResponse): Promise<void> => {
-    // Taken at once, so a show is added once, by this sign-in only.
+    // Taken before the session is kept: a kept session sends the user to the search at once, which forgets the show.
     const { pending } = useFavoritesStore.getState();
     useFavoritesStore.setState({ pending: null });
     useSessionStore.setState({ session });
