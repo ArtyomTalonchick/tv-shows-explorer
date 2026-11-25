@@ -27,15 +27,17 @@ and call no task from a start (core `imports.md`, `tasks.md`), so the reviewer r
 logic and plain functions on it. They give such a check no other place either; the project keeps it in the root
 unit's tasks folder until the plugin settles the case.
 
-## The shared package holds the rule of valid credentials
+## The shared package holds the schemas of the API and the rule of valid credentials
 
-ArtyomTalonchick/claude-simple-architecture#35 · since #61
+ArtyomTalonchick/claude-simple-architecture#81 · since #61, widened by #31
 
-`shared/src/credentials/` exports runtime code next to the `Credentials` type of `credentials.ts`: `normalizeEmail`,
-`isValidEmail`, and `isValidPassword` with `PASSWORD_MIN_LENGTH`, one per file. The plugin's rules keep the shared types package to types only
-(core `imports.md`), so the reviewer reports Imports on it. The client checks the sign-up form by this rule and the
-server checks the request by it; two copies, one per app, would drift apart unseen. The project keeps the rule in
-the shared package, with its tests, until the plugin settles the case.
+`shared/src/` holds the Zod schemas of the API, a subject per folder, each next to the type it gives
+(`z.infer`): the requests and the answers, and the rule of valid credentials, `credentialsSchema` with
+`PASSWORD_MIN_LENGTH` in `credentials/credentials.ts`, with `normalizeEmail` in a file of its own. The plugin's rules
+keep the shared types package to types only (core `imports.md`), so the reviewer reports Imports on it. The server
+checks the requests and the client the answers and its forms by these schemas; two copies, one per app, would drift
+apart unseen. The project keeps the schemas in the shared package, with their tests, until the plugin settles the
+case.
 
 ## A store file exports its own read hook
 

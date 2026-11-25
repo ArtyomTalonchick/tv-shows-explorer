@@ -1,8 +1,23 @@
-// The body of `POST /api/users` (sign up) and `POST /api/session` (sign in). The client checks a sign-up form, and
-// the server a sign-up request, by one rule of this package — `isValidEmail` and `isValidPassword` — so the two
-// cannot disagree; the server keeps and compares the email by `normalizeEmail`. That runtime code is a deliberate
-// exception from the simple-architecture rules (`.claude/rules/architecture-exceptions.md`).
-export type Credentials = {
-    email: string;
-    password: string;
-};
+import { z } from "zod";
+
+// The shortest password an account takes; the sign-up form names it in its hint.
+export const PASSWORD_MIN_LENGTH = 8;
+
+// The rule of valid credentials, the body of `POST /api/users` (sign up): an email, checked without its outer spaces,
+// and a password of `PASSWORD_MIN_LENGTH` characters or more, taken as typed: spaces count. The client checks its
+// forms and the server a sign-up by this one schema, so the two cannot disagree; the server keeps and compares the
+// email by `normalizeEmail`. Runtime code here is a deliberate exception from the simple-architecture rules
+// (`.claude/rules/architecture-exceptions.md`).
+export const credentialsSchema = z.object({
+    email: z.string().trim().pipe(z.email()),
+    password: z.string().min(PASSWORD_MIN_LENGTH),
+});
+
+// The body of `POST /api/session` (sign in): any email and password. The rule of `credentialsSchema` is not applied,
+// so an account made by an older rule can still sign in.
+export const signInBodySchema = z.object({
+    email: z.string(),
+    password: z.string(),
+});
+
+export type Credentials = z.infer<typeof signInBodySchema>;
