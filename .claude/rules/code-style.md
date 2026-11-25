@@ -129,7 +129,14 @@ followed by hand. A new preference the owner states during a task is added here 
   holds logic of the data itself (`addFavorite` keeps the list ordered by `addedAt`; `forgetSearch` knows what «no
   search» is). Everything else a task or a plain function writes with `useXStore.setState(…)`: no setter that only
   repeats `set({ x })`. (#45) A read of the store's data by id is such an action too (`findFavorite(id)`), not a
-  `find` repeated at each caller. (#64)
+  `find` repeated at each caller. (#64) A removal by id is such an action too (`forget(id)`), not a `setState` with a
+  `filter` at the caller. A small store's actions are named without its subject: `remember`, `forget(id)`, `clear`,
+  `find(id)` in `useRemovedFavoritesStore`, not `rememberRemovedFavorite`. (#56)
+- One prop that says where a component sits (`place: "card" | "list"`) replaces a look variant plus a behaviour
+  flag: the component derives both its styles and what it does from it. No unclear flags such as `inList` or
+  `announce`. (#56)
+- A request sends the value always (`PUT` with `{ addedAt }`, the old one or now), rather than branching on whether
+  there is one to send. (#56)
 - A function's name and its return type say the same thing: `issueTokens` returns `SessionTokens`. When callers
   need more than that, a second function adds it under its own name and type (`startSession` returns
   `SessionResponse`, the tokens and the user), rather than the first one returning more than its name says. (#69)
