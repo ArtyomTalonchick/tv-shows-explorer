@@ -71,7 +71,7 @@ export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
                     <ShowMeta show={favorite} mt="1" truncate />
                 </Box>
             </chakra.a>
-            <FavoriteToggle show={favorite} variant="plain" />
+            <FavoriteToggle show={favorite} place="list" />
         </chakra.li>
     );
 };

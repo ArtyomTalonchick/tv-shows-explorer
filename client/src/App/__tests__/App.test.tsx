@@ -207,7 +207,7 @@ describe("App", () => {
         expect(window.location.pathname).toBe("/");
     });
 
-    it("lists the favourites in a drawer and removes one from its bookmark", async () => {
+    it("lists the favourites in a drawer, keeps a show removed there in its place and puts it back", async () => {
         stubServer([DARK]);
         useSessionStore.setState({ session: SESSION });
         renderApp();
@@ -218,9 +218,17 @@ describe("App", () => {
 
         fireEvent.click(within(drawer).getByRole("button", { name: "Remove Dark from favourites", pressed: true }));
 
-        expect(await within(drawer).findByText("No favourites yet")).toBeInTheDocument();
-        expect(await screen.findByText(/Removed/)).toHaveTextContent("Removed Dark from favourites");
-        expect(screen.queryByRole("button", { name: "Undo" })).not.toBeInTheDocument();
+        expect(await screen.findByRole("dialog", { name: "Favourites 0" })).toBe(drawer);
+        expect(within(drawer).getByText("Dark")).toBeInTheDocument();
+        expect(within(drawer).queryByText("No favourites yet")).not.toBeInTheDocument();
+        expect(screen.queryByText(/Removed Dark from favourites/)).not.toBeInTheDocument();
+
+        fireEvent.click(within(drawer).getByRole("button", { name: /Dark/, pressed: false }));
+
+        expect(await screen.findByRole("dialog", { name: "Favourites 1" })).toBe(drawer);
+        expect(
+            within(drawer).getByRole("button", { name: "Remove Dark from favourites", pressed: true }),
+        ).toBeVisible();
     });
 
     it("opens the results screen on a tap with its field focused, without focusing the hero field", async () => {

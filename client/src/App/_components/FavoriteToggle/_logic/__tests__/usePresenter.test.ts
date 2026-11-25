@@ -2,6 +2,7 @@ import { act, renderHook } from "@testing-library/react";
 import type { Favorite, SessionResponse } from "@tv-shows-explorer/shared";
 import { toaster } from "~/lib/toast/toaster";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useRemovedFavoritesStore } from "~/App/_stores/useRemovedFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { usePresenter } from "../usePresenter";
 
@@ -25,6 +26,7 @@ const SESSION: SessionResponse = {
 describe("FavoriteToggle usePresenter", () => {
     beforeEach(() => {
         useFavoritesStore.setState({ favorites: [] });
+        useRemovedFavoritesStore.setState({ removed: [] });
         useSessionStore.setState({ session: SESSION });
         vi.spyOn(toaster, "create").mockReturnValue("toast");
         vi.stubGlobal(
@@ -41,17 +43,29 @@ describe("FavoriteToggle usePresenter", () => {
     it("names what a press does, on a poster by default", () => {
         const { result } = renderHook(() => usePresenter({ show: DARK }));
 
-        expect(result.current).toMatchObject({ pressed: false, label: "Add Dark to favourites", variant: "poster" });
+        expect(result.current).toMatchObject({ pressed: false, label: "Add Dark to favourites", place: "card" });
     });
 
     it("follows the store, and a press changes it at once", () => {
         useFavoritesStore.setState({ favorites: [DARK] });
-        const { result } = renderHook(() => usePresenter({ show: DARK, variant: "plain" }));
+        const { result } = renderHook(() => usePresenter({ show: DARK, place: "list" }));
 
-        expect(result.current).toMatchObject({ pressed: true, label: "Remove Dark from favourites", variant: "plain" });
+        expect(result.current).toMatchObject({ pressed: true, label: "Remove Dark from favourites", place: "list" });
 
         act(() => result.current.handleClick());
 
         expect(result.current).toMatchObject({ pressed: false, label: "Add Dark to favourites" });
+    });
+
+    it("in the list, removes the show with no toast and keeps it as removed", () => {
+        useFavoritesStore.setState({ favorites: [DARK] });
+        const { result } = renderHook(() => usePresenter({ show: DARK, place: "list" }));
+
+        act(() => result.current.handleClick());
+
+        expect(result.current.pressed).toBe(false);
+        expect(useFavoritesStore.getState().favorites).toEqual([]);
+        expect(useRemovedFavoritesStore.getState().removed).toEqual([DARK]);
+        expect(toaster.create).not.toHaveBeenCalled();
     });
 });

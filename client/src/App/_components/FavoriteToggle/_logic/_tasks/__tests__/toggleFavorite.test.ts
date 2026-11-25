@@ -1,5 +1,6 @@
 import type { Favorite, SessionResponse, Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
+import { useRemovedFavoritesStore } from "~/App/_stores/useRemovedFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { toggleFavorite } from "../toggleFavorite";
 
@@ -45,10 +46,12 @@ const removed = () => new Response(null, { status: 204 });
 const failed = () => new Response(JSON.stringify({ error: "busy" }), { status: 502 });
 
 const favorites = () => useFavoritesStore.getState().favorites;
+const isSaved = () => useFavoritesStore.getState().findFavorite(DARK.id) !== null;
 
 describe("toggleFavorite", () => {
     beforeEach(() => {
         useFavoritesStore.setState({ favorites: [] });
+        useRemovedFavoritesStore.setState({ removed: [] });
         useSessionStore.setState({ session: SESSION });
         vi.spyOn(Date, "now").mockReturnValue(1763300000000);
     });
@@ -88,7 +91,7 @@ describe("toggleFavorite", () => {
 
         await expect(toggleFavorite(DARK_SHOW).request).rejects.toThrow();
 
-        expect(favorites()).toEqual([]);
+        expect(isSaved()).toBe(false);
     });
 
     it("removes a show at once, and puts it back in its place when removing fails", async () => {
@@ -100,9 +103,11 @@ describe("toggleFavorite", () => {
         const { request: toggle } = toggleFavorite(DARK);
 
         expect(favorites()).toEqual([older]);
+        expect(useRemovedFavoritesStore.getState().removed).toEqual([DARK]);
         answer.respond(failed());
         await expect(toggle).rejects.toThrow();
         expect(favorites()).toEqual([DARK, older]);
+        expect(useRemovedFavoritesStore.getState().removed).toEqual([]);
     });
 
     it("keeps the second of two quick presses when the first one fails", async () => {
@@ -117,7 +122,7 @@ describe("toggleFavorite", () => {
 
         await expect(add).rejects.toThrow();
         await remove;
-        expect(favorites()).toEqual([]);
+        expect(isSaved()).toBe(false);
     });
 
     it("does not bring back a show removed while its adding was on the way", async () => {
@@ -130,9 +135,35 @@ describe("toggleFavorite", () => {
         first.respond(ok(DARK));
         await add;
 
-        expect(favorites()).toEqual([]);
+        expect(isSaved()).toBe(false);
         second.respond(removed());
         await remove;
-        expect(favorites()).toEqual([]);
+        expect(isSaved()).toBe(false);
+    });
+
+    it("sends the time a new show was added", async () => {
+        const fetchMock = vi.fn().mockResolvedValue(ok(DARK));
+        vi.stubGlobal("fetch", fetchMock);
+
+        await toggleFavorite(DARK_SHOW).request;
+
+        expect(fetchMock.mock.lastCall?.[1]).toMatchObject({
+            method: "PUT",
+            body: JSON.stringify({ addedAt: DARK.addedAt }),
+        });
+    });
+
+    it("puts a removed show back in its place with its old addedAt", async () => {
+        const older = { ...DARK, id: 1, addedAt: 1 };
+        const newer = { ...DARK, id: 2, addedAt: 1763400000000 };
+        useFavoritesStore.setState({ favorites: [newer, older] });
+        useRemovedFavoritesStore.setState({ removed: [{ ...DARK, addedAt: 1000 }] });
+        const fetchMock = vi.fn().mockResolvedValue(ok(DARK));
+        vi.stubGlobal("fetch", fetchMock);
+
+        await toggleFavorite(DARK_SHOW).request;
+
+        expect(favorites()).toEqual([newer, { ...DARK, addedAt: 1000 }, older]);
+        expect(fetchMock.mock.lastCall?.[1]).toMatchObject({ method: "PUT", body: JSON.stringify({ addedAt: 1000 }) });
     });
 });
