@@ -1,4 +1,4 @@
-import type { Favorite } from "@tv-shows-explorer/shared";
+import type { Favorite, Show } from "@tv-shows-explorer/shared";
 import { create } from "zustand";
 
 type FavoritesState = {
@@ -8,6 +8,9 @@ type FavoritesState = {
     // The favorites removed since the favourites list last opened: their rows stay in the list, shown as removed,
     // and a show put back takes its old place.
     removed: Favorite[];
+    // The show a guest bookmarked, added once they sign in or up; `null` when there is none. Kept in memory only: a
+    // reload forgets it.
+    pending: Omit<Show, "rating"> | null;
     // The favorite with this show id, or `null` when the show is not one.
     findFavorite: (id: number) => Favorite | null;
     // Puts the favorite in its place by `addedAt`, replacing the one with its id.
@@ -27,6 +30,7 @@ type FavoritesState = {
 export const useFavoritesStore = create<FavoritesState>()((set, get) => ({
     favorites: [],
     removed: [],
+    pending: null,
     findFavorite: (id) => get().favorites.find((favorite) => favorite.id === id) ?? null,
     addFavorite: (favorite) =>
         set(({ favorites }) => {

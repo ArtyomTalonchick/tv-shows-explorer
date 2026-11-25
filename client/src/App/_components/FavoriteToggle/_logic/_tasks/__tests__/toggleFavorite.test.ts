@@ -49,7 +49,7 @@ const isSaved = () => useFavoritesStore.getState().findFavorite(DARK.id) !== nul
 
 describe("toggleFavorite", () => {
     beforeEach(() => {
-        useFavoritesStore.setState({ favorites: [], removed: [] });
+        useFavoritesStore.setState({ favorites: [], removed: [], pending: null });
         useSessionStore.setState({ session: SESSION });
         vi.spyOn(Date, "now").mockReturnValue(1763300000000);
     });
@@ -71,7 +71,7 @@ describe("toggleFavorite", () => {
         expect(favorites()).toEqual([DARK]);
     });
 
-    it("changes nothing and sends nothing for a guest", async () => {
+    it("changes nothing and sends nothing for a guest, and keeps the show for the sign-in", async () => {
         useSessionStore.setState({ session: null });
         const fetchMock = vi.fn();
         vi.stubGlobal("fetch", fetchMock);
@@ -82,6 +82,7 @@ describe("toggleFavorite", () => {
         await toggling.request;
         expect(favorites()).toEqual([]);
         expect(fetchMock).not.toHaveBeenCalled();
+        expect(useFavoritesStore.getState().pending).toEqual(DARK_SHOW);
     });
 
     it("takes the show out again when adding fails, and rejects", async () => {

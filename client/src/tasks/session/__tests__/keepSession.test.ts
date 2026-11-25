@@ -23,11 +23,12 @@ const DARK: Favorite = {
 describe("keepSession", () => {
     beforeEach(() => {
         useSessionStore.setState({ session: null });
-        useFavoritesStore.setState({ favorites: [] });
+        useFavoritesStore.setState({ favorites: [], removed: [], pending: null });
     });
 
     afterEach(() => {
         vi.unstubAllGlobals();
+        vi.restoreAllMocks();
     });
 
     it("keeps the session and loads the user's favourites with its access token", async () => {
@@ -44,10 +45,41 @@ describe("keepSession", () => {
     });
 
     it("keeps the session with no favourites, and does not reject, when the load fails", async () => {
+        useFavoritesStore.setState({ pending: DARK });
         vi.stubGlobal("fetch", async () => new Response(JSON.stringify({ error: "busy" }), { status: 502 }));
 
         await expect(keepSession(SESSION)).resolves.toBeUndefined();
         expect(useSessionStore.getState().session).toEqual(SESSION);
+        expect(useFavoritesStore.getState().favorites).toEqual([]);
+        expect(useFavoritesStore.getState().pending).toBeNull();
+    });
+
+    it("adds the show bookmarked as a guest once the list is loaded, and forgets it", async () => {
+        const older = { ...DARK, id: 1, addedAt: 1 };
+        useFavoritesStore.setState({ pending: DARK });
+        vi.spyOn(Date, "now").mockReturnValue(DARK.addedAt);
+        const fetchMock = vi
+            .fn()
+            .mockResolvedValueOnce(new Response(JSON.stringify([older])))
+            .mockResolvedValueOnce(new Response(JSON.stringify(DARK)));
+        vi.stubGlobal("fetch", fetchMock);
+
+        await keepSession(SESSION);
+
+        expect(useFavoritesStore.getState().favorites).toEqual([DARK, older]);
+        expect(useFavoritesStore.getState().pending).toBeNull();
+        expect(fetchMock.mock.calls.map(([, init]) => (init as RequestInit).method)).toEqual(["GET", "PUT"]);
+    });
+
+    it("does not reject when adding the bookmarked show fails, and leaves it out", async () => {
+        useFavoritesStore.setState({ pending: DARK });
+        const fetchMock = vi
+            .fn()
+            .mockResolvedValueOnce(new Response(JSON.stringify([])))
+            .mockResolvedValueOnce(new Response(JSON.stringify({ error: "busy" }), { status: 502 }));
+        vi.stubGlobal("fetch", fetchMock);
+
+        await expect(keepSession(SESSION)).resolves.toBeUndefined();
         expect(useFavoritesStore.getState().favorites).toEqual([]);
     });
 });

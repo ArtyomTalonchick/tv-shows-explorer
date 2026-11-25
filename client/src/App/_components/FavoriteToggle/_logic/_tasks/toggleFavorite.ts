@@ -6,7 +6,7 @@ import { removeFavorite } from "./removeFavorite";
 
 // What a press on a bookmark did, known at once, before the server answers.
 export type Toggling = {
-    // A guest has no favourites: nothing changed and nothing was sent.
+    // A guest has no favourites: nothing changed and nothing was sent; the show waits for the sign-in.
     isGuest: boolean;
     // Resolves once the server has the change; rejects as `addFavorite` and `removeFavorite` do, once the change is
     // rolled back.
@@ -14,9 +14,11 @@ export type Toggling = {
 };
 
 // Removes the show from the favorites when it is there, and adds it otherwise; the store changes at once. A guest's
-// press changes nothing.
+// press changes nothing yet: the show is kept, the last pressed one, and added once they sign in or up
+// (`keepSession`).
 export const toggleFavorite = (show: Omit<Show, "rating">): Toggling => {
     if (useSessionStore.getState().session === null) {
+        useFavoritesStore.setState({ pending: show });
         return { isGuest: true, request: Promise.resolve() };
     }
     const saved = useFavoritesStore.getState().findFavorite(show.id);
