@@ -1,7 +1,7 @@
 import type { Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
-import { addFavorite } from "./addFavorite";
+import { addFavorite } from "~/tasks/favorites/addFavorite";
 import { removeFavorite } from "./removeFavorite";
 
 // What a press on a bookmark did, known at once, before the server answers.
