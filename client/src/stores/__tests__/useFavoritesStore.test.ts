@@ -21,7 +21,7 @@ describe("useFavoritesStore", () => {
 
     it.each([
         ["a new one at the top", favorite(4, 400), [4, 3, 1]],
-        ["one put back by Undo in its old place", favorite(2, 200), [3, 2, 1]],
+        ["one put back with its old addedAt in its place", favorite(2, 200), [3, 2, 1]],
         ["the oldest at the end", favorite(0, 50), [3, 1, 0]],
     ])("adds %s, keeping the newest first", (_, added, expected) => {
         useFavoritesStore.getState().addFavorite(added);

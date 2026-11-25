@@ -54,7 +54,7 @@ describe("FavoriteToggle usePresenter", () => {
 
         act(() => result.current.handleClick());
 
-        expect(result.current).toMatchObject({ pressed: false, label: "Add Dark to favourites" });
+        expect(result.current).toMatchObject({ pressed: false, label: "Put Dark back in favourites" });
     });
 
     it("in the list, removes the show with no toast and keeps it as removed", () => {
@@ -67,5 +67,11 @@ describe("FavoriteToggle usePresenter", () => {
         expect(useFavoritesStore.getState().favorites).toEqual([]);
         expect(useRemovedFavoritesStore.getState().removed).toEqual([DARK]);
         expect(toaster.create).not.toHaveBeenCalled();
+    });
+
+    it("in the list, offers to put a removed show back", () => {
+        const { result } = renderHook(() => usePresenter({ show: DARK, place: "list" }));
+
+        expect(result.current).toMatchObject({ pressed: false, label: "Put Dark back in favourites" });
     });
 });

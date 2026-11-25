@@ -21,9 +21,9 @@ All the favorites logic is on the server; the client shows the list and sends th
 5. `DELETE /api/favorites/:id` removes the show and answers `204 No Content`. `GET` is the only request that answers
    the whole list; after a change the client puts the answered favorite in its place by `addedAt`, or removes the
    show by id. (#40)
-6. Undo of a removal sends `PUT /api/favorites/:id` with the `addedAt` of the removed favorite
-   (`{ "addedAt": 1763300000000 }`): the show comes back to its old place in the list. Without a body the show is
-   added now, at the top.
+6. `PUT /api/favorites/:id` carries the `addedAt` the show is added with (`{ "addedAt": 1763300000000 }`). A show
+   put back after a removal sends the `addedAt` of the removed favorite and comes back to its old place in the
+   list; a new one sends the browser's time. Without a body the show is added now, at the top. (#56)
 7. The search results (`GET /api/shows`) do not say which shows are favorites: the client checks the ids against the
    list it holds.
 
@@ -38,13 +38,15 @@ What the user sees (`design/v0.2/`): (#28)
    while the show is a favorite; on a phone it sits at the right end of the row. A press adds or removes the show.
 10. The bookmark, the counter and the list change at once, on the press, and the request goes in the background; the
     bookmark can be pressed again at any time. A toast says what was done for 4 s, at once too: «Added **Dark** to
-    favourites», or «Removed **Dark** from favourites» with **Undo**, which puts the show back in its old place (6).
+    favourites», or «Removed **Dark** from favourites»; there is no Undo, the bookmark is pressed again (#56).
     If the server answers an error, the bookmark, the counter and the list go back to how they were, and a toast
     says so: «Couldn’t add **Dark** to favourites» (or remove). (#41)
 11. The button opens the list in a drawer from the right, full width on a phone: «Your list · Favourites N», a row
     per show, the newest first, with its poster, name, years and genres; the row leads to the show on TVmaze. The
-    bookmark of a row removes the show: the row leaves and the toast offers Undo. The backdrop, × and Escape close
-    the drawer; a press on a toast does not.
+    bookmark of a row removes the show at once, with no toast: the row stays in its place, dimmed, with «Removed» in
+    place of the years and genres and an empty bookmark, «Put **Dark** back in favourites». A second press puts the
+    show back in its old place (6). The counters drop at once, and the removed rows are gone the next time the list
+    opens. Only a failure has a toast. (#56) The backdrop, × and Escape close the drawer; a press on a toast does not.
 12. Two quick presses on one bookmark are both kept: a failure of the first one does not undo the second. (#41)
 13. A guest is asked to sign in (`design/v0.3/`): (#64)
     - a press on a bookmark sends nothing and leaves it empty; a toast says «Sign in to keep **Dark** in your
@@ -69,7 +71,8 @@ What the user sees (`design/v0.2/`): (#28)
 | No favorites | The counter shows 0 in a grey badge; the drawer says «No favourites yet» and how to add a show |
 | Favorites | The counter in the accent; filled bookmarks on their cards; a row per show in the drawer |
 | A change on its way | The bookmark, the counter and the list already show it; the bookmark answers every press (#41) |
-| Added, removed | A toast with the show's name; a removal offers Undo |
+| Added, removed | A toast with the show's name, with no Undo (#56) |
+| Removed inside the list | The row stays, dimmed, with «Removed» and an empty bookmark that puts it back; no toast; gone when the list opens again (#56) |
 | A change failed | The bookmark, the counter and the list go back; «Couldn’t add **Dark** to favourites» (or remove) in a toast (#41) |
 | The list did not load | «Couldn’t load your favourites» in a toast with Retry; the counter shows 0 meanwhile |
 | A guest | No counter on the button or in the drawer's title, and no bookmark is filled; a press on a bookmark sends nothing and asks to sign in in a toast; the drawer asks to sign in (#64) |
@@ -94,7 +97,8 @@ What the user sees (`design/v0.2/`): (#28)
   to stand for a search, not for a name and a poster. (#27)
 - A favorite keeps everything the list of the v0.2 mockup shows, the years and the genres included, not only the
   id, name, image and link the issue named; the rating is not kept. (#27)
-- The newest first, by `addedAt`; Undo puts a show back in its old place by sending its `addedAt`. (#27)
+- The newest first, by `addedAt`; Undo puts a show back in its old place by sending its `addedAt`. (#27) Since #56
+  the bookmark pressed again does it, as Undo is gone.
 - The store is a `Map` keyed by the show id, not a plain object: a plain object walks number keys in ascending
   order, not in the order added. (#27)
 - `PUT` and `DELETE` on `/api/favorites/:id`: both methods change nothing when repeated, which is what adding twice
@@ -139,7 +143,8 @@ What the user sees (`design/v0.2/`): (#28)
   (`gcloud auth application-default login`, `GOOGLE_CLOUD_PROJECT` in `server/.env`), and local development changes
   the real data; there is no second database or emulator for it. (#66)
 - A toast stays pressable over the open drawer, so Undo of a removal from the drawer works there; keyboard focus
-  stays in the drawer, so Undo is not reached by Tab while it is open. (#28)
+  stays in the drawer, so Undo is not reached by Tab while it is open. (#28) Undo is gone in #56; a toast still stays
+  pressable over the drawer, for the «Sign in» and Retry of other toasts.
 - A change answers only what it changed: `PUT` the one `Favorite`, `DELETE` `204 No Content` (the standard answer
   for a success with no body, not a bare `200`). The server does not read the list again after a change, and the
   answer does not grow with the list; the client keeps its list in order itself. (#40)
@@ -156,3 +161,15 @@ What the user sees (`design/v0.2/`): (#28)
   side, and the server may apply them in another order; and if both fail, the list may show what the server does
   not have. Both are rare, and the next load of the list puts it right; a queue of requests per show was tried and
   judged not worth its weight. (#41)
+- Undo is dropped: a removed show is put back by pressing its bookmark again, on a card or in the list's row. (#56)
+- The removed rows of the open list are kept in a store of their own, `App/_stores/useRemovedFavoritesStore`, not as a
+  flag on the favorites: the favorites store, the bookmarks and the counters stay as they were. (#56)
+- The removed rows are dropped when the list opens, not when it closes: on close they would vanish during the
+  drawer's slide-out. (#56)
+- A removal inside the list has no toast on success: the row itself says so. A failure still has one. (#56)
+- The `DELETE` goes at the press, as everywhere else, not when the list closes: the counters and the server agree at
+  once, and nothing is lost if the tab is closed with the list open. (#56)
+- The client always sends `addedAt` with a `PUT`, the old one or the browser's time, rather than choosing whether to
+  send a body. (#56)
+- Accepted: a show removed from a card and added again before the list opens goes back to its old place, not to the
+  top, as its removed favourite is still remembered. (#56)

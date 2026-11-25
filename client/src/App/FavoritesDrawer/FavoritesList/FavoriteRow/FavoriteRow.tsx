@@ -1,16 +1,23 @@
-import { Box, chakra } from "@chakra-ui/react";
+import { Box, chakra, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
 import { FavoriteToggle } from "~/App/_components/FavoriteToggle/FavoriteToggle";
 import { ShowMeta } from "~/App/_components/ShowMeta/ShowMeta";
 import { Icon } from "~/lib/ui-kit/Icon/Icon";
-import { usePresenter, type FavoriteRowProps } from "./_logic/usePresenter";
+import { usePresenter, type FavoriteRowProps, type FavoriteRowState } from "./_logic/usePresenter";
 
 export type { FavoriteRowProps } from "./_logic/usePresenter";
 
+// .fav-row--removed: a removed row is dimmed, and its name gets no accent on hover.
+const STATE_STYLES = {
+    saved: { link: {}, name: { _groupHover: { color: "accent.fg" } } },
+    removed: { link: { opacity: 0.4 }, name: {} },
+} satisfies Record<FavoriteRowState, { link: HTMLChakraProps<"a">; name: HTMLChakraProps<"span"> }>;
+
 // .fav-row of design/library: a list item with a thumbnail, the name and one line of details, and a plain bookmark
-// at its end. The name turns to the accent on hover, as on a show card.
+// at its end. The name turns to the accent on hover, as on a show card. A show removed while the list is open keeps
+// its row, dimmed, with «Removed» in place of the details; its bookmark puts it back.
 export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
-    const { favorite, name, href, imageSrc, hasImage } = usePresenter(props);
+    const { favorite, state, name, href, imageSrc, hasImage } = usePresenter(props);
 
     return (
         <chakra.li
@@ -36,6 +43,7 @@ export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
                 rounded="sm"
                 focusVisibleRing="none"
                 _focusVisible={{ outline: "3px solid", outlineColor: "accent.solid", outlineOffset: "3px" }}
+                {...STATE_STYLES[state].link}
             >
                 <Box
                     display="grid"
@@ -64,11 +72,17 @@ export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
                         lineHeight="tight"
                         truncate
                         transition="color {durations.fast} {easings.standard}"
-                        _groupHover={{ color: "accent.fg" }}
+                        {...STATE_STYLES[state].name}
                     >
                         {name}
                     </chakra.span>
-                    <ShowMeta show={favorite} mt="1" truncate />
+                    {state === "removed" ? (
+                        <chakra.span display="block" mt="1" textStyle="eyebrow" color="fg.subtle">
+                            Removed
+                        </chakra.span>
+                    ) : (
+                        <ShowMeta show={favorite} mt="1" truncate />
+                    )}
                 </Box>
             </chakra.a>
             <FavoriteToggle show={favorite} place="list" />
