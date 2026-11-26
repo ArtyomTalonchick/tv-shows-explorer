@@ -1,10 +1,12 @@
-// What the client and the server share, a file per subject: the Zod schemas of the API and the types they give, and
-// the rule of valid credentials — runtime code, a deliberate exception from the simple-architecture rules
-// (`.claude/rules/architecture-exceptions.md`). A subject file exports only the API, so it is re-exported whole.
+// What the client and the server share, a folder per subject and a file per schema: the Zod schemas of the API and
+// the types they give, and the rule of valid credentials. A file exports only its API, so it is re-exported whole.
 export * from "./credentials/credentials";
 export * from "./credentials/normalizeEmail";
 export * from "./favorites/favorites";
 export * from "./health/health";
-export * from "./session/session";
+export * from "./session/refreshBody";
+export * from "./session/sessionResponse";
+export * from "./session/sessionTokens";
+export * from "./session/user";
 export * from "./shows/show";
 export * from "./shows/shows";
