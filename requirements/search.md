@@ -68,6 +68,10 @@ The user finds TV shows by typing a query. TVmaze does the search
 ## Decisions
 
 - The debounce is 400 ms. (#8)
+- The app wakes its server on start: the server scales to zero, so the first request after a pause waits for a cold
+  start, and that would be the user's search. The root unit sends `GET /api/health` once, after the first render
+  (`App/_logic/_tasks/wakeServer`), and reads nothing from the answer: a failed or slow one shows nothing, and the
+  search sends its own request and shows its own error. (#68)
 - The query is trimmed before it is sent; a whitespace-only query counts as empty. (#8)
 - Retry repeats the current query. (#8)
 - Requests are handled by the app's own code (`AbortController`), without a query library. (#8, #16)

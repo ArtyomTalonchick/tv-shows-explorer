@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import type { Favorite } from "@tv-shows-explorer/shared";
 import { useFavoritesDrawerStore } from "~/App/_stores/useFavoritesDrawerStore";
+import { toaster } from "~/lib/toast/toaster";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { clearSearch } from "~/tasks/search/clearSearch";
@@ -22,11 +23,17 @@ const SESSION = { accessToken: "access", refreshToken: "refresh", user: { id: "u
 
 const NOTHING_FOUND = { shows: [], genres: [], found: 0, genre: null, total: 0, page: 1, perPage: 3 };
 
-// The app's server: the search finds nothing, a sign-in, a sign-up and a refresh succeed; the favorites start as
-// `saved` and follow PUT and DELETE of DARK.
-const stubServer = (saved: Favorite[] = []) => {
+// The app's server: its health answers as up, or with a network error unless `isUp`; the search finds nothing, a
+// sign-in, a sign-up and a refresh succeed; the favorites start as `saved` and follow PUT and DELETE of DARK.
+const stubServer = (saved: Favorite[] = [], { isUp = true } = {}) => {
     let favorites = saved;
     const fetchMock = vi.fn(async (url: string, init?: RequestInit) => {
+        if (url === "/api/health" && !isUp) {
+            throw new TypeError("Failed to fetch");
+        }
+        if (url === "/api/health") {
+            return new Response(JSON.stringify({ status: "ok" }));
+        }
         if (["/api/session", "/api/users", "/api/session/refresh"].includes(url)) {
             return new Response(JSON.stringify(SESSION));
         }
@@ -72,6 +79,7 @@ describe("App", () => {
 
     afterEach(() => {
         vi.unstubAllGlobals();
+        vi.restoreAllMocks();
     });
 
     it("starts with the search field and the favourites button, and sends no search", async () => {
@@ -86,6 +94,29 @@ describe("App", () => {
         expect(screen.queryByRole("region", { name: "Search results" })).not.toBeInTheDocument();
         expect(await screen.findByRole("button", { name: "Favourites 1" })).toBeInTheDocument();
         expect(searchRequests(fetchMock)).toHaveLength(0);
+    });
+
+    it("wakes the server once on start", () => {
+        const fetchMock = stubServer();
+
+        renderApp();
+
+        expect(fetchMock.mock.calls.filter(([url]) => url === "/api/health")).toHaveLength(1);
+    });
+
+    it("shows nothing when the server does not answer the wake-up, and the search still works", async () => {
+        stubServer([], { isUp: false });
+        vi.spyOn(toaster, "create");
+        renderApp();
+
+        act(() => searchbox().focus());
+        fireEvent.change(searchbox(), { target: { value: "dark" } });
+
+        expect(await screen.findByText(/Nothing found/)).toBeInTheDocument();
+        expect(toaster.create).not.toHaveBeenCalled();
+
+        // Back to the hero, so the next test starts there.
+        fireEvent.click(screen.getByRole("button", { name: "tv/explorer — back to start" }));
     });
 
     it.each([

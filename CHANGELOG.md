@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - The email of a sign-up is checked more strictly: a few addresses the old check took, such as `anna@example.c`,
   are refused now. A server answer the app does not expect shows as an error instead of breaking the page.
+- The app wakes its server as soon as it opens, so the first search after a pause answers sooner.
 
 ## 0.3.0 — 2026-11-25
 
