@@ -13,7 +13,8 @@
         "@tv-shows-explorer/shared": "*",
         "firebase-admin": "^14.5.1",
         "firebase-functions": "^7.4.0",
-        "hono": "^4.13.19"
+        "hono": "^4.13.19",
+        "zod": "^4.6.7"
     },
     "devDependencies": {
         "@types/node": "^26.6.6",

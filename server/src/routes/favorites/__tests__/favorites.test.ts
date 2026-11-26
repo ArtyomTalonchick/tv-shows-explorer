@@ -151,11 +151,14 @@ describe("/", () => {
         storeUntouched();
     });
 
-    it("answers 404 to a show TVmaze does not have, and 502 when TVmaze fails", async () => {
+    it("answers 404 to a show TVmaze does not have, and 502 when TVmaze fails or answers no show", async () => {
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 404 })));
         expect((await request("PUT", "/99")).status).toBe(404);
 
         vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 503 })));
+        expect((await request("PUT", "/99")).status).toBe(502);
+
+        vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response('{ "id": 99 }', { status: 200 })));
         expect((await request("PUT", "/99")).status).toBe(502);
         expect(favoritesStore.put).not.toHaveBeenCalled();
     });

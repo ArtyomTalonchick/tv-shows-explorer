@@ -66,4 +66,16 @@ describe("GET /api/shows", () => {
 
         expect(response.status).toBe(502);
     });
+
+    it.each([
+        ["not a list", { shows: [] }],
+        ["a show without a name", [{ score: 1, show: { ...tvmazeShow(1, []).show, name: undefined } }]],
+        ["a show with a text id", [{ score: 1, show: { ...tvmazeShow(1, []).show, id: "1" } }]],
+    ])("answers 502 to a TVmaze answer of another shape: %s", async (_, body) => {
+        vi.stubGlobal("fetch", respond(body));
+
+        const response = await app.request("/?q=dark");
+
+        expect(response.status).toBe(502);
+    });
 });
