@@ -1,5 +1,4 @@
-import type { Show } from "@tv-shows-explorer/shared";
-import { fetchJson } from "~/lib/http/fetchJson";
+import { fetchJson, type Show } from "@tv-shows-explorer/shared";
 import { TVMAZE_API } from "~/routes/constants";
 import { toShow } from "~/tasks/tvmaze/toShow";
 import { dropExpiredSearches } from "./dropExpiredSearches";
@@ -16,11 +15,9 @@ export const searchTvmaze = async (query: string, signal: AbortSignal): Promise<
         return cached;
     }
 
-    const results = await fetchJson(
-        `${TVMAZE_API}/search/shows?q=${encodeURIComponent(query)}`,
-        searchResultsSchema,
+    const results = await fetchJson(`${TVMAZE_API}/search/shows?q=${encodeURIComponent(query)}`, searchResultsSchema, {
         signal,
-    );
+    });
     const shows = results.map(({ show }) => toShow(show));
     dropExpiredSearches();
     writeCachedSearch(query, shows);

@@ -1,6 +1,5 @@
-import { addFavoriteBodySchema } from "@tv-shows-explorer/shared";
+import { addFavoriteBodySchema, HttpError } from "@tv-shows-explorer/shared";
 import type { Context } from "hono";
-import { HttpError } from "~/lib/errors/HttpError";
 import { withValid } from "~/lib/validation/withValid";
 import { favoriteParamsSchema } from "~/tasks/favorites/favoriteParamsSchema";
 import type { UserEnv } from "~/tasks/types";
