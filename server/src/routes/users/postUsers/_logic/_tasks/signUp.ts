@@ -1,9 +1,9 @@
 import { randomUUID } from "node:crypto";
-import { normalizeEmail } from "@tv-shows-explorer/shared";
 import type { Credentials, SessionResponse, User } from "@tv-shows-explorer/shared";
 import { hashPassword } from "~/lib/password/hashPassword";
 import { usersStore } from "~/routes/_stores/usersStore/usersStore";
 import { startSession } from "~/tasks/session/startSession";
+import { normalizeEmail } from "~/tasks/users/normalizeEmail";
 
 // Makes an account of valid credentials and signs it in: the email normalized, the password kept only as its hash,
 // a new random id. Returns a new pair of tokens and the user, or null when the email already has an account. The

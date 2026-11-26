@@ -1,6 +1,6 @@
 import { usersCollection } from "./usersCollection";
 
-// A user as the server keeps it. `email` is normalized (`normalizeEmail` of the shared package); `passwordHash` is
+// A user as the server keeps it. `email` is normalized (`tasks/users/normalizeEmail`); `passwordHash` is
 // `hashPassword`'s answer, never the password. `createdAt` is ms since the epoch.
 export type StoredUser = {
     id: string;

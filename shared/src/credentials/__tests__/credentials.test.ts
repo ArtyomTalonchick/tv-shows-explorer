@@ -1,5 +1,4 @@
-import { credentialsSchema, signInBodySchema } from "../credentials";
-import { normalizeEmail } from "../normalizeEmail";
+import { credentialsSchema } from "../credentials";
 
 describe("credentialsSchema", () => {
     it.each(["anna@example.com", "  anna@example.com  ", "Anna.Smith+tv@mail.example.co.uk"])("takes %j", (email) => {
@@ -22,21 +21,5 @@ describe("credentialsSchema", () => {
     it("takes a password of 8 characters and more, counting spaces as typed", () => {
         expect(credentialsSchema.safeParse({ email: "anna@example.com", password: "severanc" }).success).toBe(true);
         expect(credentialsSchema.safeParse({ email: "anna@example.com", password: "  dark " }).success).toBe(false);
-    });
-});
-
-describe("signInBodySchema", () => {
-    it("takes any two strings, so an account of an older rule still signs in", () => {
-        expect(signInBodySchema.safeParse({ email: "anna@example", password: "dark" }).success).toBe(true);
-    });
-
-    it.each([null, {}, { email: "anna@example.com" }, { email: 1, password: "severanc" }])("refuses %j", (body) => {
-        expect(signInBodySchema.safeParse(body).success).toBe(false);
-    });
-});
-
-describe("normalizeEmail", () => {
-    it("drops the outer spaces and the case", () => {
-        expect(normalizeEmail("  Anna@Example.COM ")).toBe("anna@example.com");
     });
 });
