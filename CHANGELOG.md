@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## Unreleased
 
+- The email of a sign-up is checked more strictly: a few addresses the old check took, such as `anna@example.c`,
+  are refused now. A server answer the app does not expect shows as an error instead of breaking the page.
+
 ## 0.3.0 — 2026-11-25
 
 - The app moves to https://tv-shows-explorer.web.app, with its server on the same domain; any address of the app

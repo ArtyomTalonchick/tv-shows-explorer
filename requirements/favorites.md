@@ -39,8 +39,8 @@ What the user sees (`design/v0.2/`): (#28)
 10. The bookmark, the counter and the list change at once, on the press, and the request goes in the background; the
     bookmark can be pressed again at any time. A toast says what was done for 4 s, at once too: «Added **Dark** to
     favourites», or «Removed **Dark** from favourites»; a second press on the bookmark puts the show back (6). (#56)
-    If the server answers an error, the bookmark, the counter and the list go back to how they were, and a toast
-    says so: «Couldn’t add **Dark** to favourites» (or remove). (#41)
+    If the server answers an error, or an answer of a wrong shape (#31), the bookmark, the counter and the list go
+    back to how they were, and a toast says so: «Couldn’t add **Dark** to favourites» (or remove). (#41)
 11. The button opens the list in a drawer from the right, full width on a phone: «Your list · Favourites N», a row
     per show, the newest first, with its poster, name, years and genres; the row leads to the show on TVmaze. The
     bookmark of a row removes the show at once, with no toast: the row stays in its place, dimmed, with «Removed» in
@@ -68,7 +68,7 @@ What the user sees (`design/v0.2/`): (#28)
 | No access token, or not a valid one (a guest) | 401, nothing changes (#63) |
 | A wrong id (not a whole number from 1) or body | 400, nothing changes |
 | TVmaze has no show with the id | 404, nothing changes |
-| TVmaze does not answer | 502, nothing changes |
+| TVmaze does not answer, or answers a show of a wrong shape | 502, nothing changes (#31) |
 
 | State | What the user sees (#28) |
 |---|---|

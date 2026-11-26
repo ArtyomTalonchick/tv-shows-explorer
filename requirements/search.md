@@ -61,7 +61,8 @@ The user finds TV shows by typing a query. TVmaze does the search
 - Special characters are URL-encoded on the way to the server («doctor who & co» → `q=doctor+who+%26+co`) and to
   TVmaze (`q=doctor%20who%20%26%20co`).
 - The server answers 400 to a missing or blank query and to a page that is not a whole number from 1, and 502
-  when TVmaze fails; the app shows the error state for both.
+  when TVmaze fails or answers a list of a wrong shape; the app shows the error state for both, and for an answer of
+  the server of a wrong shape. (#31)
 - A show without a rating or a poster comes through with `null` in that field.
 
 ## Decisions

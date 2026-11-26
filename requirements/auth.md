@@ -12,9 +12,9 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
 
 1. **Sign up.** `POST /api/users` with `Credentials` (`{ "email": "anna@example.com", "password": "…" }`) makes an
    account and answers `201` with a `SessionResponse`: `{ accessToken, refreshToken, user: { id, email } }`. The
-   email and the password must pass the shared rule (`shared/src/credentials/`): an email of the form
-   `name@domain.tld` with one `@` and no spaces, and a password of 8 characters or more. The client checks its form
-   by the same rule. (#61)
+   email and the password must pass the shared rule (`credentialsSchema` in `shared/src/credentials/`): an email by
+   Zod's `z.email()`, without its outer spaces, and a password of 8 characters or more. The client checks its form
+   by the same schema. (#61, #31)
 2. **Sign in.** `POST /api/session` with `Credentials` checks the password of the account of that email and answers
    `200` with a `SessionResponse`. (#61)
 3. **Who is signed in.** `GET /api/session` with `Authorization: Bearer <access token>` answers the `User` of the
@@ -39,7 +39,8 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
 10. **The forms** check their fields before any request, by the shared rule: sign-up a field as it loses focus,
     sign-in on submit. «Enter an email like name@example.com», «The password needs at least 8 characters» on
     sign-up, «Enter your password» on sign-in. While the request is on its way the fields are disabled and the button
-    shows a spinner. Signed up or signed in, the user lands on the search. (#62)
+    shows a spinner. Signed up or signed in, the user lands on the search. The forms are checked by react-hook-form's
+    `zodResolver`; the texts are the client's, not Zod's. (#62, #31)
 11. **The header** of the start screen and of the search bar shows a guest «Sign in», which leads to `/sign-in`, and
     a signed-in user the avatar with the first letter of the email; it opens the full email and «Sign out». (#62)
 12. **Sign out** drops the session and the user's favourites at once, with no request: the page is a guest's.
@@ -61,14 +62,14 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
 | Signed in | `200` and `{ accessToken, refreshToken, user }` |
 | A valid access token | `GET /api/session`: `200` and `{ id, email }` |
 | A valid refresh token | `POST /api/session/refresh`: `200` and a new `{ accessToken, refreshToken, user }` |
-| A body that is not JSON with a string email and password | `400`, nothing changes |
+| A body that is not JSON with a string email and password, or sent without `Content-Type: application/json` | `400` with what is wrong in Zod's words, nothing changes |
 | Sign-up with an email or a password that breaks the rule | `400`, no account is made |
 | Sign-up with an email that already has an account | `409` «This email already has an account» |
 | Sign-in with an unknown email or a wrong password | `401` «Wrong email or password», the same for both |
 | No token, not `Bearer`, a broken, expired or foreign token, a refresh token | `401` |
 | A valid token of an account that is gone | `401` |
 | Refresh with a broken, expired or foreign token, an access token, or the token of an account that is gone | `401` |
-| Refresh with a body that is not JSON with a string `refreshToken` | `400` |
+| Refresh with a body that is not JSON with a string `refreshToken`, or sent without the JSON `Content-Type` | `400` |
 | The server has no `JWT_SECRET` | `500` on every sign-up, sign-in, refresh and `GET /api/session` |
 
 | State in the app | What the user sees |
@@ -99,9 +100,13 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
 
 ## Decisions
 
+- Every request the server takes — a body, a query, a path — is checked by the shared Zod schemas, through one
+  helper, `withValid` (`server/src/lib/validation/`); a refused request gets `400` with `{ error }` in Zod's words.
+  A JSON body needs `Content-Type: application/json`: without it the body is read as empty. Every answer the client
+  takes is read by the shared schema too, and an answer of a wrong shape is an error, as a failed request is. (#31)
 - The rule of a valid email and password is runtime code in the shared package, so the client and the server check
   by one rule; a deliberate exception from the simple-architecture rules
-  (`.claude/rules/architecture-exceptions.md`, plugin #35). The shared package is split into folders by
+  (`.claude/rules/architecture-exceptions.md`, plugin #81). The shared package is split into folders by
   subject. (#61)
 - Accounts are keyed by a random id, `users/{id}`, not by the email, the owner's choice: the favourites of #63 go
   under `users/{id}/favorites`. (#61)
