@@ -10,5 +10,7 @@ export * from "./session/refreshBody";
 export * from "./session/sessionResponse";
 export * from "./session/sessionTokens";
 export * from "./session/user";
+export * from "./shows/genreCount";
 export * from "./shows/show";
-export * from "./shows/shows";
+export * from "./shows/showsPage";
+export * from "./shows/showsQuery";
