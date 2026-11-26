@@ -10,6 +10,6 @@ import { postSessionRefresh } from "./postSessionRefresh/postSessionRefresh";
 // sign-out request: the client drops its tokens.
 // prettier-ignore
 export const session = new Hono<UserEnv>()
-    .post("/", postSession)
+    .post("/", ...postSession)
     .post("/refresh", postSessionRefresh)
     .get("/", requireUser, getSession);

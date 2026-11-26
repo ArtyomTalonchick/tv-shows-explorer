@@ -61,5 +61,5 @@ ArtyomTalonchick/claude-simple-architecture#77 · since #63
 `userId` on; the `/session` and `/favorites` route units use it, and its env type `UserEnv` lies in
 `server/src/tasks/types.ts`. The plugin's rules keep a one-user middleware in its unit's logic folder (core
 `levels.md`) and give a shared one no place: a task has nothing from the UI framework and leaves what follows to its
-caller (core `tasks.md`), so the reviewer may report Tasks on it. The project keeps it in the tasks folder, next to
-`tasks/parseCredentials`, until the plugin settles the case.
+caller (core `tasks.md`), so the reviewer may report Tasks on it. The project keeps it in the tasks folder until the plugin settles
+the case.

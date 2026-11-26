@@ -8,8 +8,12 @@ vi.mock("~/routes/_stores/usersStore/usersStore", () => {
     return { usersStore: { create: vi.fn(), get: vi.fn(), findByEmail: vi.fn() } };
 });
 
+const post = async (body: string) => {
+    return await session.request("/", { method: "POST", headers: { "Content-Type": "application/json" }, body });
+};
+
 const signIn = async (body: string) => {
-    const response = await session.request("/", { method: "POST", body });
+    const response = await post(body);
     return { status: response.status, body: (await response.json()) as unknown };
 };
 
@@ -58,7 +62,7 @@ describe("POST /", () => {
     it.each(["not json", '{"email":"anna@example.com"}', '{"email":1,"password":"severance"}'])(
         "answers 400 to %j",
         async (body) => {
-            const response = await signIn(body);
+            const response = await post(body);
 
             expect(response.status).toBe(400);
         },

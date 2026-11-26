@@ -9,8 +9,12 @@ vi.mock("~/routes/_stores/usersStore/usersStore", () => {
 
 const STORED = { id: "u1", email: "anna@example.com", passwordHash: "salt:hash", createdAt: 1 };
 
+const post = async (body: string) => {
+    return await users.request("/", { method: "POST", headers: { "Content-Type": "application/json" }, body });
+};
+
 const signUp = async (body: string) => {
-    const response = await users.request("/", { method: "POST", body });
+    const response = await post(body);
     return { status: response.status, body: (await response.json()) as unknown };
 };
 
@@ -60,7 +64,21 @@ describe("POST /", () => {
         '{"email":"anna@example","password":"severance"}',
         '{"email":"anna@example.com","password":"dark"}',
     ])("answers 400 to %j and makes no account", async (body) => {
-        const response = await signUp(body);
+        const response = await post(body);
+
+        expect(response.status).toBe(400);
+        expect(usersStore.create).not.toHaveBeenCalled();
+    });
+
+    it("answers 400 with what is wrong, in the words of the schema", async () => {
+        const { body } = await signUp('{"email":"anna@example.com","password":"dark"}');
+
+        expect(body).toEqual({ error: expect.stringContaining("password") });
+    });
+
+    it("answers 400 to a body sent without the JSON Content-Type", async () => {
+        const body = '{"email":"anna@example.com","password":"severance"}';
+        const response = await users.request("/", { method: "POST", body });
 
         expect(response.status).toBe(400);
         expect(usersStore.create).not.toHaveBeenCalled();
