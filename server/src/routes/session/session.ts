@@ -11,5 +11,5 @@ import { postSessionRefresh } from "./postSessionRefresh/postSessionRefresh";
 // prettier-ignore
 export const session = new Hono<UserEnv>()
     .post("/", ...postSession)
-    .post("/refresh", postSessionRefresh)
+    .post("/refresh", ...postSessionRefresh)
     .get("/", requireUser, getSession);

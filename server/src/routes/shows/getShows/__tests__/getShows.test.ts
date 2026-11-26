@@ -16,7 +16,7 @@ const tvmazeShow = (id: number, genres: string[]) => ({
     },
 });
 
-const app = new Hono().get("/", getShows);
+const app = new Hono().get("/", ...getShows);
 
 const respond = (body: unknown, status = 200) =>
     vi.fn().mockResolvedValue(new Response(JSON.stringify(body), { status }));

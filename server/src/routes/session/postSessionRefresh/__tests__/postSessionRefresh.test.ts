@@ -13,8 +13,16 @@ const token = async (claims: Record<string, unknown> = {}, secret = "test-secret
     return await sign({ sub: "u1", typ: "refresh", iat: now(), exp: now() + 60, ...claims }, secret, "HS256");
 };
 
+const post = async (body: string) => {
+    return await session.request("/refresh", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body,
+    });
+};
+
 const refresh = async (body: string) => {
-    const response = await session.request("/refresh", { method: "POST", body });
+    const response = await post(body);
     return { status: response.status, body: (await response.json()) as unknown };
 };
 
@@ -65,7 +73,7 @@ describe("POST /refresh", () => {
     });
 
     it.each(["not json", "null", "{}", '{"refreshToken":1}'])("answers 400 to %j", async (body) => {
-        const response = await refresh(body);
+        const response = await post(body);
 
         expect(response.status).toBe(400);
         expect(usersStore.get).not.toHaveBeenCalled();
