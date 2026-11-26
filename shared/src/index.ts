@@ -4,6 +4,7 @@
 export * from "./credentials/credentials";
 export * from "./credentials/normalizeEmail";
 export * from "./favorites/favorites";
+export * from "./health/health";
 export * from "./session/session";
 export * from "./shows/show";
 export * from "./shows/shows";
