@@ -12,3 +12,5 @@ export const tvmazeShowSchema = z.object({
     image: z.object({ medium: z.string(), original: z.string() }).nullable(),
     url: z.string(),
 });
+
+export type TvmazeShow = z.infer<typeof tvmazeShowSchema>;
