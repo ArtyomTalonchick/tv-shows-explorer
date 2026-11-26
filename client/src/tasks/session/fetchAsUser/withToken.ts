@@ -1,4 +1,4 @@
-import type { JsonRequestInit } from "~/lib/http/fetchJson";
+import type { JsonRequestInit } from "@tv-shows-explorer/shared";
 
 // The request as the signed-in user: the access token in `Authorization: Bearer`, next to the caller's headers; as it
 // is for a guest.

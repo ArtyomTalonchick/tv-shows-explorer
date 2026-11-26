@@ -1,6 +1,5 @@
 import type { z } from "zod";
-import { HttpError } from "~/lib/http/HttpError";
-import { fetchJson, type JsonRequestInit } from "~/lib/http/fetchJson";
+import { fetchJson, HttpError, type JsonRequestInit } from "@tv-shows-explorer/shared";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { refreshSession } from "~/tasks/session/refreshSession";
 import { withToken } from "./withToken";

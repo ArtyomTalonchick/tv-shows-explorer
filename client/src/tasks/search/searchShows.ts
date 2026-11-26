@@ -1,5 +1,4 @@
-import { showsPageSchema, type ShowsPage, type ShowsQuery } from "@tv-shows-explorer/shared";
-import { fetchJson } from "~/lib/http/fetchJson";
+import { fetchJson, showsPageSchema, type ShowsPage, type ShowsQuery } from "@tv-shows-explorer/shared";
 import { API_URL } from "~/tasks/constants";
 
 // Asks the app's server for a page of the found shows of a genre. Rejects on a network error, a non-2xx answer, or

@@ -1,4 +1,4 @@
-// A request answered with a non-2xx status: the caller can tell a refusal (401, 409) from a failure by `status`.
+// A request answered with a non-2xx status: the caller can tell a refusal (401, 404, 409) from a failure by `status`.
 export class HttpError extends Error {
     readonly status: number;
 

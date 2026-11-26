@@ -1,5 +1,4 @@
-import { healthResponseSchema } from "@tv-shows-explorer/shared";
-import { fetchJson } from "~/lib/http/fetchJson";
+import { fetchJson, healthResponseSchema } from "@tv-shows-explorer/shared";
 import { API_URL } from "~/tasks/constants";
 
 // Asks the app's server whether it is up, only to wake it: the server scales to zero, so the first request after a

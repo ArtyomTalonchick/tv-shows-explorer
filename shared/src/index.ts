@@ -5,6 +5,8 @@ export * from "./credentials/signInBody";
 export * from "./favorites/addFavoriteBody";
 export * from "./favorites/favorite";
 export * from "./health/health";
+export * from "./http/HttpError";
+export * from "./http/fetchJson";
 export * from "./primitives/wholeNumberText";
 export * from "./session/refreshBody";
 export * from "./session/sessionResponse";

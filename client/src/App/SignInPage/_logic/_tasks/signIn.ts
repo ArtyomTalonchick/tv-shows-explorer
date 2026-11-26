@@ -1,6 +1,4 @@
-import { sessionResponseSchema, type Credentials, type Show } from "@tv-shows-explorer/shared";
-import { HttpError } from "~/lib/http/HttpError";
-import { fetchJson } from "~/lib/http/fetchJson";
+import { fetchJson, HttpError, sessionResponseSchema, type Credentials, type Show } from "@tv-shows-explorer/shared";
 import { API_URL } from "~/tasks/constants";
 import { keepSession } from "~/tasks/session/keepSession";
 

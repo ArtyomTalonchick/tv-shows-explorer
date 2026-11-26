@@ -1,6 +1,5 @@
-import type { SessionResponse } from "@tv-shows-explorer/shared";
+import { HttpError, type SessionResponse } from "@tv-shows-explorer/shared";
 import { z } from "zod";
-import { HttpError } from "~/lib/http/HttpError";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { fetchAsUser } from "../fetchAsUser";
 
