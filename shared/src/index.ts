@@ -2,8 +2,6 @@
 // the rule of valid credentials — runtime code, a deliberate exception from the simple-architecture rules
 // (`.claude/rules/architecture-exceptions.md`). A subject file exports only the API, so it is re-exported whole.
 export * from "./credentials/credentials";
-export * from "./credentials/isValidEmail";
-export * from "./credentials/isValidPassword";
 export * from "./credentials/normalizeEmail";
 export * from "./favorites/favorites";
 export * from "./session/session";

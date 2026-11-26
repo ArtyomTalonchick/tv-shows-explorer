@@ -1,4 +1,5 @@
-import { PASSWORD_MIN_LENGTH, isValidEmail, isValidPassword, type Credentials } from "@tv-shows-explorer/shared";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PASSWORD_MIN_LENGTH, credentialsSchema, type Credentials } from "@tv-shows-explorer/shared";
 import type { SubmitEvent } from "react";
 import { useController, useForm } from "react-hook-form";
 import { useLocation } from "react-router";
@@ -8,6 +9,12 @@ import type { PasswordFieldProps } from "~/lib/ui-kit/PasswordField/PasswordFiel
 import { toPendingFavorite } from "~/tasks/favorites/toPendingFavorite";
 import type { EmailErrorProps } from "../EmailError/EmailError";
 import { signUp } from "./_tasks/signUp";
+
+// The error under a field its schema refuses.
+const FIELD_ERRORS: Record<keyof Credentials, string> = {
+    email: EMAIL_FORMAT_ERROR,
+    password: `The password needs at least ${PASSWORD_MIN_LENGTH} characters`,
+};
 
 type UsePresenterResult = {
     // The server did not answer the last request, above the fields.
@@ -21,28 +28,20 @@ type UsePresenterResult = {
     handleSubmit: (event: SubmitEvent<HTMLFormElement>) => void;
 };
 
-// The sign-up form. A field is checked when it is left and on «Create account», and from then on as it changes, so
-// an error goes once its value is right; a request goes only with both right, else the first wrong field takes the
-// focus. A taken email stands under the email field until the email changes. The values stay after a failure, for a
-// fix or a retry.
+// The sign-up form, checked by the shared rule (`credentialsSchema`). A field is checked when it is left and on
+// «Create account», and from then on as it changes, so an error goes once its value is right; a request goes only
+// with both right, else the first wrong field takes the focus. A taken email stands under the email field until the
+// email changes. The values stay after a failure, for a fix or a retry.
 export const usePresenter = (): UsePresenterResult => {
     const { control, formState, setError, handleSubmit } = useForm<Credentials>({
         mode: "onTouched",
         defaultValues: { email: "", password: "" },
+        resolver: zodResolver(credentialsSchema, {
+            error: (issue) => FIELD_ERRORS[issue.path?.[0] as keyof Credentials],
+        }),
     });
-    const email = useController({
-        control,
-        name: "email",
-        rules: { validate: (value) => isValidEmail(value) || EMAIL_FORMAT_ERROR },
-    });
-    const password = useController({
-        control,
-        name: "password",
-        rules: {
-            validate: (value) =>
-                isValidPassword(value) || `The password needs at least ${PASSWORD_MIN_LENGTH} characters`,
-        },
-    });
+    const email = useController({ control, name: "email" });
+    const password = useController({ control, name: "password" });
     const isLoading = formState.isSubmitting;
     // The show a guest bookmarked, when they came by the «Sign in» of its toast and then the sign-in page.
     const pending = toPendingFavorite(useLocation().state);
