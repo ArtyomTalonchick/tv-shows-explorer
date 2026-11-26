@@ -1,4 +1,4 @@
-import type { Credentials, SessionResponse, Show } from "@tv-shows-explorer/shared";
+import { sessionResponseSchema, type Credentials, type Show } from "@tv-shows-explorer/shared";
 import { HttpError } from "~/lib/http/HttpError";
 import { fetchJson } from "~/lib/http/fetchJson";
 import { API_URL } from "~/tasks/constants";
@@ -12,7 +12,10 @@ export type SignInResult = "signed-in" | "wrong-credentials" | "failed";
 // and the stores stay as they were.
 export const signIn = async (credentials: Credentials, pending: Omit<Show, "rating"> | null): Promise<SignInResult> => {
     try {
-        const session = await fetchJson<SessionResponse>(`${API_URL}/session`, { method: "POST", body: credentials });
+        const session = await fetchJson(`${API_URL}/session`, sessionResponseSchema, {
+            method: "POST",
+            body: credentials,
+        });
         await keepSession(session, pending);
         return "signed-in";
     } catch (error) {

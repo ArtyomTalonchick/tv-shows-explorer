@@ -1,4 +1,4 @@
-import type { RefreshBody, SessionResponse } from "@tv-shows-explorer/shared";
+import { sessionResponseSchema, type RefreshBody } from "@tv-shows-explorer/shared";
 import { HttpError } from "~/lib/http/HttpError";
 import { fetchJson } from "~/lib/http/fetchJson";
 import { useSessionStore } from "~/stores/useSessionStore";
@@ -19,7 +19,7 @@ export const refreshSession = async (signal?: AbortSignal): Promise<void> => {
 
     try {
         const body: RefreshBody = { refreshToken };
-        const session = await fetchJson<SessionResponse>(`${API_URL}/session/refresh`, {
+        const session = await fetchJson(`${API_URL}/session/refresh`, sessionResponseSchema, {
             method: "POST",
             body,
             signal,

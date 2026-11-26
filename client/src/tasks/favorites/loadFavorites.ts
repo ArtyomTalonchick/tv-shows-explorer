@@ -1,4 +1,5 @@
-import type { Favorite } from "@tv-shows-explorer/shared";
+import { favoriteSchema } from "@tv-shows-explorer/shared";
+import { z } from "zod";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { sendFavoritesRequest } from "./sendFavoritesRequest";
@@ -11,6 +12,6 @@ export const loadFavorites = async (signal?: AbortSignal): Promise<void> => {
         return;
     }
 
-    const favorites = await sendFavoritesRequest<Favorite[]>({ method: "GET", signal });
+    const favorites = await sendFavoritesRequest({ method: "GET", signal }, z.array(favoriteSchema));
     useFavoritesStore.setState({ favorites });
 };

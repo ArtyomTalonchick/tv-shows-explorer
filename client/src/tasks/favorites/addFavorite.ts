@@ -1,4 +1,4 @@
-import type { Favorite, Show } from "@tv-shows-explorer/shared";
+import { favoriteSchema, type Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { sendFavoritesRequest } from "./sendFavoritesRequest";
 import { toFavorite } from "./toFavorite";
@@ -12,7 +12,7 @@ export const addFavorite = async (show: Omit<Show, "rating">): Promise<void> => 
     useFavoritesStore.getState().addFavorite(toFavorite(show, addedAt));
 
     try {
-        await sendFavoritesRequest<Favorite>({ method: "PUT", id: show.id, body: { addedAt } });
+        await sendFavoritesRequest({ method: "PUT", id: show.id, body: { addedAt } }, favoriteSchema);
     } catch (error) {
         useFavoritesStore.getState().removeFavorite(show.id);
         throw error;

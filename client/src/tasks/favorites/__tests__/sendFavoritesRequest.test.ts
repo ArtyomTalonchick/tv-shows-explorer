@@ -1,4 +1,5 @@
-import type { Favorite } from "@tv-shows-explorer/shared";
+import { favoriteSchema, type Favorite } from "@tv-shows-explorer/shared";
+import { z } from "zod";
 import { sendFavoritesRequest } from "../sendFavoritesRequest";
 
 const DARK: Favorite = {
@@ -25,7 +26,7 @@ describe("sendFavoritesRequest", () => {
         vi.stubGlobal("fetch", fetchMock);
         const { signal } = new AbortController();
 
-        await expect(sendFavoritesRequest({ method: "GET", signal })).resolves.toEqual([DARK]);
+        await expect(sendFavoritesRequest({ method: "GET", signal }, z.array(favoriteSchema))).resolves.toEqual([DARK]);
         const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
         expect(url).toBe("/api/favorites");
         expect(init.method).toBe("GET");
@@ -37,7 +38,7 @@ describe("sendFavoritesRequest", () => {
         vi.stubGlobal("fetch", fetchMock);
 
         await expect(
-            sendFavoritesRequest({ method: "PUT", id: 17861, body: { addedAt: DARK.addedAt } }),
+            sendFavoritesRequest({ method: "PUT", id: 17861, body: { addedAt: DARK.addedAt } }, favoriteSchema),
         ).resolves.toEqual(DARK);
         const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
         const headers = new Headers(init.headers);
@@ -50,6 +51,6 @@ describe("sendFavoritesRequest", () => {
     it("rejects when the server fails", async () => {
         vi.stubGlobal("fetch", respond({ error: "TVmaze did not answer" }, 502));
 
-        await expect(sendFavoritesRequest({ method: "DELETE", id: 17861 })).rejects.toThrow();
+        await expect(sendFavoritesRequest({ method: "DELETE", id: 17861 }, z.undefined())).rejects.toThrow();
     });
 });

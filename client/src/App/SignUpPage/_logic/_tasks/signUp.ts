@@ -1,4 +1,4 @@
-import type { Credentials, SessionResponse, Show } from "@tv-shows-explorer/shared";
+import { sessionResponseSchema, type Credentials, type Show } from "@tv-shows-explorer/shared";
 import { HttpError } from "~/lib/http/HttpError";
 import { fetchJson } from "~/lib/http/fetchJson";
 import { API_URL } from "~/tasks/constants";
@@ -12,7 +12,10 @@ export type SignUpResult = "signed-up" | "email-taken" | "failed";
 // were.
 export const signUp = async (credentials: Credentials, pending: Omit<Show, "rating"> | null): Promise<SignUpResult> => {
     try {
-        const session = await fetchJson<SessionResponse>(`${API_URL}/users`, { method: "POST", body: credentials });
+        const session = await fetchJson(`${API_URL}/users`, sessionResponseSchema, {
+            method: "POST",
+            body: credentials,
+        });
         await keepSession(session, pending);
         return "signed-up";
     } catch (error) {

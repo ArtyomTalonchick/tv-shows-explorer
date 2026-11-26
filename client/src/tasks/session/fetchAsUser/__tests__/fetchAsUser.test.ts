@@ -1,4 +1,5 @@
 import type { SessionResponse } from "@tv-shows-explorer/shared";
+import { z } from "zod";
 import { HttpError } from "~/lib/http/HttpError";
 import { useSessionStore } from "~/stores/useSessionStore";
 import { fetchAsUser } from "../fetchAsUser";
@@ -10,6 +11,9 @@ const KEPT: SessionResponse = {
 };
 
 const FRESH: SessionResponse = { ...KEPT, accessToken: "new-access", refreshToken: "new-refresh" };
+
+// The answer the tests ask for: a list of numbers.
+const NUMBERS = z.array(z.number());
 
 const answer = (status: number, body: unknown): Response => new Response(JSON.stringify(body), { status });
 
@@ -33,7 +37,7 @@ describe("fetchAsUser", () => {
         const fetchMock = vi.fn(async () => answer(200, [1]));
         vi.stubGlobal("fetch", fetchMock);
 
-        expect(await fetchAsUser("/api/favorites", { headers: { "X-Test": "yes" } })).toEqual([1]);
+        expect(await fetchAsUser("/api/favorites", NUMBERS, { headers: { "X-Test": "yes" } })).toEqual([1]);
 
         const init = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
         expect(new Headers(init[1].headers).get("X-Test")).toBe("yes");
@@ -45,7 +49,7 @@ describe("fetchAsUser", () => {
         const fetchMock = vi.fn(async () => answer(200, []));
         vi.stubGlobal("fetch", fetchMock);
 
-        await fetchAsUser("/api/favorites");
+        await fetchAsUser("/api/favorites", NUMBERS);
 
         expect(sent(fetchMock)).toEqual([["/api/favorites", null]]);
     });
@@ -58,7 +62,7 @@ describe("fetchAsUser", () => {
             .mockResolvedValueOnce(answer(200, [1]));
         vi.stubGlobal("fetch", fetchMock);
 
-        expect(await fetchAsUser("/api/favorites")).toEqual([1]);
+        expect(await fetchAsUser("/api/favorites", NUMBERS)).toEqual([1]);
 
         expect(sent(fetchMock)).toEqual([
             ["/api/favorites", "Bearer old-access"],
@@ -72,7 +76,7 @@ describe("fetchAsUser", () => {
         const fetchMock = vi.fn().mockResolvedValueOnce(answer(401, {})).mockResolvedValueOnce(answer(401, {}));
         vi.stubGlobal("fetch", fetchMock);
 
-        await expect(fetchAsUser("/api/favorites")).rejects.toEqual(new HttpError(401));
+        await expect(fetchAsUser("/api/favorites", NUMBERS)).rejects.toEqual(new HttpError(401));
 
         expect(fetchMock).toHaveBeenCalledTimes(2);
         expect(useSessionStore.getState().session).toBeNull();
@@ -82,7 +86,7 @@ describe("fetchAsUser", () => {
         const fetchMock = vi.fn().mockResolvedValueOnce(answer(401, {})).mockResolvedValueOnce(answer(503, {}));
         vi.stubGlobal("fetch", fetchMock);
 
-        await expect(fetchAsUser("/api/favorites")).rejects.toEqual(new HttpError(401));
+        await expect(fetchAsUser("/api/favorites", NUMBERS)).rejects.toEqual(new HttpError(401));
 
         expect(fetchMock).toHaveBeenCalledTimes(2);
         expect(useSessionStore.getState().session).toEqual(KEPT);
@@ -92,7 +96,7 @@ describe("fetchAsUser", () => {
         const fetchMock = vi.fn(async () => answer(502, {}));
         vi.stubGlobal("fetch", fetchMock);
 
-        await expect(fetchAsUser("/api/favorites")).rejects.toEqual(new HttpError(502));
+        await expect(fetchAsUser("/api/favorites", NUMBERS)).rejects.toEqual(new HttpError(502));
 
         expect(fetchMock).toHaveBeenCalledTimes(1);
     });

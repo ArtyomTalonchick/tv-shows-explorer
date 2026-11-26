@@ -1,4 +1,4 @@
-import type { ShowsPage, ShowsQuery } from "@tv-shows-explorer/shared";
+import { showsPageSchema, type ShowsPage, type ShowsQuery } from "@tv-shows-explorer/shared";
 import { fetchJson } from "~/lib/http/fetchJson";
 import { API_URL } from "~/tasks/constants";
 
@@ -10,5 +10,5 @@ export const searchShows = async ({ query, genre, page }: ShowsQuery, signal: Ab
         search.set("genre", genre);
     }
 
-    return await fetchJson<ShowsPage>(`${API_URL}/shows?${search}`, { signal });
+    return await fetchJson(`${API_URL}/shows?${search}`, showsPageSchema, { signal });
 };

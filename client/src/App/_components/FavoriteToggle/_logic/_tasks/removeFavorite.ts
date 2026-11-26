@@ -1,4 +1,5 @@
 import type { Favorite } from "@tv-shows-explorer/shared";
+import { z } from "zod";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
 import { sendFavoritesRequest } from "~/tasks/favorites/sendFavoritesRequest";
 
@@ -10,7 +11,7 @@ export const removeFavorite = async (favorite: Favorite): Promise<void> => {
     useFavoritesStore.getState().rememberRemoved(favorite);
 
     try {
-        await sendFavoritesRequest<void>({ method: "DELETE", id: favorite.id });
+        await sendFavoritesRequest({ method: "DELETE", id: favorite.id }, z.undefined());
     } catch (error) {
         useFavoritesStore.getState().addFavorite(favorite);
         useFavoritesStore.getState().forgetRemoved(favorite.id);
