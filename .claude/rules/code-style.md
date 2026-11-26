@@ -125,6 +125,10 @@ followed by hand. A new preference the owner states during a task is added here 
 - Cancelling a request, dropping a late answer and Retry live in the task that makes the request
   (`tasks/search/loadShows`): Retry calls the task again. The transport (`fetch`, the non-2xx check, `json()`) is
   `lib/http/fetchJson`: generic I/O, which by the architecture rules only a task calls. (#16, #30, #35, #42)
+- Data that crosses the network is checked by a Zod schema of `shared/` on both sides. The server checks a request
+  by `withValid({ json | query | param: schema }, handler)`, not a `zValidator` repeated in each route; the client
+  reads an answer by `fetchJson(url, schema)`, where the schema is always given, with no default, so a forgotten
+  one is a type error. A form is checked by `zodResolver` with the same schema, and its texts stay on the client. (#31)
 - A Zustand store keeps an action only when a Presenter calls it through the store hook (`setIsOpen`), or when it
   holds logic of the data itself (`addFavorite` keeps the list ordered by `addedAt`; `forgetSearch` knows what «no
   search» is). Everything else a task or a plain function writes with `useXStore.setState(…)`: no setter that only
@@ -166,7 +170,11 @@ followed by hand. A new preference the owner states during a task is added here 
   written only in the table of its level (`favorites.ts`). (#27)
 - Everything the client and the server share lives in `shared/`, in a folder per subject (`credentials/`,
   `favorites/`, `session/`, `shows/`), one thing per file; `shared/src/index.ts` re-exports them. Not a flat heap of
-  files in `src/`. (#61)
+  files in `src/`. (#61) The index re-exports each subject file whole, with `export *`. A pattern several schemas
+  repeat is one schema in `shared/src/primitives/` (`wholeNumberText.ts`), a folder named by what it is, not by
+  a subject such as `url/`. (#31)
+- A schema is not a constant: it lies in the folder of its subject (`tasks/tvmaze/tvmazeShowSchema.ts`), not in
+  a constants file, and not in a root `schemas/` folder. (#31)
 - The app's tasks folder is grouped by subject too, a subject inside a wider one where it belongs to it:
   `tasks/session/startSession`, `tasks/session/jwt/verifyToken`, not `tasks/jwt/` next to `tasks/startSession`. (#69)
 
