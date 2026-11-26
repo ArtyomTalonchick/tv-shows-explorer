@@ -41,10 +41,13 @@ const tokenOf = async (userId: string, typ = "access", secret = SECRET): Promise
 
 const bearerOf = async (userId: string): Promise<string> => `Bearer ${await tokenOf(userId)}`;
 
-// A request of Anna unless another `Authorization` header is given; null sends none.
+// A request of Anna unless another `Authorization` header is given; null sends none. A body goes as JSON.
 const request = async (method: string, path: string, body?: string, authorization?: string | null) => {
     const header = authorization === undefined ? await bearerOf(ANNA) : authorization;
     const headers: Record<string, string> = header === null ? {} : { Authorization: header };
+    if (body !== undefined) {
+        headers["Content-Type"] = "application/json";
+    }
     const response = await favorites.request(path, { method, body, headers });
     const text = await response.text();
     return { status: response.status, body: text === "" ? null : (JSON.parse(text) as unknown) };

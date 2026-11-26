@@ -3,7 +3,7 @@ import { requireUser } from "~/tasks/session/requireUser";
 import type { UserEnv } from "~/tasks/types";
 import { deleteFavoritesById } from "./deleteFavoritesById/deleteFavoritesById";
 import { getFavorites } from "./getFavorites/getFavorites";
-import { requireShowId } from "./_logic/requireShowId/requireShowId";
+import { requireShowId } from "./_logic/requireShowId";
 import { putFavoritesById } from "./putFavoritesById/putFavoritesById";
 
 // `/api/favorites`: the favorites of the signed-in user, named by the access token of `Authorization: Bearer`; 401
@@ -13,5 +13,5 @@ export const favorites = new Hono<UserEnv>()
     .use(requireUser)
     .use("/:id", requireShowId)
     .get("/", getFavorites)
-    .put("/:id", putFavoritesById)
+    .put("/:id", ...putFavoritesById)
     .delete("/:id", deleteFavoritesById);
