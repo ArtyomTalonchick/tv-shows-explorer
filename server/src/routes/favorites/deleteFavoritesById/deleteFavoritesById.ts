@@ -1,12 +1,15 @@
-import type { Handler } from "hono";
-import type { FavoriteEnv } from "~/routes/favorites/types";
+import { favoriteParamsSchema } from "@tv-shows-explorer/shared";
+import type { Context } from "hono";
+import { withValid } from "~/lib/validation/withValid";
+import type { UserEnv } from "~/tasks/types";
 import { removeFavorite } from "./_logic/_tasks/removeFavorite";
 
 // `DELETE /api/favorites/:id`: removes the show and answers 204 with no body; a show that is not there changes
-// nothing and is not an error.
-export const deleteFavoritesById: Handler<FavoriteEnv, "/:id"> = async (context) => {
-    const { userId, showId } = context.var;
-
-    await removeFavorite(userId, showId);
-    return context.body(null, 204);
-};
+// nothing and is not an error. 400 when the path is not a `favoriteParamsSchema`.
+export const deleteFavoritesById = withValid(
+    { param: favoriteParamsSchema },
+    async (context: Context<UserEnv>, { param }) => {
+        await removeFavorite(context.var.userId, param.id);
+        return context.body(null, 204);
+    },
+);
