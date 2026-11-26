@@ -32,7 +32,7 @@ unit's tasks folder until the plugin settles the case.
 ArtyomTalonchick/claude-simple-architecture#81 · since #61, widened by #31
 
 `shared/src/` holds the Zod schemas of the API, a subject per folder, each next to the type it gives
-(`z.infer`): the requests and the answers, and the rule of valid credentials, `credentialsSchema` with
+(`z.infer`): the requests and the answers, a part several of them share (`primitives/wholeNumberText.ts`), and the rule of valid credentials, `credentialsSchema` with
 `PASSWORD_MIN_LENGTH` in `credentials/credentials.ts`, with `normalizeEmail` in a file of its own. The plugin's rules
 keep the shared types package to types only (core `imports.md`), so the reviewer reports Imports on it. The server
 checks the requests and the client the answers and its forms by these schemas; two copies, one per app, would drift
