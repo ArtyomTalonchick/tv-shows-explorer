@@ -17,7 +17,7 @@ const STATE_STYLES = {
 // at its end. The name turns to the accent on hover, as on a show card. A show removed while the list is open keeps
 // its row, dimmed, with «Removed» in place of the details; its bookmark puts it back.
 export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
-    const { favorite, state, name, href, imageSrc, hasImage } = usePresenter(props);
+    const { favorite, state, isRemoved, name, href, imageSrc, hasImage } = usePresenter(props);
 
     return (
         <chakra.li
@@ -76,7 +76,7 @@ export const FavoriteRow: FC<FavoriteRowProps> = (props) => {
                     >
                         {name}
                     </chakra.span>
-                    {state === "removed" ? (
+                    {isRemoved ? (
                         <chakra.span display="block" mt="1" textStyle="eyebrow" color="fg.subtle">
                             Removed
                         </chakra.span>

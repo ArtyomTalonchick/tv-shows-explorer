@@ -1,8 +1,10 @@
 import type { Show } from "@tv-shows-explorer/shared";
 import { useFavoritesStore } from "~/stores/useFavoritesStore";
-import type { FavoriteTogglePlace } from "../../FavoriteToggle";
 import { toggleFavorite } from "../_tasks/toggleFavorite";
 import { showFavoriteToast } from "./showFavoriteToast";
+
+// Where a bookmark sits: over a poster of a card, or in a row of the favourites list.
+export type FavoriteTogglePlace = "card" | "list";
 
 // A press on the bookmark of one show. It changes at once, and so do the counter and the list: the task changes the
 // store before its request, and puts it back if the request fails. The toast says what was done at once, and what

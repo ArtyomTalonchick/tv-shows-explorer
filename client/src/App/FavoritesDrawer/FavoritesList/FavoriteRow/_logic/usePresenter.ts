@@ -10,6 +10,8 @@ export type FavoriteRowState = "saved" | "removed";
 
 type UsePresenterResult = FavoriteRowProps & {
     state: FavoriteRowState;
+    // The show was removed while the list is open: the row says «Removed» in place of the details.
+    isRemoved: boolean;
     name: string;
     // Where the row leads; it opens in a new tab.
     href: string;
@@ -23,6 +25,7 @@ export const usePresenter = ({ favorite }: FavoriteRowProps): UsePresenterResult
     return {
         favorite,
         state: saved === null ? "removed" : "saved",
+        isRemoved: saved === null,
         name: favorite.name,
         href: favorite.url,
         imageSrc: favorite.image ?? undefined,

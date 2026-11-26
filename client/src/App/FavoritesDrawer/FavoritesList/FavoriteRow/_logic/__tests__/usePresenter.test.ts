@@ -23,12 +23,18 @@ describe("FavoriteRow usePresenter", () => {
         useFavoritesStore.setState({ favorites: [DARK] });
         const { result } = renderHook(() => usePresenter({ favorite: DARK }));
 
-        expect(result.current).toMatchObject({ state: "saved", name: "Dark", href: DARK.url, hasImage: false });
+        expect(result.current).toMatchObject({
+            state: "saved",
+            isRemoved: false,
+            name: "Dark",
+            href: DARK.url,
+            hasImage: false,
+        });
     });
 
     it("shows a show no longer in the favourites as removed", () => {
         const { result } = renderHook(() => usePresenter({ favorite: DARK }));
 
-        expect(result.current.state).toBe("removed");
+        expect(result.current).toMatchObject({ state: "removed", isRemoved: true });
     });
 });

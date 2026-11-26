@@ -1,9 +1,11 @@
 import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Icon } from "~/lib/ui-kit/Icon/Icon";
-import { usePresenter, type FavoriteToggleProps, type FavoriteTogglePlace } from "./_logic/usePresenter";
+import type { FavoriteTogglePlace } from "./_logic/toggle/toggle";
+import { usePresenter, type FavoriteToggleProps } from "./_logic/usePresenter";
 
-export type { FavoriteToggleProps, FavoriteTogglePlace } from "./_logic/usePresenter";
+export type { FavoriteTogglePlace } from "./_logic/toggle/toggle";
+export type { FavoriteToggleProps } from "./_logic/usePresenter";
 
 const PLACE_STYLES = {
     card: {

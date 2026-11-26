@@ -1,11 +1,11 @@
 import { chakra, type HTMLChakraProps } from "@chakra-ui/react";
 import type { FC } from "react";
-import { usePresenter } from "./_logic/usePresenter";
+import { usePresenter, type FavoritesCountTone } from "./_logic/usePresenter";
 
 const TONE_STYLES = {
     zero: { bg: "bg.muted", color: "fg.muted" },
     some: { bg: "accent.solid", color: "accent.contrast" },
-} satisfies Record<"zero" | "some", HTMLChakraProps<"span">>;
+} satisfies Record<FavoritesCountTone, HTMLChakraProps<"span">>;
 
 // .fav-button__count of design/library: the number of favourites in a round badge, in the accent, or grey for 0.
 // A guest has none (.fav-button--guest). The button's end padding is the guest's; the badge's negative end margin
