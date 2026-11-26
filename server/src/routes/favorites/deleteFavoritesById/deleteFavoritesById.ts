@@ -1,6 +1,6 @@
-import { favoriteParamsSchema } from "@tv-shows-explorer/shared";
 import type { Context } from "hono";
 import { withValid } from "~/lib/validation/withValid";
+import { favoriteParamsSchema } from "~/tasks/favorites/favoriteParamsSchema";
 import type { UserEnv } from "~/tasks/types";
 import { removeFavorite } from "./_logic/_tasks/removeFavorite";
 

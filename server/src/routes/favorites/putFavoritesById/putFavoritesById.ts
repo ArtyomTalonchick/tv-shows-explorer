@@ -1,7 +1,8 @@
-import { addFavoriteBodySchema, favoriteParamsSchema } from "@tv-shows-explorer/shared";
+import { addFavoriteBodySchema } from "@tv-shows-explorer/shared";
 import type { Context } from "hono";
 import { HttpError } from "~/lib/errors/HttpError";
 import { withValid } from "~/lib/validation/withValid";
+import { favoriteParamsSchema } from "~/tasks/favorites/favoriteParamsSchema";
 import type { UserEnv } from "~/tasks/types";
 import { addFavorite } from "./_logic/_tasks/addFavorite/addFavorite";
 
