@@ -27,7 +27,13 @@ export const AuthPage: FC<AuthPageProps> = (props) => {
         >
             <Backdrop />
             <TopBar>
-                <Link asChild aria-label="tv/explorer — back to start" rounded="sm" focusRingColor="accent.solid">
+                <Link
+                    asChild
+                    aria-label="tv/explorer — back to start"
+                    rounded="sm"
+                    focusRingColor="accent.solid"
+                    _hover={{ textDecoration: "none" }}
+                >
                     <RouterLink to="/">
                         <Logo />
                     </RouterLink>
