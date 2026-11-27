@@ -7,7 +7,6 @@ export type CardPosterProps = {
 type UsePresenterResult = {
     imageSrc: string | undefined;
     imageAlt: string;
-    hasImage: boolean;
     // A whole rating keeps its decimal: «★ 8.0», like «★ 8.2».
     ratingLabel: string | null;
 };
@@ -16,7 +15,6 @@ export const usePresenter = ({ show: { name, image, rating } }: CardPosterProps)
     return {
         imageSrc: image ?? undefined,
         imageAlt: `${name} poster`,
-        hasImage: image !== null,
         ratingLabel: rating === null ? null : `★ ${rating.toFixed(1)}`,
     };
 };

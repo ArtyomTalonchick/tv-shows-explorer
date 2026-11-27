@@ -8,7 +8,7 @@ export type { CardPosterProps } from "./_logic/usePresenter";
 // The poster of a show card with the rating on it, or «No poster» in its place. It grows a little on the card's
 // hover.
 export const CardPoster: FC<CardPosterProps> = (props) => {
-    const { imageSrc, imageAlt, hasImage, ratingLabel } = usePresenter(props);
+    const { imageSrc, imageAlt, ratingLabel } = usePresenter(props);
 
     return (
         <Box
@@ -20,7 +20,7 @@ export const CardPoster: FC<CardPosterProps> = (props) => {
             bg="bg.subtle"
             boxShadow="poster"
         >
-            {hasImage ? (
+            {imageSrc ? (
                 <chakra.img
                     src={imageSrc}
                     alt={imageAlt}
