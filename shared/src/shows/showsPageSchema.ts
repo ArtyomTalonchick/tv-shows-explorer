@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { genreCountSchema } from "./genreCount";
-import { showSchema } from "./show";
+import { genreCountSchema } from "./genreCountSchema";
+import { showSchema } from "./showSchema";
 
 // The answer of `GET /api/shows`: one page of the found shows of a genre, and what the filter and the pages need.
 export const showsPageSchema = z.object({

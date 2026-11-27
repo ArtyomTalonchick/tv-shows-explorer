@@ -174,10 +174,11 @@ followed by hand. A new preference the owner states during a task is added here 
 - Everything the client and the server share lives in `shared/`, in a folder per subject (`credentials/`,
   `favorites/`, `session/`, `shows/`), one thing per file; `shared/src/index.ts` re-exports them. Not a flat heap of
   files in `src/`. (#61) The index re-exports each subject file whole, with `export *`. A pattern several schemas
-  repeat is one schema in `shared/src/primitives/` (`wholeNumberText.ts`), a folder named by what it is, not by
-  a subject such as `url/`. (#31)
+  repeat is one schema in `shared/src/primitives/` (`wholeNumberTextSchema.ts`), a folder named by what it is, not
+  by a subject such as `url/`. (#31)
 - A schema is not a constant: it lies in the folder of its subject (`tasks/tvmaze/tvmazeShowSchema.ts`), not in
-  a constants file, and not in a root `schemas/` folder. (#31)
+  a constants file, and not in a root `schemas/` folder. (#31) Its file is named as the schema it holds, in `shared/`
+  as in the apps: `shows/showSchema.ts` holds `showSchema`, not `shows/show.ts`. (#75)
 - The app's tasks folder is grouped by subject too, a subject inside a wider one where it belongs to it:
   `tasks/session/startSession`, `tasks/session/jwt/verifyToken`, not `tasks/jwt/` next to `tasks/startSession`. (#69)
 

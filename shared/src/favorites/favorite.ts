@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { showSchema } from "../shows/show";
+import { showSchema } from "../shows/showSchema";
 
 // Every request of `/api/favorites` sends the `X-Client-Id` header: a UUID the browser makes once
 // (`crypto.randomUUID()`) and keeps, which names its own list of favorites.

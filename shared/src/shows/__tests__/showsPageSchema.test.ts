@@ -1,4 +1,4 @@
-import { showsPageSchema } from "../showsPage";
+import { showsPageSchema } from "../showsPageSchema";
 
 const SHOW = {
     id: 1,

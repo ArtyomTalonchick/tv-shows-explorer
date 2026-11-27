@@ -1,4 +1,4 @@
-import { showsQuerySchema } from "../showsQuery";
+import { showsQuerySchema } from "../showsQuerySchema";
 
 describe("showsQuerySchema", () => {
     it("reads the trimmed query, the genre and the page", () => {
