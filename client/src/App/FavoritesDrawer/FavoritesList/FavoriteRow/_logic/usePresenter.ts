@@ -16,7 +16,6 @@ type UsePresenterResult = FavoriteRowProps & {
     // Where the row leads; it opens in a new tab.
     href: string;
     imageSrc: string | undefined;
-    hasImage: boolean;
 };
 
 export const usePresenter = ({ favorite }: FavoriteRowProps): UsePresenterResult => {
@@ -29,6 +28,5 @@ export const usePresenter = ({ favorite }: FavoriteRowProps): UsePresenterResult
         name: favorite.name,
         href: favorite.url,
         imageSrc: favorite.image ?? undefined,
-        hasImage: favorite.image !== null,
     };
 };

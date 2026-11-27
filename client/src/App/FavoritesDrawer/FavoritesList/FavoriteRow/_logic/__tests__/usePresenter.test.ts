@@ -28,7 +28,7 @@ describe("FavoriteRow usePresenter", () => {
             isRemoved: false,
             name: "Dark",
             href: DARK.url,
-            hasImage: false,
+            imageSrc: undefined,
         });
     });
 
