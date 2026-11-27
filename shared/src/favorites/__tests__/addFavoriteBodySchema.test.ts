@@ -1,4 +1,4 @@
-import { addFavoriteBodySchema } from "../addFavoriteBody";
+import { addFavoriteBodySchema } from "../addFavoriteBodySchema";
 
 describe("addFavoriteBodySchema", () => {
     it("takes no addedAt, or a time to put a show back", () => {

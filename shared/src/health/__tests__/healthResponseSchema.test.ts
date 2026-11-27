@@ -1,4 +1,4 @@
-import { healthResponseSchema } from "../health";
+import { healthResponseSchema } from "../healthResponseSchema";
 
 describe("healthResponseSchema", () => {
     it("takes the answer of a server that is up", () => {

@@ -1,4 +1,4 @@
-import { favoriteSchema } from "../favorite";
+import { favoriteSchema } from "../favoriteSchema";
 
 const FAVORITE = {
     id: 1,

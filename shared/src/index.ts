@@ -2,9 +2,9 @@
 // the types they give, and the rule of valid credentials. A file exports only its API, so it is re-exported whole.
 export * from "./credentials/credentials";
 export * from "./credentials/signInBody";
-export * from "./favorites/addFavoriteBody";
-export * from "./favorites/favorite";
-export * from "./health/health";
+export * from "./favorites/addFavoriteBodySchema";
+export * from "./favorites/favoriteSchema";
+export * from "./health/healthResponseSchema";
 export * from "./http/HttpError";
 export * from "./http/fetchJson";
 export * from "./primitives/wholeNumberTextSchema";
