@@ -1,4 +1,4 @@
-import { signInBodySchema } from "../signInBody";
+import { signInBodySchema } from "../signInBodySchema";
 
 describe("signInBodySchema", () => {
     it("takes any two strings, so an account of an older rule still signs in", () => {

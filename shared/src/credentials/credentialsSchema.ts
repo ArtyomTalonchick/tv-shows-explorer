@@ -11,3 +11,5 @@ export const credentialsSchema = z.object({
     email: z.string().trim().pipe(z.email()),
     password: z.string().min(PASSWORD_MIN_LENGTH),
 });
+
+export type Credentials = z.infer<typeof credentialsSchema>;

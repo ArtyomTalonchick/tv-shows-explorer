@@ -7,4 +7,4 @@ export const signInBodySchema = z.object({
     password: z.string(),
 });
 
-export type Credentials = z.infer<typeof signInBodySchema>;
+export type SignInBody = z.infer<typeof signInBodySchema>;

@@ -1,4 +1,4 @@
-import { credentialsSchema } from "../credentials";
+import { credentialsSchema } from "../credentialsSchema";
 
 describe("credentialsSchema", () => {
     it.each(["anna@example.com", "  anna@example.com  ", "Anna.Smith+tv@mail.example.co.uk"])("takes %j", (email) => {

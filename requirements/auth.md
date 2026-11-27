@@ -15,8 +15,8 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
    email and the password must pass the shared rule (`credentialsSchema` in `shared/src/credentials/`): an email by
    Zod's `z.email()`, without its outer spaces, and a password of 8 characters or more. The client checks its form
    by the same schema. (#61, #31)
-2. **Sign in.** `POST /api/session` with `Credentials` checks the password of the account of that email and answers
-   `200` with a `SessionResponse`. (#61)
+2. **Sign in.** `POST /api/session` with a `SignInBody` (any email and password, `signInBodySchema` of the server)
+   checks the password of the account of that email and answers `200` with a `SessionResponse`. (#61, #75)
 3. **Who is signed in.** `GET /api/session` with `Authorization: Bearer <access token>` answers the `User` of the
    token. (#61)
 4. **The tokens** are JWTs signed with HS256 and `JWT_SECRET`, with `sub` (the user id), `typ`, `iat` and `exp`:
