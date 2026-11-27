@@ -124,11 +124,14 @@ followed by hand. A new preference the owner states during a task is added here 
   queue, no store of pending requests. (#41)
 - Cancelling a request, dropping a late answer and Retry live in the task that makes the request
   (`tasks/search/loadShows`): Retry calls the task again. The transport (`fetch`, the non-2xx check, `json()`) is
-  `lib/http/fetchJson`: generic I/O, which by the architecture rules only a task calls. (#16, #30, #35, #42)
-- Data that crosses the network is checked by a Zod schema of `shared/` on both sides. The server checks a request
+  `fetchJson` of the shared package (`shared/src/http/`), one for both apps: generic I/O, which by the architecture
+  rules only a task calls. (#16, #30, #35, #42, #73)
+- Data that crosses the network is checked by a Zod schema on both sides. The server checks a request
   by `withValid({ json | query | param: schema }, handler)`, not a `zValidator` repeated in each route; the client
   reads an answer by `fetchJson(url, schema)`, where the schema is always given, with no default, so a forgotten
   one is a type error. A form is checked by `zodResolver` with the same schema, and its texts stay on the client. (#31)
+  A schema lies in `shared/` when both apps need it or the type it gives; one only the server uses, with no type the
+  client needs (the path of a favorite, `favoriteParamsSchema`), lies on the server. (#73)
 - A Zustand store keeps an action only when a Presenter calls it through the store hook (`setIsOpen`), or when it
   holds logic of the data itself (`addFavorite` keeps the list ordered by `addedAt`; `forgetSearch` knows what «no
   search» is). Everything else a task or a plain function writes with `useXStore.setState(…)`: no setter that only

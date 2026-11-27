@@ -100,14 +100,13 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
 
 ## Decisions
 
-- Every request the server takes — a body, a query, a path — is checked by the shared Zod schemas, through one
+- Every request the server takes — a body, a query, a path — is checked by Zod schemas, through one
   helper, `withValid` (`server/src/lib/validation/`); a refused request gets `400` with `{ error }` in Zod's words.
   A JSON body needs `Content-Type: application/json`: without it the body is read as empty. Every answer the client
   takes is read by the shared schema too, and an answer of a wrong shape is an error, as a failed request is. (#31)
 - The rule of a valid email and password is runtime code in the shared package, so the client and the server check
-  by one rule; a deliberate exception from the simple-architecture rules
-  (`.claude/rules/architecture-exceptions.md`, plugin #81). The shared package is split into folders by
-  subject. (#61)
+  by one rule. The shared package is split into folders by subject, a file per schema; how an email is kept and
+  compared (`normalizeEmail`) is the server's alone and lies in `server/src/tasks/users/`. (#61, #73)
 - Accounts are keyed by a random id, `users/{id}`, not by the email, the owner's choice: the favourites of #63 go
   under `users/{id}/favorites`. (#61)
 - «Email taken» is checked by sign-up before the write (`findByEmail`, then `create`), not by an atomic create:
@@ -126,8 +125,8 @@ travels only on sign-in and on its exchange for a new pair, so it is harder to s
   token only of the kind asked for. (#69)
 - The token secret is `JWT_SECRET`: a Firebase secret bound to the function in production
   (`firebase functions:secrets:set JWT_SECRET` before the deploy), `server/.env` locally. It is not checked on the
-  server's start, unlike the Google credentials (exception #72): a missing secret fails the auth requests with `500`,
-  and the rest of the API still works. (#61)
+  server's start, unlike the Google credentials (`checkGoogleCredentials`): a missing secret fails the auth
+  requests with `500`, and the rest of the API still works. (#61)
 - A body is read as text and checked by hand (`parseCredentials`), as the favorites body is, not with a schema
   library: shared schemas are #31. (#61)
 - Sign out drops the favourites with the session: they belong to the user, not to the browser. (#62, #63)

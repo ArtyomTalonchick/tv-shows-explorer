@@ -117,9 +117,9 @@ The user finds TV shows by typing a query. TVmaze does the search
   touch screens was turned down. (#18)
 - Events call tasks, and no effect watches data to call one. The field, the asked query, genre and page, the request
   on its way and the answer are one Zustand store, `client/src/stores/useSearchStore`. The task `loadShows`
-  (`client/src/tasks/search/`) asks for what the store holds through `searchShows` over `lib/http/fetchJson`,
-  cancels the request on its way and drops an answer that is not current any more, so the latest call wins; it keeps
-  found shows on screen while it loads, and Retry calls it again. (#16, #42)
+  (`client/src/tasks/search/`) asks for what the store holds through `searchShows` over `fetchJson` of the shared
+  package, cancels the request on its way and drops an answer that is not current any more, so the latest call wins;
+  it keeps found shows on screen while it loads, and Retry calls it again. (#16, #42, #73)
 - The field is one component, `SearchPage/_components/SearchField`, in the hero and in the search bar: its change
   calls `changeQuery`, which stops the search at once for an emptied field, and a `debounce` made once in its
   Presenter, which calls `searchQuery` after 400 ms. (#42)

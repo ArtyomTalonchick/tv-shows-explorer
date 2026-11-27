@@ -43,7 +43,7 @@ What each feature does is described in [`requirements/`](requirements/README.md)
 The architecture rules live in their own repository, a Claude Code plugin:
 [`claude-simple-architecture`](https://github.com/ArtyomTalonchick/claude-simple-architecture).
 This version is built by the rules of
-[`v0.3.0`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.3.0). The client and the server
+[`v0.3.3`](https://github.com/ArtyomTalonchick/claude-simple-architecture/tree/v0.3.3). The client and the server
 both follow them: the same levels, tasks and stores on each side.
 
 In this repository:
@@ -51,7 +51,7 @@ In this repository:
 - [`CLAUDE.md`](CLAUDE.md) — the project instructions for the agent;
 - [`.claude/simple-architecture/config.json`](.claude/simple-architecture/config.json) — where the plugin finds the
   client and the server, and the folder names;
-- [`.claude/rules/`](.claude/rules/) — the project's code style and its exceptions from the plugin's rules;
+- [`.claude/rules/`](.claude/rules/) — the project's code style;
 - [`.claude/gh-tasks/rules.md`](.claude/gh-tasks/rules.md) — how a task is picked, built, checked and released
   (run with the gh-tasks plugin for Claude Code).
 
