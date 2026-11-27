@@ -1,4 +1,4 @@
-import { sessionResponseSchema } from "../sessionResponse";
+import { sessionResponseSchema } from "../sessionResponseSchema";
 
 const SESSION = { accessToken: "a", refreshToken: "r", user: { id: "u1", email: "anna@example.com" } };
 

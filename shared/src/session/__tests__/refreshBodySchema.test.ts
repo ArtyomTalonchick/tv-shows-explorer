@@ -1,4 +1,4 @@
-import { refreshBodySchema } from "../refreshBody";
+import { refreshBodySchema } from "../refreshBodySchema";
 
 describe("refreshBodySchema", () => {
     it("takes a string refreshToken and refuses anything else", () => {
