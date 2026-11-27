@@ -7,12 +7,8 @@ import { changePage } from "./_tasks/changePage";
 import { formatShownRange } from "./formatShownRange";
 import { showPageNotLoadedToast } from "./showPageNotLoadedToast";
 
-type UsePresenterResult = {
-    // Hidden when every show fits on one page.
-    pagination: PaginationProps | null;
-};
-
-export const usePresenter = (): UsePresenterResult => {
+// The props of the pages, or null when every show fits on one page.
+export const usePresenter = (): PaginationProps | null => {
     const query = useSearchStore((state) => state.query);
     const page = useSearchStore((state) => state.page);
     const answer = useSearchStore((state) => state.answer);
@@ -21,7 +17,7 @@ export const usePresenter = (): UsePresenterResult => {
     const perPage = data?.perPage ?? 1;
 
     if (getPageCount(total, perPage) <= 1) {
-        return { pagination: null };
+        return null;
     }
 
     // The pages are switched below the cards: when the cards start above the screen, bring them into view.
@@ -35,14 +31,12 @@ export const usePresenter = (): UsePresenterResult => {
     };
 
     return {
-        pagination: {
-            // Another page of the shown query is marked as soon as it is asked; while a new query waits and
-            // loads, the shown results keep their own.
-            page: answer?.query === query ? page : (data?.page ?? 1),
-            perPage,
-            total,
-            onPageChange: (next) => void handlePageChange(next),
-            formatRange: formatShownRange,
-        },
+        // Another page of the shown query is marked as soon as it is asked; while a new query waits and loads, the
+        // shown results keep their own.
+        page: answer?.query === query ? page : (data?.page ?? 1),
+        perPage,
+        total,
+        onPageChange: (next) => void handlePageChange(next),
+        formatRange: formatShownRange,
     };
 };

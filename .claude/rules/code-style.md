@@ -91,8 +91,12 @@ followed by hand. A new preference the owner states during a task is added here 
   ```
 
   The ternary is only one form. When the child gets nothing in some case and its ready props are longer than a line
-  or need a handler of their own, the Presenter returns early — `if (pageCount <= 1) { return { pagination: null }; }`
-  — and builds the props after it, for the case that shows the child. (#50)
+  or need a handler of their own, the Presenter returns early — `if (pageCount <= 1) { return null; }` — and builds
+  the props after it, for the case that shows the child. (#50)
+
+  When the child is the component's whole markup, the Presenter returns the child's props itself, with no wrapper
+  around them: `usePresenter = (): PaginationProps | null`, read in the View as `const pagination = usePresenter();`.
+  (#76)
 
 - Styles that depend on a variant (`size`, `tone`) are a table in the component file, above the View: they are pure
   presentation. The Presenter returns only the ready key — the variant with its default applied, or a key it chose
